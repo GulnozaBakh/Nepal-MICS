@@ -185,22 +185,8 @@ print(weighted_wm_freq_HH6_HH7)
 print(weighted_wm_freq_welevel)
 print(weighted_wm_freq_wage)
 
-#Task 4. Calculating and appending background variables (perhaps needs to be done before aggregating)
+#Task 4. Calculating and appending background variables 
 #existing ethnicities in the data
 unique(data_hh_2014$HC1C)
-
-# Recode ethnicity (code provided in the syntax files, but how to group the ethnicities?)
-data_hh_2014 <- data_hh_2014 %>%
-  mutate(ethnicity = case_when(
-    HC1C == 1 ~ 1,
-    HC1C %in% c(2, 3) ~ 2,
-    HC1C == 4 ~ 3,
-    HC1C %in% c(8, 9) ~ 9,
-    TRUE ~ NA_real_
-  )) %>%
-  mutate(ethnicity = factor(ethnicity, levels = c(1, 2, 3, 9), labels = c("Group 1", "Group 2", "Group 3", "Missing/DK")))
-
-
-
 
 
