@@ -84,6 +84,37 @@ colnames(merged_data)
 # Save the merged data
 write.csv(merged_data, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data.csv")
 
+#Task 2. CHECK WOMEN'S FILE AGAINST THE HOUSEHOLD FILE
+# Create check variable in household data
+data_hh_2014$check <- 1
+
+# Sort both datasets
+data_hh_2014 <- data_hh_2014 %>% arrange(HH1, HH2)
+data_wm_2014 <- data_wm_2014 %>% arrange(HH1, HH2, LN)
+
+# Merge data
+merged_data2 <- left_join(data_wm_2014, data_hh_2014, by = c("HH1", "HH2"))
+
+# Identify cases present in women's file but not in household file
+discrepancies <- merged_data2 %>%
+  filter(is.na(check)) %>%
+  select(HH1, HH2, LN)
+
+# Display discrepancies
+if (nrow(discrepancies) > 0) {
+  cat("Case present in WOMEN file but not in HOUSEHOLD file:\n")
+  print(discrepancies)
+} else {
+  cat("No discrepancies found.\n")
+}
+#save the merged data 2
+write.csv(merged_data2, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data2.csv")
+
+
+
+
+
+
 
 
 
