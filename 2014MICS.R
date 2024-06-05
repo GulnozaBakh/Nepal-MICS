@@ -109,7 +109,7 @@ if (nrow(discrepancies) > 0) {
   cat("No inconsistencies found.\n")
 }
 
-#Task 2. CHECK WOMEN'S FILE AGAINST THE HOUSEHOLD FILE
+#Task 2. CHECKCONSIS2. CHECK WOMEN'S FILE AGAINST THE HOUSEHOLD FILE
 # Create check variable in household data
 data_hh_2014$check <- 1
 
@@ -135,7 +135,7 @@ if (nrow(discrepancies) > 0) {
 #save the merged data 2
 write.csv(merged_data2, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data2.csv")
 
-#Task 3. Household weight checking frequencies
+#Task 3. CHECKSAMPLE Household weight checking frequencies
 # Check the structure of HH9 in HH data to understand the values it contains
 str(data_hh_2014$HH9)
 unique(data_hh_2014$HH9)
@@ -185,22 +185,24 @@ print(weighted_wm_freq_HH6_HH7)
 print(weighted_wm_freq_welevel)
 print(weighted_wm_freq_wage)
 
-#Task 4. Calculating and appending background variables (perhaps needs to be done before aggregating)
+#Task 4. Calculating and appending background variables 
 #existing ethnicities in the data
-unique(data_hh_2014$HC1C)
+unique(data_hh_2014$HC1C) #need to know how to group ethnicities? 
 
-# Recode ethnicity (code provided in the syntax files, but how to group the ethnicities?)
-data_hh_2014 <- data_hh_2014 %>%
-  mutate(ethnicity = case_when(
-    HC1C == 1 ~ 1,
-    HC1C %in% c(2, 3) ~ 2,
-    HC1C == 4 ~ 3,
-    HC1C %in% c(8, 9) ~ 9,
-    TRUE ~ NA_real_
-  )) %>%
-  mutate(ethnicity = factor(ethnicity, levels = c(1, 2, 3, 9), labels = c("Group 1", "Group 2", "Group 3", "Missing/DK")))
+#Task 5. Create index for the types of practises followed
+# Define the columns related to practices
+practice_columns_wm <- c("UN13AA", "UN13AB", "UN13AC", "UN13AD", "UN13AE", "UN13AF", "UN13AG")
 
+# Filter to keep only "Yes" and "No" responses, excluding NA and "Missing"
+filtered_wm_data_practices <- data_wm_2014 %>%
+  select(all_of(practice_columns_wm)) %>%  
+  filter(if_any(all_of(practice_columns_wm), ~ .x %in% c("Yes", "No"))) 
 
-
+# Create the index
+practice_index <- filtered_wm_data_practices %>%
+  mutate(across(all_of(practice_columns_wm), ~ ifelse(.x == "Yes", 1, 0))) %>% 
+  rowwise() %>%
+  mutate(practice_index = sum(c_across(all_of(practice_columns_wm)))) %>%
+  ungroup()
 
 
