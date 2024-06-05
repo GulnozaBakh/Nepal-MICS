@@ -110,11 +110,27 @@ if (nrow(discrepancies) > 0) {
 #save the merged data 2
 write.csv(merged_data2, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data2.csv")
 
+#Task 3. Household weight checking frequencies
+# Check the structure of HH9 in HH data to understand the values it contains
+str(data_hh_2014$HH9)
+unique(data_hh_2014$HH9)
 
+# Filter the data in column HH9, making sure to handle any potential missing values
+filtered_hh_data <- data_hh_2014[data_hh_2014$HH9 == "Completed" & !is.na(data_hh_2014$HH9), ]
 
-
-
-
+# Check the unweighted frequencies for household 
+if (nrow(filtered_hh_data) > 0) { #if the filtered data is not empty
+  cat('!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
+  unweighted_hh_freq <- lapply(filtered_hh_data[c("HH6", "HH7")], table) #counts how often each value in HH6 and HH7 occurs in the dataset
+  print(unweighted_hh_freq)
+} else {
+  cat('No rows match the filtering criteria.\n')
+}
+# Check the weighted frequencies for household
+hh_design <- svydesign(ids = ~1, data = data_hh_2014, weights = ~hhweight) #original dataset is used for weighted calculations 
+cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
+weighted_hh_freq <- svytable(~HH6 + HH7, hh_design) #shows how each combination of values in HH6 and HH7 occurs, taking into account survey weights
+print(weighted_hh_freq)
 
 
 
