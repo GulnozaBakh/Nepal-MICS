@@ -132,6 +132,36 @@ cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
 weighted_hh_freq <- svytable(~HH6 + HH7, hh_design) #shows how each combination of values in HH6 and HH7 occurs, taking into account survey weights
 print(weighted_hh_freq)
 
+#Women weight checking frequencies
+# Check the structure of WM7 in WM data to understand the values it contains
+str(data_wm_2014$WM7)
+unique(data_wm_2014$WM7)
+
+# Filter the data in column WM7, making sure to handle any potential missing values
+filtered_wm_data <- data_wm_2014[data_wm_2014$WM7 == "Completed" & !is.na(data_wm_2014$WM7),]
+
+# Check the unweighted frequencies for women 
+if (nrow(filtered_wm_data) > 0) {
+  cat('!!! UNWEIGHTED FREQUENCIES FOR WOMEN !!!\n')
+  unweighted_wm_freq <- lapply(filtered_wm_data[c("HH6", "HH7", "welevel", "WAGE")], table)
+  print(unweighted_wm_freq)
+} else {
+  cat('No rows match the filtering criteria.\n')
+}
+
+#Check the weighted frequencies for women 
+wm_design <- svydesign(ids = ~1, data = filtered_wm_data, weights = ~wmweight)
+cat('!!! WEIGHTED FREQUENCIES FOR WOMEN !!!\n')
+weighted_wm_freq_HH6_HH7 <- svytable(~HH6 + HH7, wm_design)
+weighted_wm_freq_welevel <- svytable(~welevel, wm_design)
+weighted_wm_freq_wage <- svytable(~WAGE, wm_design)
+
+print(weighted_wm_freq_HH6_HH7)
+print(weighted_wm_freq_welevel)
+print(weighted_wm_freq_wage)
+
+
+
 
 
 
