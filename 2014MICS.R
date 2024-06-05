@@ -27,3 +27,35 @@ colnames(data_hh_2014)
 colnames(data_wm_2014)
 str(data_hh_2014)
 str(data_wm_2014)
+
+# Summarize the data by counting occurrences to check household clusters (characterized)
+data_hh_2014_summary <- data_hh_2014 %>%
+  group_by(HH1) %>%
+  summarize(
+    HH6_counts = n(),
+    HH6_unique_values = paste(unique(HH6), collapse = ", "),
+    HH6_unique_count = n_distinct(HH6),
+    HH7_counts = n(),
+    HH7_unique_values = paste(unique(HH7), collapse = ", "),
+    HH7_unique_count = n_distinct(HH7)
+  )
+# Display the table
+data_hh_2014_summary %>%
+  kbl(caption = "Women's region and type of place of residence by cluster") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# Summarize the women data by counting occurrences to check household clusters  (characterized)
+data_wm_2014_summary <- data_wm_2014 %>%
+  group_by(HH1) %>%
+  summarize(
+    HH6_counts = n(),
+    HH6_unique_values = paste(unique(HH6), collapse = ", "),
+    HH6_unique_count = n_distinct(HH6),
+    HH7_counts = n(),
+    HH7_unique_values = paste(unique(HH7), collapse = ", "),
+    HH7_unique_count = n_distinct(HH7)
+  )
+# Display the table
+data_wm_2014_summary %>%
+  kbl(caption = "Women's region and type of place of residence by cluster") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
