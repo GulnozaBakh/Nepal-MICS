@@ -28,6 +28,7 @@ colnames(data_wm_2014)
 str(data_hh_2014)
 str(data_wm_2014)
 
+#Tables to check household and women clusters
 # Summarize the data by counting occurrences to check household clusters (characterized)
 data_hh_2014_summary <- data_hh_2014 %>%
   group_by(HH1) %>%
@@ -83,6 +84,30 @@ colnames(merged_data)
 
 # Save the merged data
 write.csv(merged_data, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data.csv")
+
+# Check for discrepancies between aggregated woman data and hh data
+# Check if columns exist (replace `HH12`, `HH13` with actual column names)
+if (!("HH12" %in% colnames(merged_data) & "HH13" %in% colnames(merged_data))) {
+  stop("Columns HH12 (total women) and/or HH13 (completed interviews women) not found in the household data.")
+}
+
+# Create inconsistency flags
+merged_data <- merged_data %>%
+  mutate(
+    badwom   = ifelse(totwoman != HH12, 1, 0),  # Check total women
+    badcwom  = ifelse(totcwoman != HH13, 1, 0)   # Check completed women interviews
+  )
+# Filter for discrepancies (either total or completed interviews)
+discrepancies <- merged_data %>%
+  filter(badwom == 1 | badcwom == 1)
+
+# Report discrepancies
+if (nrow(discrepancies) > 0) {
+  cat("MICS5 Listing of inconsistencies between cases reported at household level and within the women's file:\n\n")
+  print(discrepancies %>% select(HH1, HH2, HH12, totwoman, HH13, totcwoman)) 
+} else {
+  cat("No inconsistencies found.\n")
+}
 
 #Task 2. CHECK WOMEN'S FILE AGAINST THE HOUSEHOLD FILE
 # Create check variable in household data
@@ -160,7 +185,20 @@ print(weighted_wm_freq_HH6_HH7)
 print(weighted_wm_freq_welevel)
 print(weighted_wm_freq_wage)
 
+#Task 4. Calculating and appending background variables (perhaps needs to be done before aggregating)
+#existing ethnicities in the data
+unique(data_hh_2014$HC1C)
 
+# Recode ethnicity (code provided in the syntax files, but how to group the ethnicities?)
+data_hh_2014 <- data_hh_2014 %>%
+  mutate(ethnicity = case_when(
+    HC1C == 1 ~ 1,
+    HC1C %in% c(2, 3) ~ 2,
+    HC1C == 4 ~ 3,
+    HC1C %in% c(8, 9) ~ 9,
+    TRUE ~ NA_real_
+  )) %>%
+  mutate(ethnicity = factor(ethnicity, levels = c(1, 2, 3, 9), labels = c("Group 1", "Group 2", "Group 3", "Missing/DK")))
 
 
 
