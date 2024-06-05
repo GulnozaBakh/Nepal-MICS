@@ -187,6 +187,20 @@ print(weighted_wm_freq_wage)
 
 #Task 4. Calculating and appending background variables 
 #existing ethnicities in the data
-unique(data_hh_2014$HC1C)
+unique(data_hh_2014$HC1C)  #need to know how to group ethnicities? 
 
+#Task 5. Create index for the types of practises followed
+# Define the columns related to practices
+practice_columns_wm <- c("UN13AA", "UN13AB", "UN13AC", "UN13AD", "UN13AE", "UN13AF", "UN13AG")
 
+# Filter to keep only "Yes" and "No" responses, excluding NA and "Missing"
+filtered_wm_data_practices <- data_wm_2014 %>%
+  select(all_of(practice_columns_wm)) %>%  
+  filter(if_any(all_of(practice_columns_wm), ~ .x %in% c("Yes", "No"))) 
+
+# Create the index
+practice_index <- filtered_wm_data_practices %>%
+  mutate(across(all_of(practice_columns_wm), ~ ifelse(.x == "Yes", 1, 0))) %>% 
+  rowwise() %>%
+  mutate(practice_index = sum(c_across(all_of(practice_columns_wm)))) %>%
+  ungroup()
