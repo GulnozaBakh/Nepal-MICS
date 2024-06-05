@@ -59,3 +59,33 @@ data_wm_2014_summary <- data_wm_2014 %>%
 data_wm_2014_summary %>%
   kbl(caption = "Women's region and type of place of residence by cluster") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
+
+#Task 1. CREATE AGGREGATE FILE FROM WOMAN DATA FILE
+# Create indicator variables (woman= each number of women in the dataset, cwoman= number of women completed or not completed interviews)
+data_wm_2014 <- data_wm_2014 %>%
+  mutate(
+    woman = 1,
+    cwoman = ifelse(WM7 == "Completed", 1, 0)
+  )
+# Aggregate data
+aggregate_data <- data_wm_2014 %>%
+  group_by(HH1, HH2) %>%
+  summarize(
+    totwoman = sum(woman, na.rm = TRUE),
+    totcwoman = sum(cwoman, na.rm = TRUE)
+  )
+# Merge the aggregated women's data with the household data
+merged_data <- data_hh_2014 %>%
+  left_join(aggregate_data, by = c("HH1", "HH2"))
+
+#the variables changed from 210 to 212, so we can check the column names
+colnames(merged_data)
+
+# Save the merged data
+write.csv(merged_data, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data.csv")
+
+
+
+
+
+
