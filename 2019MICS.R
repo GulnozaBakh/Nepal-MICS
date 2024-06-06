@@ -27,3 +27,23 @@ colnames(data_hh)
 colnames(data_wm)
 str(data_hh)
 str(data_wm)
+
+#Task1. CommonVarsHH. # Recode HHAGE (age of hh head) into HHAGEy
+data_hh <- data_hh %>%
+  mutate(
+    HHAGEy = case_when(
+      HHAGE >= 15 & HHAGE <= 19 ~ 1,
+      HHAGE >= 20 & HHAGE <= 24 ~ 2,
+      HHAGE >= 25 & HHAGE <= 29 ~ 3,
+      HHAGE >= 30 & HHAGE <= 34 ~ 4,
+      HHAGE >= 35 & HHAGE <= 39 ~ 5,
+      HHAGE >= 40 & HHAGE <= 44 ~ 6,
+      HHAGE >= 45 & HHAGE <= 49 ~ 7,
+      HHAGE >= 50 & HHAGE <= 59 ~ 8,
+      HHAGE >= 60 & HHAGE <= 69 ~ 9,
+      HHAGE >= 70 ~ 10
+    )
+  )
+
+
+
