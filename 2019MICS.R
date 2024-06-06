@@ -28,7 +28,7 @@ colnames(data_wm)
 str(data_hh)
 str(data_wm)
 
-#Task1. CommonVarsHH. # Recode HHAGE (age of hh head) into HHAGEy
+#Task1. CommonVarsHH. # Recode HHAGE (age of hh head) into HHAGEy (we can also group into 4 groups)
 data_hh <- data_hh %>%
   mutate(
     HHAGEy = case_when(
