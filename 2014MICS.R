@@ -204,5 +204,3 @@ practice_index <- filtered_wm_data_practices %>%
   rowwise() %>%
   mutate(practice_index = sum(c_across(all_of(practice_columns_wm)))) %>%
   ungroup()
-
-
