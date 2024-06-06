@@ -1,0 +1,13 @@
+install.packages("dplyr")
+install.packages("haven")
+install.packages("readr")
+install.packages("labelled")
+install.packages("survey")
+install.packages("kableExtra")
+
+library(dplyr)
+library(haven)
+library(readr)
+library(labelled)
+library(survey)
+library(kableExtra)
