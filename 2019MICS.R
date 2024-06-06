@@ -44,6 +44,17 @@ data_hh <- data_hh %>%
       HHAGE >= 70 ~ 10
     )
   )
-
+# Task2. CommonVarsWM. 
+#Recode MSTATUS into MSTATUS2 based on character strings
+data_wm <- data_wm %>%
+  mutate(
+    MSTATUS2 = case_when(
+      MSTATUS %in% c("Currently married/in union", "Formerly married/in union") ~ 1,
+      MSTATUS == "Never married/in union" ~ 2,
+      is.na(MSTATUS) ~ 9,
+      TRUE ~ NA_real_  # Handle unexpected values
+    ),
+    MSTATUS2 = factor(MSTATUS2, levels = c(1, 2, 9), labels = c("Ever married/in union", "Never married/in union", "Missing"))
+  )
 
 
