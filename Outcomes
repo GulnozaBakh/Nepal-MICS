@@ -1,4 +1,4 @@
-1.
+1. #UN16AA = Staying in a chaupadi/chhapro
 	Pearson's X^2: Rao & Scott adjustment
 
 data:  svychisq(~UN16AA + stratum, design = survey_design)
@@ -40,6 +40,38 @@ Pearson's X^2: Rao & Scott adjustment
 data:  svychisq(~UN16AA + helevel1, design = survey_design)
 F = 0.84311, ndf = 3.2534, ddf = 699.4858, p-value = 0.4783 #not statistically significant with UN16AA and education of hh head
 9. 
- 
+ Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + HHAGEx, design = survey_design)
+F = 5.4692, ndf = 5.627, ddf = 1209.813, p-value = 2.276e-05 #statistically significant with UN16AA and age of hh head
+10. 
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + HHSEX, design = survey_design)
+F = 1.7676, ndf = 1.6729, ddf = 359.6780, p-value = 0.178 #not statistically significant with UN16AA and sex of hh head
+11.
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + WAGE, design = survey_design)
+F = 0.59838, ndf = 9.5324, ddf = 2049.4688, p-value = 0.8087 #not statistically significant with UN16AA and age of women
+12.
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + CM4_grouped, design = survey_design)
+F = 3.2315, ndf = 2.5704, ddf = 552.6256, p-value = 0.02855 #statistically #significant with UN16AA and number of daughters living together
+13.
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + MSTATUS_grouped, design = survey_design)
+F = 2.5842, ndf = 1, ddf = 215, p-value = 0.1094 #not statistically significant with UN16AA and marital status 
+14. 
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + welevel1, design = survey_design)
+F = 6.5963, ndf = 2.8528, ddf = 613.3485, p-value = 0.0002856 #statistically significant with UN16AA and the education of women
+
+
+
+
 
 
