@@ -139,16 +139,46 @@ xtabs(~UN16AA + HH7, data=merged_data_new)
 # Convert "YES" to 1 and "NO" to 0 in column UN16AA
 merged_data_new$UN16AA <- ifelse(merged_data_new$UN16AA == "YES", 1, 
                                  ifelse(merged_data_new$UN16AA == "NO", 0, NA))
-
 # Check the transformation
 unique(merged_data_new$UN16AA)
 
 # Convert "YES" to 1 and "NO" to 0 in column UN16AB
 merged_data_new$UN16AB <- ifelse(merged_data_new$UN16AB == "YES", 1, 
                                  ifelse(merged_data_new$UN16AB == "NO", 0, NA))
-
 # Check the transformation
 unique(merged_data_new$UN16AB)
+
+# Convert "YES" to 1 and "NO" to 0 in column UN16AC
+merged_data_new$UN16AC <- ifelse(merged_data_new$UN16AC == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AC == "NO", 0, NA))
+# Check the transformation
+unique(merged_data_new$UN16AC)
+
+# Convert "YES" to 1 and "NO" to 0 in column UN16AC
+merged_data_new$UN16AD <- ifelse(merged_data_new$UN16AD == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AD == "NO", 0, NA))
+# Check the transformation
+unique(merged_data_new$UN16AD)
+# Convert "YES" to 1 and "NO" to 0 in column UN16AE
+merged_data_new$UN16AE <- ifelse(merged_data_new$UN16AE == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AE == "NO", 0, NA))
+# Check the transformation
+unique(merged_data_new$UN16AE)
+# Convert "YES" to 1 and "NO" to 0 in column UN16AF
+merged_data_new$UN16AF <- ifelse(merged_data_new$UN16AF == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AF == "NO", 0, NA))
+# Check the transformation
+unique(merged_data_new$UN16AF)
+# Convert "YES" to 1 and "NO" to 0 in column UN16AG
+merged_data_new$UN16AG <- ifelse(merged_data_new$UN16AG == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AG == "NO", 0, NA))
+# Check the transformation
+unique(merged_data_new$UN16AG)
+# Convert "YES" to 1 and "NO" to 0 in column UN16AH
+merged_data_new$UN16AH <- ifelse(merged_data_new$UN16AH == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AH == "NO", 0, NA))
+# Check the transformation
+unique(merged_data_new$UN16AH)
 
 # Combine low count categories for demonstration
 merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
