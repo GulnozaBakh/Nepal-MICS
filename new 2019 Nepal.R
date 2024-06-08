@@ -356,26 +356,16 @@ chi_test_result <- svychisq(~UN16AA + welevel1, design = survey_design)
 # Print the Chi-squared test result
 print(chi_test_result)
 
-#Create a weighted contingency table for chi-squared test
-contingency_table15 <- svytable(~UN16AB + welevel1, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table15 <- round(contingency_table15)
-# Print the contingency table
-print(rounded_contingency_table15)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AB + welevel1, design = survey_design)
+#Preparing the data for logistic regression: create factors
 
 
-# Convert "YES" to 1 and "NO" to 0 in column UN16AA
-merged_data_new$UN16AA <- ifelse(merged_data_new$UN16AA == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AA == "NO", 0, NA))
 
 
-# Re-run the logistic regression model
-logistic <- glm(UN16AA ~ MSTATUS, data=merged_data_new, family="binomial")
-summary(logistic)
-logistic2 <- glm(UN16AA ~ HH7+MSTATUS, data=merged_data_new, family="binomial")
+# Run the logistic regression model
+logistic1 <- glm(UN16AA ~ stratum, data=merged_data_new, family="binomial")
+summary(logistic1)
 
+exp(coef(logistic1)) #if you need to export odds ratio
 # Print the table with formatted output
 print(table1, formatOptions = list(big.mark = ",", digits = 2))
 
