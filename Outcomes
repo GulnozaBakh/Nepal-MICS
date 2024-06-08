@@ -5,14 +5,41 @@ data:  svychisq(~UN16AA + stratum, design = survey_design)
 F = 33.097, ndf = 5.3693, ddf = 1154.3993, p-value < 2.2e-16 #statistically significant with UN16AA and the region 
 2.
 Pearson's X^2: Rao & Scott adjustment
-3.
+
 data:  svychisq(~UN16AA + windex5r, design = survey_design)
 F = 8.7462, ndf = 3.3188, ddf = 713.5428, p-value = 4.374e-06 #statistically significant with UN16AA and wealth index
-4.
+3.
 Pearson's X^2: Rao & Scott adjustment
 
 data:  svychisq(~UN16AA + HH51, design = survey_design)
 F = 1.448, ndf = 5.2399, ddf = 1126.5845, p-value = 0.2016 #not statistically significant with UN16AA and number of children under age 5
+4.
+Pearson's X^2: Rao & Scott adjustment
 
+data:  svychisq(~UN16AA + HH52, design = survey_design)
+F = 1.2907, ndf = 8.5821, ddf = 1845.1537, p-value = 0.2396 #not statistically significant with UN16AA and number of children above age 5 
+5. 
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + HC1A_combined, design = survey_design)
+F = 2.9033, ndf = 3.4266, ddf = 736.7105, p-value = 0.02777 #statistically significant with UN16AA and religion 
+6.
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + EthnicityGroup, design = survey_design)
+F = 12.725, ndf = 6.6509, ddf = 1429.9539, p-value = 2.853e-15 #statistically significant with UN16AA and ethnicity
+
+7.
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + HC15, design = survey_design)
+F = 5.0046, ndf = 3.566, ddf = 766.681, p-value = 0.000944 #statistically significant with UN16AA and whether the hhs own agricultural land
+8. 
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + helevel1, design = survey_design)
+F = 0.84311, ndf = 3.2534, ddf = 699.4858, p-value = 0.4783 #not statistically significant with UN16AA and education of hh head
+9. 
+ 
 
 
