@@ -1,1 +1,18 @@
+1.
+	Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + stratum, design = survey_design)
+F = 33.097, ndf = 5.3693, ddf = 1154.3993, p-value < 2.2e-16 #statistically significant with UN16AA and the region 
+2.
+Pearson's X^2: Rao & Scott adjustment
+3.
+data:  svychisq(~UN16AA + windex5r, design = survey_design)
+F = 8.7462, ndf = 3.3188, ddf = 713.5428, p-value = 4.374e-06 #statistically significant with UN16AA and wealth index
+4.
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + HH51, design = survey_design)
+F = 1.448, ndf = 5.2399, ddf = 1126.5845, p-value = 0.2016 #not statistically significant with UN16AA and number of children under age 5
+
+
 
