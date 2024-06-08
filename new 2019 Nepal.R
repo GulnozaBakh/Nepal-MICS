@@ -366,31 +366,10 @@ logistic1 <- glm(UN16AA ~ stratum, data=merged_data_new, family="binomial")
 summary(logistic1)
 
 exp(coef(logistic1)) #if you need to export odds ratio
-# Print the table with formatted output
-print(table1, formatOptions = list(big.mark = ",", digits = 2))
-
-# Create a weighted contingency table for chi-squared test
-contingency_table <- svytable(~UN16AA + WAGE, design = survey_design)
-
-# Print the contingency table
-print(contingency_table)
-
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + stratum, design = survey_design)
-
-# Print the Chi-squared test result
-print(chi_test_result)
 
 
 
 
-# Re-run the logistic regression model
-logistic <- glm(UN16AA ~ MSTATUS, data=merged_data_new, family="binomial")
-summary(logistic)
-logistic2 <- glm(UN16AA ~ HH7+MSTATUS, data=merged_data_new, family="binomial")
-
-# Print the table with formatted output
-print(table1, formatOptions = list(big.mark = ",", digits = 2))
 
 
 
