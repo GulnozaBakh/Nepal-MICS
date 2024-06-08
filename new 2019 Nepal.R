@@ -21,7 +21,7 @@ library(broom)
 library(tableone)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
-
+ 
 #open dataset
 data_wm <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019/Nepal 2019/Nepal MICS6 SPSS Datasets/wm.sav")
 data_hh <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019/Nepal 2019/Nepal MICS6 SPSS Datasets/hh.sav")
@@ -334,9 +334,11 @@ rounded_contingency_table15 <- round(contingency_table15)
 print(rounded_contingency_table15)
 # Perform a Chi-squared test on the weighted contingency table
 chi_test_result <- svychisq(~UN16AB + welevel1, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
 
+
+# Convert "YES" to 1 and "NO" to 0 in column UN16AA
+merged_data_new$UN16AA <- ifelse(merged_data_new$UN16AA == "YES", 1, 
+                                 ifelse(merged_data_new$UN16AA == "NO", 0, NA))
 
 
 # Re-run the logistic regression model
@@ -347,6 +349,28 @@ logistic2 <- glm(UN16AA ~ HH7+MSTATUS, data=merged_data_new, family="binomial")
 # Print the table with formatted output
 print(table1, formatOptions = list(big.mark = ",", digits = 2))
 
+# Create a weighted contingency table for chi-squared test
+contingency_table <- svytable(~UN16AA + WAGE, design = survey_design)
+
+# Print the contingency table
+print(contingency_table)
+
+# Perform a Chi-squared test on the weighted contingency table
+chi_test_result <- svychisq(~UN16AA + stratum, design = survey_design)
+
+# Print the Chi-squared test result
+print(chi_test_result)
+
+
+
+
+# Re-run the logistic regression model
+logistic <- glm(UN16AA ~ MSTATUS, data=merged_data_new, family="binomial")
+summary(logistic)
+logistic2 <- glm(UN16AA ~ HH7+MSTATUS, data=merged_data_new, family="binomial")
+
+# Print the table with formatted output
+print(table1, formatOptions = list(big.mark = ",", digits = 2))
 
 
 
