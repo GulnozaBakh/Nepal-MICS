@@ -8,6 +8,7 @@ install.packages("psych")
 install.packages("tidyr")
 install.packages("broom")
 install.packages("tableone")
+install.packages("gtsummary")
 
 library(dplyr)
 library(haven)
@@ -19,6 +20,7 @@ library(psych)
 library(tidyr)
 library(broom)
 library(tableone)
+library(gtsummary)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
  
@@ -136,6 +138,51 @@ print(column_sums)
 #Table for the number of women following practices in different regions
 xtabs(~UN16AA + HH7, data=merged_data_new)
 
+# Combine low count categories for demonstration
+merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
+# Create a new grouped variable for CM4
+merged_data_new$CM4_grouped <- ifelse(merged_data_new$CM4 >= 3, "More than 2", as.character(merged_data_new$CM4))
+# Convert the new variable to a factor
+merged_data_new$CM4_grouped <- factor(merged_data_new$CM4_grouped, levels = c("0", "1", "2", "More than 2"))
+#Group MSTATUS into two groups
+merged_data_new$MSTATUS_grouped <- ifelse(merged_data_new$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
+# Convert the new variable to a factor
+merged_data_new$MSTATUS_grouped <- factor(merged_data_new$MSTATUS_grouped, levels = c("Ever Married", "Never Married"))
+
+# Count the number of NA values in each column
+na_counts <- colSums(is.na(merged_data_new))
+# Print the counts
+print(na_counts)
+
+# Create a new variable HH51_grouped in the dataset
+merged_data_new$HH51_grouped <- ifelse(merged_data_new$HH51 > 2, "3+", as.character(merged_data_new$HH51))
+# Convert to a factor with meaningful levels
+merged_data_new$HH51_grouped <- factor(merged_data_new$HH51_grouped, levels = c("0", "1", "2", "3+"))
+# Check the distribution of the new variable
+table(merged_data_new$HH51_grouped)
+# Create a new variable HH51_grouped in the dataset
+merged_data_new$HH52_grouped <- ifelse(merged_data_new$HH52 > 3, "4+", as.character(merged_data_new$HH52))
+# Convert to a factor with meaningful levels
+merged_data_new$HH52_grouped <- factor(merged_data_new$HH52_grouped, levels = c("0", "1", "2", "3", "4+"))
+# Check the distribution of the new variable
+table(merged_data_new$HH52_grouped)
+
+# Create the survey design object
+survey_design <- svydesign(
+  id = ~HH1,               # Primary sampling unit
+  strata = ~stratum,       # Stratification variable
+  weights = ~wmweight,     # Women's weight variable
+  data = merged_data_new     # Filtered data
+)
+
+summary(survey_design)
+svymean(~WB4, survey_design) #mean age of women
+
+#try to have a summary table
+d <- merged_data_new %>% select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, UN16AA, UN16AB, WAGE, welevel1, MSTATUS_grouped, CM4_grouped)
+tbl_summary(d)
+
+#####################
 # Convert "YES" to 1 and "NO" to 0 in column UN16AA
 merged_data_new$UN16AA <- ifelse(merged_data_new$UN16AA == "YES", 1, 
                                  ifelse(merged_data_new$UN16AA == "NO", 0, NA))
@@ -179,28 +226,6 @@ merged_data_new$UN16AH <- ifelse(merged_data_new$UN16AH == "YES", 1,
                                  ifelse(merged_data_new$UN16AH == "NO", 0, NA))
 # Check the transformation
 unique(merged_data_new$UN16AH)
-
-# Combine low count categories for demonstration
-merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
-# Create a new grouped variable for CM4
-merged_data_new$CM4_grouped <- ifelse(merged_data_new$CM4 >= 3, "More than 2", as.character(merged_data_new$CM4))
-# Convert the new variable to a factor
-merged_data_new$CM4_grouped <- factor(merged_data_new$CM4_grouped, levels = c("0", "1", "2", "More than 2"))
-#Group MSTATUS into two groups
-merged_data_new$MSTATUS_grouped <- ifelse(merged_data_new$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
-# Convert the new variable to a factor
-merged_data_new$MSTATUS_grouped <- factor(merged_data_new$MSTATUS_grouped, levels = c("Ever Married", "Never Married"))
-
-# Create the survey design object
-survey_design <- svydesign(
-  id = ~HH1,               # Primary sampling unit
-  strata = ~stratum,       # Stratification variable
-  weights = ~wmweight,     # Women's weight variable
-  data = merged_data_new     # Filtered data
-)
-
-summary(survey_design)
-svymean(~WB4, survey_design) #mean age of women
 
 # 1. Create a weighted contingency table for chi-squared test
 contingency_table <- svytable(~UN16AA + stratum, design = survey_design)
@@ -356,20 +381,39 @@ chi_test_result <- svychisq(~UN16AA + welevel1, design = survey_design)
 # Print the Chi-squared test result
 print(chi_test_result)
 
-#Preparing the data for logistic regression: create factors
-
 
 
 
 # Run the logistic regression model
 logistic1 <- glm(UN16AA ~ stratum, data=merged_data_new, family="binomial")
 summary(logistic1)
+logistic2 <- glm(UN16AA ~ windex5r, data=merged_data_new, family="binomial")
+summary(logistic2)
+logistic3 <- glm(UN16AA ~ HH51, data=merged_data_new, family="binomial")
+summary(logistic3)
+logistic4 <- glm(UN16AA ~ HH52, data=merged_data_new, family="binomial")
+summary(logistic4)
+logistic5 <- svyglm(formula = UN16AA ~ HC1A_combined, design = survey_design, family = quasibinomial())
+summary(logistic5)
+logistic6 <- svyglm(formula = UN16AA ~ EthnicityGroup, design = survey_design, family = quasibinomial())
+summary(logistic6)
+logistic7 <- glm(UN16AA ~ HC15, data=merged_data_new, family="binomial")
+summary(logistic7)
+
+logistic_survey1 <- svyglm(UN16AA ~ HC1A, design = survey_design, family = quasibinomial())
+summary(logistic_survey1)
+
+logistic7 <- glm(UN16AA ~ HC1A, data=merged_data_new, family="binomial")
+summary(logistic7)
+
 
 exp(coef(logistic1)) #if you need to export odds ratio
 
 
 
 
+#Preparing the data for logistic regression: create factors
+attr(merged_data_new$stratum, "label") == "Region"
 
 
 
@@ -391,7 +435,10 @@ data_hh$HHAGEx <- NULL
 rm(merged_data_hh_wm)
 
 
-
+xtabs(~UN16AA + HH7, data=merged_data_new)
 # Count the number of occurrences of each category in the WM17 column
 table(merged_data_hh_wm$WM17)
 table(merged_data_hh_wm$HH6)
+
+logistic_survey2 <- svyglm(UN16AA ~ windex5r, design = survey_design, family = quasibinomial())
+summary(logistic_survey2)
