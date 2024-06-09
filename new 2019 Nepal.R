@@ -109,6 +109,22 @@ selected_data_wm <- filtered_data_wm %>%
 # Merge the datasets on HH1 and HH2
 merged_data_new <- merge(selected_data_hh, selected_data_wm, by = c("HH1", "HH2"))
 
+# Filter out rows with "No response" in any of the specified variables
+updated_data <- merged_data_new %>%
+  filter(
+    UN16AA != "No response",
+    UN16AB != "No response",
+    UN16AC != "No response",
+    UN16AD != "No response",
+    UN16AE != "No response",
+    UN16AF != "No response",
+    UN16AG != "No response",
+    UN16AH != "No response"
+  )
+
+# Verify the filtering
+summary(updated_data)
+
 # Define the columns related to practices
 practice_columns_wm <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF", "UN16AG", "UN16AH")
 
@@ -178,8 +194,15 @@ survey_design <- svydesign(
 summary(survey_design)
 svymean(~WB4, survey_design) #mean age of women
 
-#try to have a summary table
-d <- merged_data_new %>% select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, UN16AA, UN16AB, WAGE, welevel1, MSTATUS_grouped, CM4_grouped)
+# Using table to count the number of each factor level including NA
+count_un16aa <- table(addNA(updated_data$UN16AH))
+print(count_un16aa)
+         
+# Select the desired variables including the new summary index
+d <- merged_data_new %>% 
+  select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, menstrual_index, WAGE, welevel1, MSTATUS_grouped, CM4_grouped)
+
+# Create the summary table
 tbl_summary(d)
 
 #####################
