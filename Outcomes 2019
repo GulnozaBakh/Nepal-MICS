@@ -1,4 +1,4 @@
-Weighted Frequencies #to check the difference between weighted and unweighted
+Weighted Frequencies #to check the difference between weighted and unweighted for comparison
 stratum
       Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
                     566.3556                     344.8996                     315.5805 
@@ -22,4 +22,33 @@ Sudoorpaschim province Rural
       mean     SE
 WB4 29.106 0.1538
 #######
+#Bivariate Logistic Regression
+1. Weighted  Call:
+svyglm(formula = UN16AA ~ stratum, design = hh_design, family = quasibinomial)
 
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                          -6.6071     0.7268  -9.091  < 2e-16 *** Bagmati Province Rural 
+stratumGandaki province Rural         1.4974     0.9119   1.642   0.1021    
+stratumKarnali province Rural         4.5113     0.8394   5.374 2.05e-07 ***
+stratumProvince 1 Rural               1.5606     0.8456   1.846   0.0664 .  
+stratumProvince 2 Rural               1.4928     0.8757   1.705   0.0897 .  
+stratumProvince 5 Rural               1.9645     0.8230   2.387   0.0179 *  
+stratumSudoorpaschim province Rural   5.4392     0.7999   6.800 1.08e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 9
+#######chi-square test for comparison
+Pearson's X^2: Rao & Scott adjustment
+
+data:  svychisq(~UN16AA + stratum, hh_design)
+F = 50.266, ndf = 2.7501, ddf = 591.2739, p-value < 2.2e-16
+#############
+2. 
