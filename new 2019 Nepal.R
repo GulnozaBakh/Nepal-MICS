@@ -46,6 +46,19 @@ glimpse(data_wm)
 # Use subset to filter only cases where the interview is completed and only rural areas
 filtered_data_wm <- subset(data_wm, WM17 == "COMPLETED" & HH6 == "RURAL")
 
+# Filter out rows with "No response" in any of the specified variables using subset
+updated_data <- subset(filtered_data_wm, 
+                       UN16AA != "No response" &
+                         UN16AB != "No response" &
+                         UN16AC != "No response" &
+                         UN16AD != "No response" &
+                         UN16AE != "No response" &
+                         UN16AF != "No response" &
+                         UN16AG != "No response" &
+                         UN16AH != "No response")
+# Verify the filtering
+summary(updated_data)
+
 # Define the mapping of each ethnicity to its group
 ethnicity_mapping <- list(
   "Brahman/Chhetri" = c("Brahman - Hill", "Chhetree", "Thakuri", "Sanyasi/Dashnami", "Brahman - Tarai", "Rajput", "Kayastha"),
@@ -103,27 +116,11 @@ selected_data_hh <- data_hh %>%
   select(HH1, HH2, HH6, HH7, HH49, stratum, windex5r, HH51, HH52, HC1A, EthnicityGroup, HC15, helevel1, hhweight, HHAGEx, HHSEX, HHAGE)
 
 # Select relevant variables from the women's dataset
-selected_data_wm <- filtered_data_wm %>%
+selected_data_wm <- updated_data %>%
   select(HH1, HH2, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH, WAGE, WM17, CM4, MSTATUS, welevel1, wmweight, WB4)
 
 # Merge the datasets on HH1 and HH2
 merged_data_new <- merge(selected_data_hh, selected_data_wm, by = c("HH1", "HH2"))
-
-# Filter out rows with "No response" in any of the specified variables
-updated_data <- merged_data_new %>%
-  filter(
-    UN16AA != "No response",
-    UN16AB != "No response",
-    UN16AC != "No response",
-    UN16AD != "No response",
-    UN16AE != "No response",
-    UN16AF != "No response",
-    UN16AG != "No response",
-    UN16AH != "No response"
-  )
-
-# Verify the filtering
-summary(updated_data)
 
 # Define the columns related to practices
 practice_columns_wm <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF", "UN16AG", "UN16AH")
@@ -152,7 +149,7 @@ summary(data_numeric)
 column_sums <- colSums(data_numeric, na.rm = TRUE)
 print(column_sums)
 #Table for the number of women following practices in different regions
-xtabs(~UN16AA + HH7, data=merged_data_new)
+xtabs(~UN16AA + HH7, data=updated_data)
 
 # Combine low count categories for demonstration
 merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
@@ -183,6 +180,35 @@ merged_data_new$HH52_grouped <- factor(merged_data_new$HH52_grouped, levels = c(
 # Check the distribution of the new variable
 table(merged_data_new$HH52_grouped)
 
+# Convert character variables to factors
+merged_data_new <- merged_data_new %>%
+  mutate(
+    HH6 = as.factor(HH6),
+    HH7 = as.factor(HH7),
+    stratum = as.factor(stratum),
+    windex5r = as.factor(windex5r),
+    HC1A = as.factor(HC1A),
+    EthnicityGroup = as.factor(EthnicityGroup),
+    HC15 = as.factor(HC15),
+    helevel1 = as.factor(helevel1),
+    HHSEX = as.factor(HHSEX),
+    UN16AA = as.factor(UN16AA),
+    UN16AB = as.factor(UN16AB),
+    UN16AC = as.factor(UN16AC),
+    UN16AD = as.factor(UN16AD),
+    UN16AE = as.factor(UN16AE),
+    UN16AF = as.factor(UN16AF),
+    UN16AG = as.factor(UN16AG),
+    UN16AH = as.factor(UN16AH),
+    WAGE = as.factor(WAGE),
+    WM17 = as.factor(WM17),
+    welevel1 = as.factor(welevel1),
+    HC1A_combined = as.factor(HC1A_combined)
+  )
+
+# Verify the conversion
+str(merged_data_new)
+
 # Create the survey design object
 survey_design <- svydesign(
   id = ~HH1,               # Primary sampling unit
@@ -190,20 +216,54 @@ survey_design <- svydesign(
   weights = ~wmweight,     # Women's weight variable
   data = merged_data_new     # Filtered data
 )
-
+ 
 summary(survey_design)
 svymean(~WB4, survey_design) #mean age of women
 
 # Using table to count the number of each factor level including NA
-count_un16aa <- table(addNA(updated_data$UN16AH))
+count_un16aa <- table(addNA(updated_data$UN16AA))
 print(count_un16aa)
          
 # Select the desired variables including the new summary index
 d <- merged_data_new %>% 
-  select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, menstrual_index, WAGE, welevel1, MSTATUS_grouped, CM4_grouped)
+  select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, WAGE, welevel1, MSTATUS_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
 
-# Create the summary table
-tbl_summary(d)
+# Example variable labels
+variable_labels <- list(
+  stratum = "Region",
+  windex5r = "Rural Wealth Index Quintile",
+  HH51_grouped = "Number of Children Under Age 5",
+  HH52_grouped = "Number of Children Age 5-17",
+  EthnicityGroup = "Ethnicity of Household Head",
+  HC1A_combined = "Religion of Household Head",
+  HC15 = "Owns Agricultural Land",
+  helevel1 = "Education Level of Household Head",
+  HHAGEx = "Age of Household Head",
+  HHSEX = "Sex of Household Head",
+  WAGE = "Age Range of Women",
+  welevel1 = "Education of Women",
+  UN16AA = "Staying in a chaupadi/chhapro",
+  UN16AB = "Staying in a separate room ",
+  UN16AC = "Staying in the cowshed",
+  UN16AD = "Eating in a separate place",
+  UN16AE = "Bathing in a separate place",
+  UN16AF = "Staying away from school or work",
+  UN16AG = "Staying away from social gatherings",
+  UN16AH = "Staying away from religious work "
+)
+
+# Create the summary table with custom labels
+summary_table <- tbl_summary(
+  d,
+  label = variable_labels
+)
+ # Display the summary table
+summary_table
+ #Save it 
+summary_table <- tbl_summary(d)
+summary_gt <- as_gt(summary_table)
+gtsave(summary_gt, filename = "summary_table.png")
+
 
 #####################
 # Convert "YES" to 1 and "NO" to 0 in column UN16AA
