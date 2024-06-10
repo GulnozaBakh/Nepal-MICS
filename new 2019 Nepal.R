@@ -21,6 +21,7 @@ library(tidyr)
 library(broom)
 library(tableone)
 library(gtsummary)
+library(gt)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
  
@@ -208,22 +209,7 @@ merged_data_new <- merged_data_new %>%
 # Verify the conversion
 str(merged_data_new)
 write.csv(merged_data_new, file = "/Users/nasib/Desktop/Nepal MICS/merged_data_with_NAs_2019.csv")
-
-# Create the survey design object
-survey_design <- svydesign(
-  id = ~HH1,               # Primary sampling unit
-  strata = ~stratum,       # Stratification variable
-  weights = ~wmweight,     # Women's weight variable
-  data = merged_data_new     # Filtered data
-)
- 
-summary(survey_design)
-svymean(~WB4, survey_design) #mean age of women
-
-# Using table to count the number of each factor level including NA
-count_un16aa <- table(addNA(updated_data$UN16AA))
-print(count_un16aa)
-         
+####################################Creating a frequency distribution table on unweighted data
 # Select the desired variables including the new summary index
 d <- merged_data_new %>% 
   select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, WAGE, welevel1, MSTATUS_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
@@ -235,6 +221,7 @@ variable_labels <- list(
   HH51_grouped = "Number of Children Under Age 5",
   HH52_grouped = "Number of Children Age 5-17",
   EthnicityGroup = "Ethnicity of Household Head",
+  MSTATUS_grouped = "Marital Status",
   HC1A_combined = "Religion of Household Head",
   HC15 = "Owns Agricultural Land",
   helevel1 = "Education Level of Household Head",
@@ -251,18 +238,55 @@ variable_labels <- list(
   UN16AG = "Staying away from social gatherings",
   UN16AH = "Staying away from religious work "
 )
-
 # Create the summary table with custom labels
 summary_table <- tbl_summary(
   d,
   label = variable_labels
 )
- # Display the summary table
+# Display the summary table
 summary_table
- #Save it 
-summary_table <- tbl_summary(d)
+#Save it 
 summary_gt <- as_gt(summary_table)
-gtsave(summary_gt, filename = "summary_table.png")
+gtsave(summary_gt, filename = "summary_table1.png")
+##########################################
+# Create survey design objects for each level
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
+wm_design <- svydesign(id = ~HH1, weights = ~wmweight,strata = ~stratum, data = merged_data_new)
+
+
+# Create the survey design object
+final <- svydesign(
+  id = ~HH1,               # Primary sampling unit
+  strata = ~stratum,       # Stratification variable
+  weights = ~wmweight,     # Women's weight variable
+  data = merged_data_new     # Filtered data
+)
+summary(survey_design)
+svymean(~WB4, hh_design) #mean age of women
+svymean(~WB4, wm_design)
+mean(merged_data_new$WB4) #mean age without applying weights
+
+# Unweighted frequencies for household 
+if (nrow(merged_data_new) > 0) { 
+  cat('!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
+  unweighted_freq <- lapply(merged_data_new[c("stratum")], table)
+  print(unweighted_freq)
+} else {
+  cat('No rows match the filtering criteria.\n')
+}
+# Weighted frequencies for household
+cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
+weighted_freq <- svytable(~stratum, hh_design)
+print(weighted_freq)
+
+
+
+
+
+# Using table to count the number of each factor level including NA
+count_un16aa <- table(addNA(updated_data$UN16AA))
+print(count_un16aa)
+         
 
 
 #####################
