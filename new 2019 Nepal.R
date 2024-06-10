@@ -205,9 +205,9 @@ merged_data_new <- merged_data_new %>%
     welevel1 = as.factor(welevel1),
     HC1A_combined = as.factor(HC1A_combined)
   )
-
 # Verify the conversion
 str(merged_data_new)
+write.csv(merged_data_new, file = "/Users/nasib/Desktop/Nepal MICS/merged_data_with_NAs_2019.csv")
 
 # Create the survey design object
 survey_design <- svydesign(
