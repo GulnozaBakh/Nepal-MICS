@@ -1,0 +1,25 @@
+Weighted Frequencies #to check the difference between weighted and unweighted
+stratum
+      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                    566.3556                     344.8996                     315.5805 
+            Province 1 Rural             Province 2 Rural             Province 5 Rural 
+                    766.8735                     606.4822                     960.0265 
+Sudoorpaschim province Rural 
+                    444.4476 
+ # Unweighted frequencies for household 
+
+      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                         749                          632                          697 
+            Province 1 Rural             Province 2 Rural             Province 5 Rural 
+                         837                          825                          993 
+Sudoorpaschim province Rural 
+                         768 
+
+######
+#mean age of women without applying weights
+[1] 28.77277
+#mean age after applying weights
+      mean     SE
+WB4 29.106 0.1538
+#######
+
