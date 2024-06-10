@@ -253,7 +253,7 @@ gtsave(summary_gt, filename = "summary_table1.png")
 hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
 wm_design <- svydesign(id = ~HH1, weights = ~wmweight,strata = ~stratum, data = merged_data_new)
 
-
+scsc
 # Create the survey design object
 final <- svydesign(
   id = ~HH1,               # Primary sampling unit
