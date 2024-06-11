@@ -22,6 +22,7 @@ library(broom)
 library(tableone)
 library(gtsummary)
 library(gt)
+library(stargazer)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
  
@@ -249,19 +250,15 @@ summary_table
 summary_gt <- as_gt(summary_table)
 gtsave(summary_gt, filename = "summary_table1.png")
 ##########################################
+#convert YEs and NO to 1 and 0 in the practices columns
+merged_data_new <- merged_data_new %>%
+  mutate(across(c(UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
+
 # Create survey design objects for each level
 hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
 wm_design <- svydesign(id = ~HH1, weights = ~wmweight,strata = ~stratum, data = merged_data_new)
 
-scsc
-# Create the survey design object
-final <- svydesign(
-  id = ~HH1,               # Primary sampling unit
-  strata = ~stratum,       # Stratification variable
-  weights = ~wmweight,     # Women's weight variable
-  data = merged_data_new     # Filtered data
-)
-summary(survey_design)
+summary(hh_design)
 svymean(~WB4, hh_design) #mean age of women
 svymean(~WB4, wm_design)
 mean(merged_data_new$WB4) #mean age without applying weights
@@ -278,61 +275,169 @@ if (nrow(merged_data_new) > 0) {
 cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
 weighted_freq <- svytable(~stratum, hh_design)
 print(weighted_freq)
+##############################
+#1. Unweighted Chi-Square Test
+unweighted_table <- table(merged_data_new$UN16AA, merged_data_new$stratum)
+unweighted_chisq_test <- chisq.test(unweighted_table)
+print(unweighted_chisq_test)
 
+# Weighted Chi-Square Test
+weighted_chisq_test <- svychisq(~UN16AA + stratum, hh_design)
+print(weighted_chisq_test)
 
+# Unweighted logistic regression
+unweighted_logit <- glm(UN16AA ~ stratum, data = merged_data_new, family = binomial)
+summary(unweighted_logit)
+# Weighted logistic regression
+weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
+summary(weighted_logit)
+#to check the frequency 
+xtabs(~UN16AA + stratum, data=merged_data_new)
+svytable(~UN16AA + stratum, hh_design)
 
+#2. Unweighted logistic regression
+unweighted_logit2 <- glm(UN16AA ~ windex5r, data = merged_data_new, family = binomial)
+summary(unweighted_logit2)
+# Weighted logistic regression
+weighted_logit2 <- svyglm(UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
+summary(weighted_logit2)
+#to check the frequency 
+xtabs(~UN16AA + windex5r, data=merged_data_new)
+svytable(~UN16AA + windex5r, hh_design)
 
-
-# Using table to count the number of each factor level including NA
-count_un16aa <- table(addNA(updated_data$UN16AA))
-print(count_un16aa)
+#3. Unweighted logistic regression
+unweighted_logit3 <- glm(UN16AA ~ HH51, data = merged_data_new, family = binomial)
+summary(unweighted_logit3)
+# Weighted logistic regression
+weighted_logit3 <- svyglm(UN16AA ~ HH51, design = hh_design, family = quasibinomial)
+summary(weighted_logit3)
+#to check the frequency 
+xtabs(~UN16AA + HH51, data=merged_data_new)
+svytable(~UN16AA + HH51, hh_design)
          
+#4. Unweighted logistic regression
+unweighted_logit4 <- glm(UN16AA ~ HH52, data = merged_data_new, family = binomial)
+summary(unweighted_logit4)
+# Weighted logistic regression
+weighted_logit4 <- svyglm(UN16AA ~ HH52, design = hh_design, family = quasibinomial)
+summary(weighted_logit4)
+#to check the frequency 
+xtabs(~UN16AA + HH52, data=merged_data_new)
+svytable(~UN16AA + HH52, hh_design)
+
+#5. Unweighted logistic regression
+unweighted_logit5 <- glm(UN16AA ~ HC1A_combined, data = merged_data_new, family = binomial)
+summary(unweighted_logit5)
+# Weighted logistic regression
+weighted_logit5 <- svyglm(UN16AA ~ HC1A_combined, design = hh_design, family = quasibinomial)
+summary(weighted_logit5)
+#to check the frequency 
+xtabs(~UN16AA + HC1A_combined, data=merged_data_new)
+svytable(~UN16AA + HC1A_combined, hh_design)
+
+#6. Unweighted logistic regression
+unweighted_logit6 <- glm(UN16AA ~ helevel1, data = merged_data_new, family = binomial)
+summary(unweighted_logit6)
+# Weighted logistic regression
+weighted_logit6 <- svyglm(UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
+summary(weighted_logit6)
+#to check the frequency 
+xtabs(~UN16AA + helevel1, data=merged_data_new)
+svytable(~UN16AA + helevel1, hh_design)
+
+#7.  Unweighted logistic regression
+unweighted_logit7 <- glm(UN16AA ~ HHAGEx, data = merged_data_new, family = binomial)
+summary(unweighted_logit7)
+# Weighted logistic regression
+weighted_logit7 <- svyglm(UN16AA ~ HHAGEx, design = hh_design, family = quasibinomial)
+summary(weighted_logit7)
+#to check the frequency 
+xtabs(~UN16AA + HHAGEx, data=merged_data_new)
+svytable(~UN16AA + HHAGEx, hh_design)
+
+#8.  Unweighted logistic regression
+unweighted_logit8 <- glm(UN16AA ~ HHSEX, data = merged_data_new, family = binomial)
+summary(unweighted_logit8)
+# Weighted logistic regression
+weighted_logit8 <- svyglm(UN16AA ~ HHSEX, design = hh_design, family = quasibinomial)
+summary(weighted_logit8)
+#to check the frequency 
+xtabs(~UN16AA + HHSEX, data=merged_data_new)
+svytable(~UN16AA + HHSEX, hh_design)
+
+#9.  Unweighted logistic regression
+unweighted_logit9 <- glm(UN16AA ~ WAGE, data = merged_data_new, family = binomial)
+summary(unweighted_logit9)
+# Weighted logistic regression
+weighted_logit9 <- svyglm(UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
+summary(weighted_logit9)
+#to check the frequency 
+xtabs(~UN16AA + WAGE, data=merged_data_new)
+svytable(~UN16AA + WAGE, hh_design)
+
+#10.  Unweighted logistic regression
+unweighted_logit10 <- glm(UN16AA ~ CM4, data = merged_data_new, family = binomial)
+summary(unweighted_logit10)
+# Weighted logistic regression
+weighted_logit10 <- svyglm(UN16AA ~ CM4, design = hh_design, family = quasibinomial)
+summary(weighted_logit10)
+#to check the frequency 
+xtabs(~UN16AA + CM4, data=merged_data_new)
+svytable(~UN16AA + CM4, hh_design)
+
+#11.  Unweighted logistic regression
+unweighted_logit11 <- glm(UN16AA ~ MSTATUS_grouped, data = merged_data_new, family = binomial)
+summary(unweighted_logit11)
+# Weighted logistic regression
+weighted_logit11 <- svyglm(UN16AA ~ MSTATUS_grouped, design = hh_design, family = quasibinomial)
+summary(weighted_logit11)
+#to check the frequency 
+xtabs(~UN16AA + MSTATUS_grouped, data=merged_data_new)
+svytable(~UN16AA + MSTATUS_grouped, hh_design)
+attr(merged_data_new$welevel1, "label") == "Education of Women"
+#12.  Unweighted logistic regression
+unweighted_logit12 <- glm(UN16AA ~ welevel1, data = merged_data_new, family = binomial)
+summary(unweighted_logit12)
+# Weighted logistic regression
+weighted_logit12 <- svyglm(UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
+summary(weighted_logit12)
+
+#to check the frequency 
+xtabs(~UN16AA + welevel1, data=merged_data_new)
+svytable(~UN16AA + welevel1, hh_design)
+
+# Get the coefficients from your model
+coefs12 <- coef(weighted_logit12)  
+
+# Exponentiate the coefficients to get the odds ratios
+ORs <- exp(coefs12)
+
+# Calculate confidence intervals for the odds ratios
+ci <- exp(confint(weighted_logit12))  
+
+# Print the results
+print(ORs)
+print(ci)
+
+#Label the variables 
+attr(merged_data_new$welevel1, "label") <- "Education of Women"
+tbl_regression(weighted_logit12, exponentiate = TRUE)
+tbl_regression(weighted_logit11, exponentiate = TRUE)
+tbl_regression(weighted_logit10, exponentiate = TRUE)
+tbl_regression(weighted_logit9, exponentiate = TRUE)
+tbl_regression(weighted_logit8, exponentiate = TRUE)
+tbl_regression(weighted_logit7, exponentiate = TRUE)
+tbl_regression(weighted_logit6, exponentiate = TRUE)
+tbl_regression(weighted_logit5, exponentiate = TRUE)
+tbl_regression(weighted_logit4, exponentiate = TRUE)
+tbl_regression(weighted_logit3, exponentiate = TRUE)
+tbl_regression(weighted_logit2, exponentiate = TRUE)
+tbl_regression(weighted_logit, exponentiate = TRUE)
 
 
-#####################
-# Convert "YES" to 1 and "NO" to 0 in column UN16AA
-merged_data_new$UN16AA <- ifelse(merged_data_new$UN16AA == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AA == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AA)
 
-# Convert "YES" to 1 and "NO" to 0 in column UN16AB
-merged_data_new$UN16AB <- ifelse(merged_data_new$UN16AB == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AB == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AB)
 
-# Convert "YES" to 1 and "NO" to 0 in column UN16AC
-merged_data_new$UN16AC <- ifelse(merged_data_new$UN16AC == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AC == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AC)
 
-# Convert "YES" to 1 and "NO" to 0 in column UN16AC
-merged_data_new$UN16AD <- ifelse(merged_data_new$UN16AD == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AD == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AD)
-# Convert "YES" to 1 and "NO" to 0 in column UN16AE
-merged_data_new$UN16AE <- ifelse(merged_data_new$UN16AE == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AE == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AE)
-# Convert "YES" to 1 and "NO" to 0 in column UN16AF
-merged_data_new$UN16AF <- ifelse(merged_data_new$UN16AF == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AF == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AF)
-# Convert "YES" to 1 and "NO" to 0 in column UN16AG
-merged_data_new$UN16AG <- ifelse(merged_data_new$UN16AG == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AG == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AG)
-# Convert "YES" to 1 and "NO" to 0 in column UN16AH
-merged_data_new$UN16AH <- ifelse(merged_data_new$UN16AH == "YES", 1, 
-                                 ifelse(merged_data_new$UN16AH == "NO", 0, NA))
-# Check the transformation
-unique(merged_data_new$UN16AH)
 
 # 1. Create a weighted contingency table for chi-squared test
 contingency_table <- svytable(~UN16AA + stratum, design = survey_design)
@@ -524,7 +629,6 @@ attr(merged_data_new$stratum, "label") == "Region"
 
 
 
-
   
     
 #Export data to csv
@@ -549,3 +653,8 @@ table(merged_data_hh_wm$HH6)
 
 logistic_survey2 <- svyglm(UN16AA ~ windex5r, design = survey_design, family = quasibinomial())
 summary(logistic_survey2)
+
+
+# Using table to count the number of each factor level including NA
+count_un16aa <- table(addNA(updated_data$UN16AA))
+print(count_un16aa)
