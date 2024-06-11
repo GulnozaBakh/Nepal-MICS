@@ -276,24 +276,38 @@ cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
 weighted_freq <- svytable(~stratum, hh_design)
 print(weighted_freq)
 ##############################
-#1. Unweighted Chi-Square Test
-unweighted_table <- table(merged_data_new$UN16AA, merged_data_new$stratum)
-unweighted_chisq_test <- chisq.test(unweighted_table)
-print(unweighted_chisq_test)
+attr(merged_data_new[["stratum"]], "label") <- "Region"
+attr(merged_data_new[["windex5r"]], "label") <- "Rural Wealth Index Quintile"
+attr(merged_data_new[["HH51_grouped"]], "label") <- "Number of Chilren Aged below 5"
+attr(merged_data_new[["HH52_grouped"]], "label") <- "Number of Chilren Aged 5-17"
+attr(merged_data_new[["HC1A_combined"]], "label") <- "Religion"
+attr(merged_data_new[["EthnicityGroup"]], "label") <- "Ethnicity"
+attr(merged_data_new[["HC15"]], "label") <- "Owns Agricultural Land"
+attr(merged_data_new[["helevel1"]], "label") <- "Education of Household Head"
+attr(merged_data_new[["HHAGEx"]], "label") <- "Age of Household Head"
+attr(merged_data_new[["HHSEX"]], "label") <- "Sex of Household Head"
+attr(merged_data_new[["UN16AA"]], "label") <- "Staying in a chaupadi/chhapro"
+attr(merged_data_new[["UN16AB"]], "label") <- "Staying in a separate room "
+attr(merged_data_new[["UN16AC"]], "label") <- "Staying in the cowshed"
+attr(merged_data_new[["UN16AD"]], "label") <- "Eating in a separate place"
+attr(merged_data_new[["UN16AE"]], "label") <- "Bathing in a separate place"
+attr(merged_data_new[["UN16AF"]], "label") <- "Staying away from school or work"
+attr(merged_data_new[["UN16AG"]], "label") <- "Staying away from social gatherings"
+attr(merged_data_new[["UN16AH"]], "label") <- "Staying away from religious work "
+attr(merged_data_new[["WAGE"]], "label") <- "Age of Women "
+attr(merged_data_new[["CM4"]], "label") <- "Number of daughters living together "
+attr(merged_data_new[["MSTATUS_grouped"]], "label") <- "Marital Status "
+attr(merged_data_new[["welevel1"]], "label") <- "Education of women"
 
-# Weighted Chi-Square Test
-weighted_chisq_test <- svychisq(~UN16AA + stratum, hh_design)
-print(weighted_chisq_test)
-
-# Unweighted logistic regression
+#1.Unweighted logistic regression
 unweighted_logit <- glm(UN16AA ~ stratum, data = merged_data_new, family = binomial)
 summary(unweighted_logit)
 # Weighted logistic regression
 weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
 summary(weighted_logit)
 #to check the frequency 
-xtabs(~UN16AA + stratum, data=merged_data_new)
-svytable(~UN16AA + stratum, hh_design)
+xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
+svytable(~UN16AA + stratum, hh_design) #for weighted
 
 #2. Unweighted logistic regression
 unweighted_logit2 <- glm(UN16AA ~ windex5r, data = merged_data_new, family = binomial)
@@ -306,24 +320,24 @@ xtabs(~UN16AA + windex5r, data=merged_data_new)
 svytable(~UN16AA + windex5r, hh_design)
 
 #3. Unweighted logistic regression
-unweighted_logit3 <- glm(UN16AA ~ HH51, data = merged_data_new, family = binomial)
+unweighted_logit3 <- glm(UN16AA ~ HH51_grouped, data = merged_data_new, family = binomial)
 summary(unweighted_logit3)
 # Weighted logistic regression
-weighted_logit3 <- svyglm(UN16AA ~ HH51, design = hh_design, family = quasibinomial)
+weighted_logit3 <- svyglm(UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit3)
 #to check the frequency 
-xtabs(~UN16AA + HH51, data=merged_data_new)
-svytable(~UN16AA + HH51, hh_design)
+xtabs(~UN16AA + HH51_grouped, data=merged_data_new)
+svytable(~UN16AA + HH51_grouped, hh_design)
          
-#4. Unweighted logistic regression
-unweighted_logit4 <- glm(UN16AA ~ HH52, data = merged_data_new, family = binomial)
+#4 Unweighted logistic regression
+unweighted_logit4 <- glm(UN16AA ~ HH52_grouped, data = merged_data_new, family = binomial)
 summary(unweighted_logit4)
 # Weighted logistic regression
-weighted_logit4 <- svyglm(UN16AA ~ HH52, design = hh_design, family = quasibinomial)
+weighted_logit4 <- svyglm(UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit4)
 #to check the frequency 
-xtabs(~UN16AA + HH52, data=merged_data_new)
-svytable(~UN16AA + HH52, hh_design)
+xtabs(~UN16AA + HH52_grouped, data=merged_data_new)
+svytable(~UN16AA + HH52_grouped, hh_design)
 
 #5. Unweighted logistic regression
 unweighted_logit5 <- glm(UN16AA ~ HC1A_combined, data = merged_data_new, family = binomial)
@@ -394,33 +408,42 @@ summary(weighted_logit11)
 #to check the frequency 
 xtabs(~UN16AA + MSTATUS_grouped, data=merged_data_new)
 svytable(~UN16AA + MSTATUS_grouped, hh_design)
-attr(merged_data_new$welevel1, "label") == "Education of Women"
+
 #12.  Unweighted logistic regression
 unweighted_logit12 <- glm(UN16AA ~ welevel1, data = merged_data_new, family = binomial)
 summary(unweighted_logit12)
 # Weighted logistic regression
 weighted_logit12 <- svyglm(UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit12)
-
 #to check the frequency 
 xtabs(~UN16AA + welevel1, data=merged_data_new)
 svytable(~UN16AA + welevel1, hh_design)
 
+#12.  Unweighted logistic regression
+unweighted_logit13 <- glm(UN16AA ~ HC15, data = merged_data_new, family = binomial)
+summary(unweighted_logit13)
+# Weighted logistic regression
+weighted_logit13 <- svyglm(UN16AA ~ HC15, design = hh_design, family = quasibinomial)
+summary(weighted_logit13)
+#to check the frequency 
+xtabs(~UN16AA + HC15, data=merged_data_new)
+svytable(~UN16AA + HC15, hh_design)
+
 # Get the coefficients from your model
 coefs12 <- coef(weighted_logit12)  
-
 # Exponentiate the coefficients to get the odds ratios
 ORs <- exp(coefs12)
-
 # Calculate confidence intervals for the odds ratios
 ci <- exp(confint(weighted_logit12))  
-
 # Print the results
 print(ORs)
 print(ci)
 
+
+weighted_logit14 <- svyglm(UN16AA ~ stratum + windex5r + HH51_grouped + HH52_grouped + EthnicityGroup + HC1A_combined + helevel1 + HHAGEx + HHSEX + WAGE + CM4_grouped + MSTATUS_grouped + welevel1 + HC15 , design = hh_design, family = quasibinomial)
+summary(weighted_logit14)
+
 #Label the variables 
-attr(merged_data_new$welevel1, "label") <- "Education of Women"
 tbl_regression(weighted_logit12, exponentiate = TRUE)
 tbl_regression(weighted_logit11, exponentiate = TRUE)
 tbl_regression(weighted_logit10, exponentiate = TRUE)
