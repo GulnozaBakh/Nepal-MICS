@@ -9,6 +9,7 @@ install.packages("tidyr")
 install.packages("broom")
 install.packages("tableone")
 install.packages("gtsummary")
+install.packages("webshot2")
 
 library(dplyr)
 library(haven)
@@ -23,6 +24,7 @@ library(tableone)
 library(gtsummary)
 library(gt)
 library(stargazer)
+library(webshot2) 
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
  
@@ -63,8 +65,8 @@ summary(updated_data)
 
 # Define the mapping of each ethnicity to its group
 ethnicity_mapping <- list(
-  "Brahman/Chhetri" = c("Brahman - Hill", "Chhetree", "Thakuri", "Sanyasi/Dashnami", "Brahman - Tarai", "Rajput", "Kayastha"),
-  "Tarai/Madhesi Other Castes" = c("Teli", "Terai Others", "Rajbansi", "Gangai", "Yadav", "Bantaba", "Jhangad/Dhagar", "Bantar/Sardar", 
+  "Brahman or Chhetri" = c("Brahman - Hill", "Chhetree", "Thakuri", "Sanyasi/Dashnami", "Brahman - Tarai", "Rajput", "Kayastha"),
+  "Tarai or Madhesi Other Castes" = c("Teli", "Terai Others", "Rajbansi", "Gangai", "Yadav", "Bantaba", "Jhangad/Dhagar", "Bantar/Sardar", 
                                    "Kewat", "Kahar", "Musahar", "Hajam/Thakur", "Koiri/Kushwaha", "Sonar", "Bangali", "Dhimal", "Danuwar", 
                                    "Tajpuriya", "Kurmi", "Dhanuk", "Meche", "Koche", "Khawas", "Mallaha", "Kori", "Marwadi", "Kalwar", 
                                    "Tatma/Tatwa", "Sarbaria", "Mali", "Dhobi", "Amat", "Baraee", "Dom", "Gaderi/Bhedhar", "Sudhi", "Lohar", 
@@ -108,7 +110,7 @@ data_hh <- data_hh %>%
     )
   )
 # Convert HHAGEx to a factor with appropriate labels
-data_hh$HHAGEx <- factor(data_hh$HHAGEx, levels = c(1, 2, 3, 4), labels = c("15-19", "20-24", "25-49", "50+"))
+data_hh$HHAGEx <- factor(data_hh$HHAGEx, levels = c(1, 2, 3, 4), labels = c("15-19", "20-24", "25-49", "50 plus"))
 
 # Check the summary to ensure the recoding worked
 summary(data_hh$HHAGEx)
@@ -163,22 +165,16 @@ merged_data_new$CM4_grouped <- factor(merged_data_new$CM4_grouped, levels = c("0
 merged_data_new$MSTATUS_grouped <- ifelse(merged_data_new$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
 # Convert the new variable to a factor
 merged_data_new$MSTATUS_grouped <- factor(merged_data_new$MSTATUS_grouped, levels = c("Ever Married", "Never Married"))
-
-# Count the number of NA values in each column
-na_counts <- colSums(is.na(merged_data_new))
-# Print the counts
-print(na_counts)
-
 # Create a new variable HH51_grouped in the dataset
-merged_data_new$HH51_grouped <- ifelse(merged_data_new$HH51 > 2, "3+", as.character(merged_data_new$HH51))
+merged_data_new$HH51_grouped <- ifelse(merged_data_new$HH51 > 2, "more than 3", as.character(merged_data_new$HH51))
 # Convert to a factor with meaningful levels
-merged_data_new$HH51_grouped <- factor(merged_data_new$HH51_grouped, levels = c("0", "1", "2", "3+"))
+merged_data_new$HH51_grouped <- factor(merged_data_new$HH51_grouped, levels = c("0", "1", "2", "more than 3"))
 # Check the distribution of the new variable
 table(merged_data_new$HH51_grouped)
 # Create a new variable HH51_grouped in the dataset
-merged_data_new$HH52_grouped <- ifelse(merged_data_new$HH52 > 3, "4+", as.character(merged_data_new$HH52))
+merged_data_new$HH52_grouped <- ifelse(merged_data_new$HH52 > 3, "more than 4", as.character(merged_data_new$HH52))
 # Convert to a factor with meaningful levels
-merged_data_new$HH52_grouped <- factor(merged_data_new$HH52_grouped, levels = c("0", "1", "2", "3", "4+"))
+merged_data_new$HH52_grouped <- factor(merged_data_new$HH52_grouped, levels = c("0", "1", "2", "3", "more than 4"))
 # Check the distribution of the new variable
 table(merged_data_new$HH52_grouped)
 
@@ -209,8 +205,9 @@ merged_data_new <- merged_data_new %>%
   )
 # Verify the conversion
 str(merged_data_new)
+#If you want to save the document, run the following by choosing the directory
 write.csv(merged_data_new, file = "/Users/nasib/Desktop/Nepal MICS/merged_data_with_NAs_2019.csv")
-####################################Creating a frequency distribution table on unweighted data
+####################################Creating a frequency distribution (summary) table on unweighted data
 # Select the desired variables including the new summary index
 d <- merged_data_new %>% 
   select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, WAGE, welevel1, MSTATUS_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
@@ -250,16 +247,35 @@ summary_table
 summary_gt <- as_gt(summary_table)
 gtsave(summary_gt, filename = "summary_table1.png")
 ##########################################
-#convert YEs and NO to 1 and 0 in the practices columns
+#convert Yes and NO to 1 and 0 in the practices columns
 merged_data_new <- merged_data_new %>%
   mutate(across(c(UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
+# Renaming levels of the factor
+# Step 1: Trim whitespace from the levels
+merged_data_new$helevel1 <- trimws(merged_data_new$helevel1)
+merged_data_new$welevel1 <- trimws(merged_data_new$welevel1)
+# Step 2: Convert factor levels with the cleaned data
+merged_data_new$helevel1 <- factor(merged_data_new$helevel1, 
+                                   levels = c("Basic (Gr 1-8)", "Higher", "None", "Secondary (Gr 9-12)") ,
+                                   labels = c("Basic", "Higher", "None", "Secondary"))
+merged_data_new$welevel1 <- factor(merged_data_new$welevel1, 
+                                   levels = c("Basic (Gr 1-8)", "Higher", "None", "Secondary (Gr 9-12)") ,
+                                   labels = c("Basic", "Higher", "None", "Secondary"))
+merged_data_new$HHAGEx <- factor(merged_data_new$HHAGEx, 
+                                   levels = c("15-19", "20-24","25-49", "50 plus" ),
+                                   labels = c("15 to 19", "20 to 24","25 to 49", "50 plus"   ))
+merged_data_new$WAGE <- factor(merged_data_new$WAGE, 
+                                 levels = c("15-19", "20-24", "25-29", "30-34", "35-39",  "40-44", "45-49" ),
+                                 labels = c("15 to 19", "20 to 24", "25 to 29","30 to 34", "35 to 39", "40 to 44",  "45 to 49" ))
+
+
 
 # Create survey design objects for each level
 hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
 wm_design <- svydesign(id = ~HH1, weights = ~wmweight,strata = ~stratum, data = merged_data_new)
 
 summary(hh_design)
-svymean(~WB4, hh_design) #mean age of women
+svymean(~WB4, hh_design) #mean age of women just to check the difference
 svymean(~WB4, wm_design)
 mean(merged_data_new$WB4) #mean age without applying weights
 
@@ -275,7 +291,7 @@ if (nrow(merged_data_new) > 0) {
 cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
 weighted_freq <- svytable(~stratum, hh_design)
 print(weighted_freq)
-##############################
+############################## Change the Variable names (labels) names
 attr(merged_data_new[["stratum"]], "label") <- "Region"
 attr(merged_data_new[["windex5r"]], "label") <- "Rural Wealth Index Quintile"
 attr(merged_data_new[["HH51_grouped"]], "label") <- "Number of Chilren Aged below 5"
@@ -349,7 +365,6 @@ summary(weighted_logit8)
 weighted_logit9 <- svyglm(UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
 summary(weighted_logit9)
 
-
 #10.  
 # Weighted logistic regression
 weighted_logit10 <- svyglm(UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
@@ -368,6 +383,11 @@ summary(weighted_logit12)
 # Weighted logistic regression
 weighted_logit13 <- svyglm(UN16AA ~ HC15, design = hh_design, family = quasibinomial)
 summary(weighted_logit13)
+
+#14
+# Weighted logistic regression
+weighted_logit14 <- svyglm(UN16AA ~ EthnicityGroup, design = hh_design, family = quasibinomial)
+summary(weighted_logit14)
 
 #Tables for each regression
 tbl_regression(weighted_logit12, exponentiate = TRUE)
@@ -416,7 +436,7 @@ table2 <- weighted_logit2 %>%
   italicize_levels()
 
 table3 <- weighted_logit3 %>%
-  tbl_regression(label = list(HH51_grouped = "Number of Children Aged below 5"),
+  tbl_regression(label = list(HH51_grouped = "Number of Children Aged below five"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
   ) %>%
@@ -524,23 +544,44 @@ table13 <- weighted_logit13 %>%
   bold_p(t = 0.10) %>%
   bold_labels() %>%
   italicize_levels()
-# Merging the tables
-combined_table <- tbl_merge(
-  tbls = list(table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11, table12, table13),
-  tab_spanner = c("**First Regression**", "**Second Regression**", "**Third Regression**", "**Fourth Regression**", "**Fifth Regression**", "**Sixth Regression**", "**Seventh Regression**", "**Eighth Regression**", "**Ninth Regression**", "**Tenth Regression**", "**Eleventh Regression**", "**Twelvth Regression**", "**Thirteens Regression**")
-) 
 
-# Display the combined table
-combined_table
+table14 <- weighted_logit14 %>%
+  tbl_regression(label = list(EthnicityGroup = "Ethnicity"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+# Stack the tables vertically
+stacked_table <- tbl_stack(
+  tbls = list(table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11, table12, table13, table14)
+)
+
+# Convert the gtsummary table to a gt table
+stacked_gt <- as_gt(stacked_table)
+
+# Save the gt table as an image
+gtsave(stacked_gt, "staying_in_chaupadi.png")
 
 
 
 
-  
-    
+
+
+
+
+
+
+
+
+
+
+
 #Export data to csv
 write.csv(data_wm, file = "/Users/nasib/Desktop/data_wm.csv")
-
 
 # Remove the column HHAGEx column
 data_hh$HHAGEx <- NULL 
@@ -552,3 +593,7 @@ table(merged_data_hh_wm$WM17)
 # Using table to count the number of each factor level including NA
 count_un16aa <- table(addNA(updated_data$UN16AA))
 print(count_un16aa)
+# Count the number of NA values in each column
+na_counts <- colSums(is.na(merged_data_new))
+# Print the counts
+print(na_counts)
