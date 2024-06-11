@@ -209,20 +209,22 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 Number of Fisher Scoring iterations: 6
 10. Call:##### Number of daughters living together######there are 1739 NAs so the result must be distorted!!
-svyglm(formula = UN16AA ~ CM4, design = hh_design, family = quasibinomial)
+svyglm(formula = UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
 
 Survey design:
 svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
     data = merged_data_new)
 
 Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  -3.3010     0.1997 -16.530   <2e-16 ***
-CM4           0.2061     0.0846   2.437   0.0156 *  
+                       Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -3.2739     0.2186 -14.973   <2e-16 ***
+CM4_grouped1             0.1534     0.1715   0.894   0.3721    
+CM4_grouped2             0.3463     0.2065   1.677   0.0949 .  
+CM4_groupedMore than 2   0.7713     0.2990   2.580   0.0106 *  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 0.9496867)
+(Dispersion parameter for quasibinomial family taken to be 0.949597)
 
 Number of Fisher Scoring iterations: 6
 11. Call:
