@@ -309,141 +309,67 @@ summary(weighted_logit)
 xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
 svytable(~UN16AA + stratum, hh_design) #for weighted
 
-#2. Unweighted logistic regression
-unweighted_logit2 <- glm(UN16AA ~ windex5r, data = merged_data_new, family = binomial)
-summary(unweighted_logit2)
+#2. 
 # Weighted logistic regression
 weighted_logit2 <- svyglm(UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
 summary(weighted_logit2)
-#to check the frequency 
-xtabs(~UN16AA + windex5r, data=merged_data_new)
-svytable(~UN16AA + windex5r, hh_design)
 
-#3. Unweighted logistic regression
-unweighted_logit3 <- glm(UN16AA ~ HH51_grouped, data = merged_data_new, family = binomial)
-summary(unweighted_logit3)
+#3. 
 # Weighted logistic regression
 weighted_logit3 <- svyglm(UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit3)
-#to check the frequency 
-xtabs(~UN16AA + HH51_grouped, data=merged_data_new)
-svytable(~UN16AA + HH51_grouped, hh_design)
-         
-#4 Unweighted logistic regression
-unweighted_logit4 <- glm(UN16AA ~ HH52_grouped, data = merged_data_new, family = binomial)
-summary(unweighted_logit4)
+
+#4 
 # Weighted logistic regression
 weighted_logit4 <- svyglm(UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit4)
-#to check the frequency 
-xtabs(~UN16AA + HH52_grouped, data=merged_data_new)
-svytable(~UN16AA + HH52_grouped, hh_design)
 
-#5. Unweighted logistic regression
-unweighted_logit5 <- glm(UN16AA ~ HC1A_combined, data = merged_data_new, family = binomial)
-summary(unweighted_logit5)
+#5. 
 # Weighted logistic regression
 weighted_logit5 <- svyglm(UN16AA ~ HC1A_combined, design = hh_design, family = quasibinomial)
 summary(weighted_logit5)
-#to check the frequency 
-xtabs(~UN16AA + HC1A_combined, data=merged_data_new)
-svytable(~UN16AA + HC1A_combined, hh_design)
 
-#6. Unweighted logistic regression
-unweighted_logit6 <- glm(UN16AA ~ helevel1, data = merged_data_new, family = binomial)
-summary(unweighted_logit6)
+#6. 
 # Weighted logistic regression
 weighted_logit6 <- svyglm(UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit6)
-#to check the frequency 
-xtabs(~UN16AA + helevel1, data=merged_data_new)
-svytable(~UN16AA + helevel1, hh_design)
 
-#7.  Unweighted logistic regression
-unweighted_logit7 <- glm(UN16AA ~ HHAGEx, data = merged_data_new, family = binomial)
-summary(unweighted_logit7)
+#7.  
 # Weighted logistic regression
 weighted_logit7 <- svyglm(UN16AA ~ HHAGEx, design = hh_design, family = quasibinomial)
 summary(weighted_logit7)
-#to check the frequency 
-xtabs(~UN16AA + HHAGEx, data=merged_data_new)
-svytable(~UN16AA + HHAGEx, hh_design)
 
-#8.  Unweighted logistic regression
-unweighted_logit8 <- glm(UN16AA ~ HHSEX, data = merged_data_new, family = binomial)
-summary(unweighted_logit8)
+#8.  
 # Weighted logistic regression
 weighted_logit8 <- svyglm(UN16AA ~ HHSEX, design = hh_design, family = quasibinomial)
 summary(weighted_logit8)
-#to check the frequency 
-xtabs(~UN16AA + HHSEX, data=merged_data_new)
-svytable(~UN16AA + HHSEX, hh_design)
 
-#9.  Unweighted logistic regression
-unweighted_logit9 <- glm(UN16AA ~ WAGE, data = merged_data_new, family = binomial)
-summary(unweighted_logit9)
+#9.  
 # Weighted logistic regression
 weighted_logit9 <- svyglm(UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
 summary(weighted_logit9)
-#to check the frequency 
-xtabs(~UN16AA + WAGE, data=merged_data_new)
-svytable(~UN16AA + WAGE, hh_design)
 
-#10.  Unweighted logistic regression
-unweighted_logit10 <- glm(UN16AA ~ CM4, data = merged_data_new, family = binomial)
-summary(unweighted_logit10)
+
+#10.  
 # Weighted logistic regression
-weighted_logit10 <- svyglm(UN16AA ~ CM4, design = hh_design, family = quasibinomial)
+weighted_logit10 <- svyglm(UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit10)
-#to check the frequency 
-xtabs(~UN16AA + CM4, data=merged_data_new)
-svytable(~UN16AA + CM4, hh_design)
 
-#11.  Unweighted logistic regression
-unweighted_logit11 <- glm(UN16AA ~ MSTATUS_grouped, data = merged_data_new, family = binomial)
-summary(unweighted_logit11)
+#11.  
 # Weighted logistic regression
 weighted_logit11 <- svyglm(UN16AA ~ MSTATUS_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit11)
-#to check the frequency 
-xtabs(~UN16AA + MSTATUS_grouped, data=merged_data_new)
-svytable(~UN16AA + MSTATUS_grouped, hh_design)
 
-#12.  Unweighted logistic regression
-unweighted_logit12 <- glm(UN16AA ~ welevel1, data = merged_data_new, family = binomial)
-summary(unweighted_logit12)
+#12.  
 # Weighted logistic regression
 weighted_logit12 <- svyglm(UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit12)
-#to check the frequency 
-xtabs(~UN16AA + welevel1, data=merged_data_new)
-svytable(~UN16AA + welevel1, hh_design)
-
-#12.  Unweighted logistic regression
-unweighted_logit13 <- glm(UN16AA ~ HC15, data = merged_data_new, family = binomial)
-summary(unweighted_logit13)
+#13
 # Weighted logistic regression
 weighted_logit13 <- svyglm(UN16AA ~ HC15, design = hh_design, family = quasibinomial)
 summary(weighted_logit13)
-#to check the frequency 
-xtabs(~UN16AA + HC15, data=merged_data_new)
-svytable(~UN16AA + HC15, hh_design)
 
-# Get the coefficients from your model
-coefs12 <- coef(weighted_logit12)  
-# Exponentiate the coefficients to get the odds ratios
-ORs <- exp(coefs12)
-# Calculate confidence intervals for the odds ratios
-ci <- exp(confint(weighted_logit12))  
-# Print the results
-print(ORs)
-print(ci)
-
-
-weighted_logit14 <- svyglm(UN16AA ~ stratum + windex5r + HH51_grouped + HH52_grouped + EthnicityGroup + HC1A_combined + helevel1 + HHAGEx + HHSEX + WAGE + CM4_grouped + MSTATUS_grouped + welevel1 + HC15 , design = hh_design, family = quasibinomial)
-summary(weighted_logit14)
-
-#Label the variables 
+#Tables for each regression
 tbl_regression(weighted_logit12, exponentiate = TRUE)
 tbl_regression(weighted_logit11, exponentiate = TRUE)
 tbl_regression(weighted_logit10, exponentiate = TRUE)
@@ -457,198 +383,156 @@ tbl_regression(weighted_logit3, exponentiate = TRUE)
 tbl_regression(weighted_logit2, exponentiate = TRUE)
 tbl_regression(weighted_logit, exponentiate = TRUE)
 
+# format results into data frame with global p-values
+weighted_logit %>%
+  tbl_regression(label = list(stratum = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
+# First regression table
+table1 <- weighted_logit %>%
+  tbl_regression(label = list(stratum = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
+table2 <- weighted_logit2 %>%
+  tbl_regression(label = list(windex5r = "Rural Wealth Index Quintile"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
+table3 <- weighted_logit3 %>%
+  tbl_regression(label = list(HH51_grouped = "Number of Children Aged below 5"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
+table4 <- weighted_logit4 %>%
+  tbl_regression(label = list(HH52_grouped = "Number of Children Aged 5-17"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 1. Create a weighted contingency table for chi-squared test
-contingency_table <- svytable(~UN16AA + stratum, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table <- round(contingency_table)
-# Print the contingency table
-print(rounded_contingency_table)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + stratum, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table5 <- weighted_logit5 %>%
+  tbl_regression(label = list(HC1A_combined = "Religion"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 2. Create a weighted contingency table for chi-squared test
-contingency_table2 <- svytable(~UN16AA + windex5r, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table2 <- round(contingency_table2)
-# Print the contingency table
-print(rounded_contingency_table2)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + windex5r, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table6 <- weighted_logit6 %>%
+  tbl_regression(label = list(helevel1 = "Education of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 3. Create a weighted contingency table for chi-squared test
-contingency_table3 <- svytable(~UN16AA +HH51, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table3 <- round(contingency_table3)
-# Print the contingency table
-print(rounded_contingency_table3)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + HH51, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table7 <- weighted_logit7 %>%
+  tbl_regression(label = list(HHAGEx = "Age of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 4. Create a weighted contingency table for chi-squared test
-contingency_table4 <- svytable(~UN16AA +HH52, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table4 <- round(contingency_table4)
-# Print the contingency table
-print(rounded_contingency_table4)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + HH52, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table8 <- weighted_logit8 %>%
+  tbl_regression(label = list(HHSEX = "Sex of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 5. Create a weighted contingency table for chi-squared test
-contingency_table5 <- svytable(~UN16AA +HC1A_combined, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table5 <- round(contingency_table5)
-# Print the contingency table
-print(rounded_contingency_table5)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + HC1A_combined, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table9 <- weighted_logit9 %>%
+  tbl_regression(label = list(WAGE = "Age of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 6. Create a weighted contingency table for chi-squared test
-contingency_table6 <- svytable(~UN16AA + EthnicityGroup, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table6 <- round(contingency_table6)
-# Print the contingency table
-print(rounded_contingency_table6)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + EthnicityGroup, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table10 <- weighted_logit10 %>%
+  tbl_regression(label = list(CM4_grouped = "Number of daughters living together"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 7. Create a weighted contingency table for chi-squared test
-contingency_table7 <- svytable(~UN16AA + HC15, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table7 <- round(contingency_table7)
-# Print the contingency table
-print(rounded_contingency_table7)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + HC15, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table11 <- weighted_logit11 %>%
+  tbl_regression(label = list(MSTATUS_grouped = "Marital Status"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 8. Create a weighted contingency table for chi-squared test
-contingency_table8 <- svytable(~UN16AA + helevel1, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table8 <- round(contingency_table8)
-# Print the contingency table
-print(rounded_contingency_table8)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + helevel1, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table12 <- weighted_logit12 %>%
+  tbl_regression(label = list(welevel1 = "Education of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
-# 9. Create a weighted contingency table for chi-squared test
-contingency_table9 <- svytable(~UN16AA + HHAGEx, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table9 <- round(contingency_table9)
-# Print the contingency table
-print(rounded_contingency_table9)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + HHAGEx, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+table13 <- weighted_logit13 %>%
+  tbl_regression(label = list(HC15 = "Owns Agricultural Land"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+# Merging the tables
+combined_table <- tbl_merge(
+  tbls = list(table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11, table12, table13),
+  tab_spanner = c("**First Regression**", "**Second Regression**", "**Third Regression**", "**Fourth Regression**", "**Fifth Regression**", "**Sixth Regression**", "**Seventh Regression**", "**Eighth Regression**", "**Ninth Regression**", "**Tenth Regression**", "**Eleventh Regression**", "**Twelvth Regression**", "**Thirteens Regression**")
+) 
 
-# 10. Create a weighted contingency table for chi-squared test
-contingency_table10 <- svytable(~UN16AA + HHSEX, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table10 <- round(contingency_table10)
-# Print the contingency table
-print(rounded_contingency_table10)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + HHSEX, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
+# Display the combined table
+combined_table
 
-# 11. Create a weighted contingency table for chi-squared test
-contingency_table11 <- svytable(~UN16AA + WAGE, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table11 <- round(contingency_table11)
-# Print the contingency table
-print(rounded_contingency_table11)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + WAGE, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
-
-# 12. Create a weighted contingency table for chi-squared test
-contingency_table12 <- svytable(~UN16AA + CM4_grouped, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table12 <- round(contingency_table12)
-# Print the contingency table
-print(rounded_contingency_table12)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + CM4_grouped, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
-
-# 13. Create a weighted contingency table for chi-squared test
-contingency_table13 <- svytable(~UN16AA + MSTATUS_grouped, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table13 <- round(contingency_table13)
-# Print the contingency table
-print(rounded_contingency_table13)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + MSTATUS_grouped, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
-
-# 14. Create a weighted contingency table for chi-squared test
-contingency_table14 <- svytable(~UN16AA + welevel1, design = survey_design)
-# Round the values in the contingency table
-rounded_contingency_table14 <- round(contingency_table14)
-# Print the contingency table
-print(rounded_contingency_table14)
-# Perform a Chi-squared test on the weighted contingency table
-chi_test_result <- svychisq(~UN16AA + welevel1, design = survey_design)
-# Print the Chi-squared test result
-print(chi_test_result)
-
-
-
-
-# Run the logistic regression model
-logistic1 <- glm(UN16AA ~ stratum, data=merged_data_new, family="binomial")
-summary(logistic1)
-logistic2 <- glm(UN16AA ~ windex5r, data=merged_data_new, family="binomial")
-summary(logistic2)
-logistic3 <- glm(UN16AA ~ HH51, data=merged_data_new, family="binomial")
-summary(logistic3)
-logistic4 <- glm(UN16AA ~ HH52, data=merged_data_new, family="binomial")
-summary(logistic4)
-logistic5 <- svyglm(formula = UN16AA ~ HC1A_combined, design = survey_design, family = quasibinomial())
-summary(logistic5)
-logistic6 <- svyglm(formula = UN16AA ~ EthnicityGroup, design = survey_design, family = quasibinomial())
-summary(logistic6)
-logistic7 <- glm(UN16AA ~ HC15, data=merged_data_new, family="binomial")
-summary(logistic7)
-
-logistic_survey1 <- svyglm(UN16AA ~ HC1A, design = survey_design, family = quasibinomial())
-summary(logistic_survey1)
-
-logistic7 <- glm(UN16AA ~ HC1A, data=merged_data_new, family="binomial")
-summary(logistic7)
-
-
-exp(coef(logistic1)) #if you need to export odds ratio
-
-
-
-
-#Preparing the data for logistic regression: create factors
-attr(merged_data_new$stratum, "label") == "Region"
 
 
 
@@ -656,28 +540,15 @@ attr(merged_data_new$stratum, "label") == "Region"
     
 #Export data to csv
 write.csv(data_wm, file = "/Users/nasib/Desktop/data_wm.csv")
-write.csv(data_hh, file = "/Users/nasib/Desktop/data_hh.csv")
-write.csv(data_hl, file = "/Users/nasib/Desktop/data_hl.csv")
-write.csv(merged_data_hh_wm, file = "/Users/nasib/Desktop/merged_data_updated.csv")
 
-# Inspect the merged data
-head(merged_data)
-str(merged_data)
 
 # Remove the column HHAGEx column
 data_hh$HHAGEx <- NULL 
 rm(merged_data_hh_wm)
 
-
 xtabs(~UN16AA + HH7, data=merged_data_new)
 # Count the number of occurrences of each category in the WM17 column
 table(merged_data_hh_wm$WM17)
-table(merged_data_hh_wm$HH6)
-
-logistic_survey2 <- svyglm(UN16AA ~ windex5r, design = survey_design, family = quasibinomial())
-summary(logistic_survey2)
-
-
 # Using table to count the number of each factor level including NA
 count_un16aa <- table(addNA(updated_data$UN16AA))
 print(count_un16aa)
