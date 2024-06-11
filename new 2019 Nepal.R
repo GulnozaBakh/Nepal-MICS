@@ -674,7 +674,7 @@ table3B <- weighted_logit3B %>%
   bold_labels() %>%
   italicize_levels()
 
-table4 <- weighted_logit4 %>%
+table4B <- weighted_logit4B %>%
   tbl_regression(label = list(HH52_grouped = "Number of Children Aged 5-17"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -684,7 +684,7 @@ table4 <- weighted_logit4 %>%
   bold_labels() %>%
   italicize_levels()
 
-table5 <- weighted_logit5 %>%
+table5B <- weighted_logit5B %>%
   tbl_regression(label = list(HC1A_combined = "Religion"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -694,7 +694,7 @@ table5 <- weighted_logit5 %>%
   bold_labels() %>%
   italicize_levels()
 
-table6 <- weighted_logit6 %>%
+table6B <- weighted_logit6B %>%
   tbl_regression(label = list(helevel1 = "Education of Household Head"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -704,7 +704,7 @@ table6 <- weighted_logit6 %>%
   bold_labels() %>%
   italicize_levels()
 
-table7 <- weighted_logit7 %>%
+table7B <- weighted_logit7B %>%
   tbl_regression(label = list(HHAGEx = "Age of Household Head"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -714,7 +714,7 @@ table7 <- weighted_logit7 %>%
   bold_labels() %>%
   italicize_levels()
 
-table8 <- weighted_logit8 %>%
+table8B <- weighted_logit8B %>%
   tbl_regression(label = list(HHSEX = "Sex of Household Head"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -724,7 +724,7 @@ table8 <- weighted_logit8 %>%
   bold_labels() %>%
   italicize_levels()
 
-table9 <- weighted_logit9 %>%
+table9B <- weighted_logit9B %>%
   tbl_regression(label = list(WAGE = "Age of Women"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -734,7 +734,7 @@ table9 <- weighted_logit9 %>%
   bold_labels() %>%
   italicize_levels()
 
-table10 <- weighted_logit10 %>%
+table10B <- weighted_logit10B %>%
   tbl_regression(label = list(CM4_grouped = "Number of daughters living together"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -744,7 +744,7 @@ table10 <- weighted_logit10 %>%
   bold_labels() %>%
   italicize_levels()
 
-table11 <- weighted_logit11 %>%
+table11B <- weighted_logit11B %>%
   tbl_regression(label = list(MSTATUS_grouped = "Marital Status"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -754,7 +754,7 @@ table11 <- weighted_logit11 %>%
   bold_labels() %>%
   italicize_levels()
 
-table12 <- weighted_logit12 %>%
+table12B <- weighted_logit12B %>%
   tbl_regression(label = list(welevel1 = "Education of Women"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -764,7 +764,7 @@ table12 <- weighted_logit12 %>%
   bold_labels() %>%
   italicize_levels()
 
-table13 <- weighted_logit13 %>%
+table13B <- weighted_logit13B %>%
   tbl_regression(label = list(HC15 = "Owns Agricultural Land"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -774,7 +774,7 @@ table13 <- weighted_logit13 %>%
   bold_labels() %>%
   italicize_levels()
 
-table14 <- weighted_logit14 %>%
+table14B <- weighted_logit14B %>%
   tbl_regression(label = list(EthnicityGroup = "Ethnicity"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -785,13 +785,13 @@ table14 <- weighted_logit14 %>%
   italicize_levels()
 
 # Stack the tables vertically
-stacked_table <- tbl_stack(
-  tbls = list(table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11, table12, table13, table14)
+stacked_tableB <- tbl_stack(
+  tbls = list(table1B, table2B, table3B, table4B, table5B, table6B, table7B, table8B, table9B, table10B, table11B, table12B, table13B, table14B)
 )
 # Convert the gtsummary table to a gt table
-stacked_gt <- as_gt(stacked_table)
+stacked_gtB <- as_gt(stacked_tableB)
 # Save the gt table as an image
-gtsave(stacked_gt, "staying_in_chaupadi.png")
+gtsave(stacked_gtB, "staying_in_separate_room.png")
 
 
 
