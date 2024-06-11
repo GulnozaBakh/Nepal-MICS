@@ -51,4 +51,211 @@ Pearson's X^2: Rao & Scott adjustment
 data:  svychisq(~UN16AA + stratum, hh_design)
 F = 50.266, ndf = 2.7501, ddf = 591.2739, p-value < 2.2e-16
 #############
-2. 
+2. Call:
+svyglm(formula = UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      -5.1764     0.3955 -13.089  < 2e-16 *** fourth
+windex5rMiddle    1.2448     0.5423   2.295   0.0227 *  
+windex5rPoorest   3.1376     0.4926   6.370 1.17e-09 ***
+windex5rRichest   0.3922     0.5600   0.700   0.4845    
+windex5rSecond    2.5192     0.4736   5.319 2.65e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 7
+3. Call:
+svyglm(formula = UN16AA ~ HH51, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -3.3409     0.2242 -14.904   <2e-16 *** #children aged below 5
+HH51          0.2671     0.1043   2.561   0.0111 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.00199)
+
+Number of Fisher Scoring iterations: 6
+4. Call:
+svyglm(formula = UN16AA ~ HH52, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -3.52423    0.19936 -17.678   <2e-16 *** #number of children aged 5-17
+HH52         0.19985    0.06043   3.307   0.0011 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9975559)
+
+Number of Fisher Scoring iterations: 6
+5. Call:
+svyglm(formula = UN16AA ~ HC1A_combined, design = hh_design, 
+    family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -5.13456    0.60971  -8.421 5.71e-15 *** buddhist
+HC1A_combinedCHRISTIAN -12.49782    0.67204 -18.597  < 2e-16 ***
+HC1A_combinedHINDU       2.10990    0.64026   3.295  0.00115 ** 
+HC1A_combinedISLAM       0.07545    1.21009   0.062  0.95035    
+HC1A_combinedOTHER       1.58920    0.92278   1.722  0.08650 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9794844)
+
+Number of Fisher Scoring iterations: 16
+6. Call:
+svyglm(formula = UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  -3.3455     0.2327 -14.376   <2e-16 *** #basic
+helevel1Higher              -14.2329     0.2541 -56.003   <2e-16 ***
+helevel1None                  0.3371     0.2079   1.621    0.106    
+helevel1Secondary (Gr 9-12)   0.1922     0.2255   0.852    0.395    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9780046)
+
+Number of Fisher Scoring iterations: 16
+7. Call:
+svyglm(formula = UN16AA ~ HHAGEx, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -0.8502     0.6208  -1.369  0.17231    #15-19
+HHAGEx20-24  -1.7009     0.5949  -2.859  0.00467 ** 
+HHAGEx25-49  -2.3012     0.5744  -4.006 8.55e-05 ***
+HHAGEx50+    -2.4933     0.6131  -4.067 6.72e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 6
+8. Call:
+svyglm(formula = UN16AA ~ HHSEX, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -2.9369     0.2112 -13.903   <2e-16 ***
+HHSEXMale    -0.3312     0.2121  -1.562     0.12    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 6
+9. Call:
+svyglm(formula = UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -3.21692    0.22745 -14.143   <2e-16 ***
+WAGE20-24    0.05340    0.16736   0.319    0.750    
+WAGE25-29   -0.09195    0.20756  -0.443    0.658    
+WAGE30-34    0.26569    0.22618   1.175    0.241    
+WAGE35-39    0.09737    0.22397   0.435    0.664    
+WAGE40-44   -0.07528    0.18588  -0.405    0.686    
+WAGE45-49   -0.05327    0.27126  -0.196    0.844    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 6
+10. Call: Number of daughters living together
+svyglm(formula = UN16AA ~ CM4, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -3.3010     0.1997 -16.530   <2e-16 ***
+CM4           0.2061     0.0846   2.437   0.0156 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9496867)
+
+Number of Fisher Scoring iterations: 6
+11. Call:
+svyglm(formula = UN16AA ~ MSTATUS_grouped, design = hh_design, 
+    family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                   -3.1258     0.1870 -16.715   <2e-16 ***
+MSTATUS_groupedNever Married  -0.2497     0.1553  -1.607    0.109    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 6
+12. 
+Call:
+svyglm(formula = UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  -3.2516     0.2096 -15.512   <2e-16 ***
+welevel1Higher               -1.5211     0.7588  -2.005   0.0463 *  
+welevel1None                  0.4011     0.1645   2.439   0.0155 *  
+welevel1Secondary (Gr 9-12)  -0.1965     0.2063  -0.952   0.3420    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000379)
+
+Number of Fisher Scoring iterations: 7
+13. 
