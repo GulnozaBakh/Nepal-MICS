@@ -641,9 +641,7 @@ summary(weighted_logit14B)
 
 tbl_regression(weighted_logit_B, exponentiate = TRUE)
 
-
-
-# First regression table
+# Second regression table
 table1B <- weighted_logit_B %>%
   tbl_regression(label = list(stratum = "Region"),
                  exponentiate = TRUE,
@@ -794,7 +792,229 @@ stacked_gtB <- as_gt(stacked_tableB)
 gtsave(stacked_gtB, "staying_in_separate_room.png")
 
 
+###############################################################################################
+#Staying in the cowshed UN16AC
 
+#1.
+# Weighted logistic regression
+weighted_logit_C <- svyglm(UN16AC ~ stratum, design = hh_design, family = quasibinomial)
+summary(weighted_logit_C)
+#to check the frequency 
+svytable(~UN16AC + stratum, hh_design) #for weighted
+
+#2. 
+# Weighted logistic regression
+weighted_logit2C <- svyglm(UN16AC ~ windex5r, design = hh_design, family = quasibinomial)
+summary(weighted_logit2C)
+
+#3. 
+# Weighted logistic regression
+weighted_logit3C <- svyglm(UN16AC ~ HH51_grouped, design = hh_design, family = quasibinomial)
+summary(weighted_logit3C)
+
+#4 
+# Weighted logistic regression
+weighted_logit4C <- svyglm(UN16AC ~ HH52_grouped, design = hh_design, family = quasibinomial)
+summary(weighted_logit4C)
+
+#5. 
+# Weighted logistic regression
+weighted_logit5C <- svyglm(UN16AC ~ HC1A_combined, design = hh_design, family = quasibinomial)
+summary(weighted_logit5C)
+
+#6. 
+# Weighted logistic regression
+weighted_logit6C <- svyglm(UN16AC ~ helevel1, design = hh_design, family = quasibinomial)
+summary(weighted_logit6C)
+
+#7.  
+# Weighted logistic regression
+weighted_logit7C <- svyglm(UN16AC ~ HHAGEx, design = hh_design, family = quasibinomial)
+summary(weighted_logit7C)
+
+#8.  
+# Weighted logistic regression
+weighted_logit8C <- svyglm(UN16AC ~ HHSEX, design = hh_design, family = quasibinomial)
+summary(weighted_logit8C)
+
+#9.  
+# Weighted logistic regression
+weighted_logit9C <- svyglm(UN16AC ~ WAGE, design = hh_design, family = quasibinomial)
+summary(weighted_logit9C)
+
+#10.  
+# Weighted logistic regression
+weighted_logit10C <- svyglm(UN16AC ~ CM4_grouped, design = hh_design, family = quasibinomial)
+summary(weighted_logit10C)
+
+#11.  
+# Weighted logistic regression
+weighted_logit11C <- svyglm(UN16AC ~ MSTATUS_grouped, design = hh_design, family = quasibinomial)
+summary(weighted_logit11C)
+
+#12.  
+# Weighted logistic regression
+weighted_logit12C <- svyglm(UN16AC ~ welevel1, design = hh_design, family = quasibinomial)
+summary(weighted_logit12C)
+#13
+# Weighted logistic regression
+weighted_logit13C <- svyglm(UN16AC ~ HC15, design = hh_design, family = quasibinomial)
+summary(weighted_logit13C)
+
+#14
+# Weighted logistic regression
+weighted_logit14C <- svyglm(UN16AC ~ EthnicityGroup, design = hh_design, family = quasibinomial)
+summary(weighted_logit14C)
+
+# Third regression table
+table1C <- weighted_logit_C %>%
+  tbl_regression(label = list(stratum = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table2C <- weighted_logit2C %>%
+  tbl_regression(label = list(windex5r = "Rural Wealth Index Quintile"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table3C <- weighted_logit3C %>%
+  tbl_regression(label = list(HH51_grouped = "Number of Children Aged below five"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table4C <- weighted_logit4C %>%
+  tbl_regression(label = list(HH52_grouped = "Number of Children Aged 5-17"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table5C <- weighted_logit5C %>%
+  tbl_regression(label = list(HC1A_combined = "Religion"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table6C <- weighted_logit6C %>%
+  tbl_regression(label = list(helevel1 = "Education of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table7C <- weighted_logit7C %>%
+  tbl_regression(label = list(HHAGEx = "Age of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table8C <- weighted_logit8C %>%
+  tbl_regression(label = list(HHSEX = "Sex of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table9C <- weighted_logit9C %>%
+  tbl_regression(label = list(WAGE = "Age of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table10C <- weighted_logit10C %>%
+  tbl_regression(label = list(CM4_grouped = "Number of daughters living together"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table11C <- weighted_logit11C %>%
+  tbl_regression(label = list(MSTATUS_grouped = "Marital Status"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table12C <- weighted_logit12C %>%
+  tbl_regression(label = list(welevel1 = "Education of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table13C <- weighted_logit13C %>%
+  tbl_regression(label = list(HC15 = "Owns Agricultural Land"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table14C <- weighted_logit14C %>%
+  tbl_regression(label = list(EthnicityGroup = "Ethnicity"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+# Stack the tables vertically
+stacked_tableC <- tbl_stack(
+  tbls = list(table1C, table2C, table3C, table4C, table5C, table6C, table7C, table8C, table9C, table10C, table11C, table12C, table13C, table14C)
+)
+# Convert the gtsummary table to a gt table
+stacked_gtC <- as_gt(stacked_tableC)
+# Save the gt table as an image
+gtsave(stacked_gtC, "staying_in_cowshed.png")
 
 
 
