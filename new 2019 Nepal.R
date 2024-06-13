@@ -50,16 +50,31 @@ glimpse(data_wm)
 # Use subset to filter only cases where the interview is completed and only rural areas
 filtered_data_wm <- subset(data_wm, WM17 == "COMPLETED" & HH6 == "RURAL")
 
-# Filter out rows with "No response" in any of the specified variables using subset
-updated_data <- subset(filtered_data_wm, 
-                       UN16AA != "No response" &
-                         UN16AB != "No response" &
-                         UN16AC != "No response" &
-                         UN16AD != "No response" &
-                         UN16AE != "No response" &
-                         UN16AF != "No response" &
-                         UN16AG != "No response" &
-                         UN16AH != "No response")
+# Function to clean the data
+clean_data <- function(df, columns) {
+  df %>%
+    mutate(across(all_of(columns), 
+                  ~ toupper(str_trim(gsub("[^[:print:]]", "", .))))) %>%
+    mutate(across(all_of(columns), ~ na_if(., "NO RESPONSE")))
+}
+
+# Specify the columns to clean
+columns_to_clean <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF", "UN16AG", "UN16AH")
+
+# Clean the data
+filtered_data_wm <- clean_data(filtered_data_wm, columns_to_clean)
+
+# Create a logical condition to filter out rows with "NO RESPONSE" or NA
+condition <- !(
+  is.na(filtered_data_wm$UN16AA) | is.na(filtered_data_wm$UN16AB) | 
+    is.na(filtered_data_wm$UN16AC) | is.na(filtered_data_wm$UN16AD) | 
+    is.na(filtered_data_wm$UN16AE) | is.na(filtered_data_wm$UN16AF) | 
+    is.na(filtered_data_wm$UN16AG) | is.na(filtered_data_wm$UN16AH)
+)
+
+# Use subset to filter the data
+updated_data <- subset(filtered_data_wm, condition)
+
 # Verify the filtering
 summary(updated_data)
 
@@ -67,11 +82,11 @@ summary(updated_data)
 ethnicity_mapping <- list(
   "Brahman or Chhetri" = c("Brahman - Hill", "Chhetree", "Thakuri", "Sanyasi/Dashnami", "Brahman - Tarai", "Rajput", "Kayastha"),
   "Tarai or Madhesi Other Castes" = c("Teli", "Terai Others", "Rajbansi", "Gangai", "Yadav", "Bantaba", "Jhangad/Dhagar", "Bantar/Sardar", 
-                                   "Kewat", "Kahar", "Musahar", "Hajam/Thakur", "Koiri/Kushwaha", "Sonar", "Bangali", "Dhimal", "Danuwar", 
-                                   "Tajpuriya", "Kurmi", "Dhanuk", "Meche", "Koche", "Khawas", "Mallaha", "Kori", "Marwadi", "Kalwar", 
-                                   "Tatma/Tatwa", "Sarbaria", "Mali", "Dhobi", "Amat", "Baraee", "Dom", "Gaderi/Bhedhar", "Sudhi", "Lohar", 
-                                   "Kumhar", "Kanu", "Kathbaniyan", "Nuniya", "Dev", "Khatwe", "Kamar", "Badhaee", "Bin", "Rajbhar", 
-                                   "Lodh", "Chidimar"),
+                                      "Kewat", "Kahar", "Musahar", "Hajam/Thakur", "Koiri/Kushwaha", "Sonar", "Bangali", "Dhimal", "Danuwar", 
+                                      "Tajpuriya", "Kurmi", "Dhanuk", "Meche", "Koche", "Khawas", "Mallaha", "Kori", "Marwadi", "Kalwar", 
+                                      "Tatma/Tatwa", "Sarbaria", "Mali", "Dhobi", "Amat", "Baraee", "Dom", "Gaderi/Bhedhar", "Sudhi", "Lohar", 
+                                      "Kumhar", "Kanu", "Kathbaniyan", "Nuniya", "Dev", "Khatwe", "Kamar", "Badhaee", "Bin", "Rajbhar", 
+                                      "Lodh", "Chidimar"),
   "Dalits" = c("Sarki", "Damai/Dholi", "Dalit Others", "Kami", "Chamar/Harijan/Ram", "Dusadh/Pasawan/Pasi", "Badi"),
   "Newar" = c("Newar"),
   "Janajati" = c("Gharti/Bhujel", "Limbu", "Tamang", "Gurung", "Rai", "Kulung", "Sherpa", "Magar", "Majhi", "Lepcha", "Aathpariya", 
@@ -115,8 +130,18 @@ data_hh$HHAGEx <- factor(data_hh$HHAGEx, levels = c(1, 2, 3, 4), labels = c("15-
 # Check the summary to ensure the recoding worked
 summary(data_hh$HHAGEx)
 
+# Convert "NO RESPONSE" to NA for the HC15 column
+data_hh <- data_hh %>%
+  mutate(HC15 = na_if(toupper(str_trim(gsub("[^[:print:]]", "", HC15))), "NO RESPONSE"))
+
+# Remove rows with NA values in HC15
+cleaned_data_hh <- subset(data_hh, !is.na(HC15))
+
+# Verify the unique values in HC15 after cleaning
+unique(cleaned_data_hh$HC15)
+
 # Select relevant variables from the household dataset
-selected_data_hh <- data_hh %>%
+selected_data_hh <- cleaned_data_hh %>%
   select(HH1, HH2, HH6, HH7, HH49, stratum, windex5r, HH51, HH52, HC1A, EthnicityGroup, HC15, helevel1, hhweight, HHAGEx, HHSEX, HHAGE)
 
 # Select relevant variables from the women's dataset
