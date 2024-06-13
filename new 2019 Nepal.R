@@ -25,6 +25,7 @@ library(gtsummary)
 library(gt)
 library(stargazer)
 library(webshot2) 
+library(stringr)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
  
@@ -151,32 +152,6 @@ selected_data_wm <- updated_data %>%
 # Merge the datasets on HH1 and HH2
 merged_data_new <- merge(selected_data_hh, selected_data_wm, by = c("HH1", "HH2"))
 
-# Define the columns related to practices
-practice_columns_wm <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF", "UN16AG", "UN16AH")
-
-# Filter to keep only the defined columns
-practices <- merged_data_new %>%
-  select(all_of(practice_columns_wm)) 
-
-# Make a copy of the data
-data_numeric <- practices
-
-# Replace "NO RESPONSE" with NA
-practices[practices == "NO RESPONSE"] <- NA
-
-# Replace "YES" with 1 and "NO" with 0
-data_numeric <- practices
-data_numeric[data_numeric == "YES"] <- 1
-data_numeric[data_numeric == "NO"] <- 0
-
-# Convert to numeric, ensuring NA values are preserved
-data_numeric <- as.data.frame(lapply(data_numeric, function(x) as.numeric(as.character(x))))
-
-# Check the summary to ensure conversion worked correctly
-summary(data_numeric)
-# Sum the columns
-column_sums <- colSums(data_numeric, na.rm = TRUE)
-print(column_sums)
 #Table for the number of women following practices in different regions
 xtabs(~UN16AA + HH7, data=updated_data)
 
