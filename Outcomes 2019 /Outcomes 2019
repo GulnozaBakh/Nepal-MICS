@@ -1,19 +1,19 @@
 Weighted Frequencies #to check the difference between weighted and unweighted for comparison
 stratum
       Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
-                    566.3556                     344.8996                     315.5805 
+                    563.5017                     344.0732                     312.5547 
             Province 1 Rural             Province 2 Rural             Province 5 Rural 
-                    766.8735                     606.4822                     960.0265 
+                    763.0279                     601.4027                     955.3646 
 Sudoorpaschim province Rural 
-                    444.4476 
+                    439.6831  
  # Unweighted frequencies for household 
 
-      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
-                         749                          632                          697 
+       Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                         745                          630                          691 
             Province 1 Rural             Province 2 Rural             Province 5 Rural 
-                         837                          825                          993 
+                         833                          817                          989 
 Sudoorpaschim province Rural 
-                         768 
+                         760 
 
 ######
 #mean age of women without applying weights
@@ -23,7 +23,7 @@ Sudoorpaschim province Rural
 WB4 29.106 0.1538
 #######
 #Bivariate Logistic Regression
-1. Weighted  Call:
+1. Weighted Call:
 svyglm(formula = UN16AA ~ stratum, design = hh_design, family = quasibinomial)
 
 Survey design:
@@ -32,26 +32,21 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                                     Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                          -6.6071     0.7268  -9.091  < 2e-16 *** Bagmati Province Rural 
-stratumGandaki province Rural         1.4974     0.9119   1.642   0.1021    
-stratumKarnali province Rural         4.5113     0.8394   5.374 2.05e-07 ***
-stratumProvince 1 Rural               1.5606     0.8456   1.846   0.0664 .  
-stratumProvince 2 Rural               1.4928     0.8757   1.705   0.0897 .  
-stratumProvince 5 Rural               1.9645     0.8230   2.387   0.0179 *  
-stratumSudoorpaschim province Rural   5.4392     0.7999   6.800 1.08e-10 ***
+(Intercept)                          -6.6020     0.7266  -9.086  < 2e-16 *** #Bagmati
+stratumGandaki province Rural         1.4947     0.9117   1.640   0.1026    
+stratumKarnali province Rural         4.4788     0.8348   5.365 2.14e-07 ***
+stratumProvince 1 Rural               1.5600     0.8454   1.845   0.0664 .  
+stratumProvince 2 Rural               1.4937     0.8759   1.705   0.0896 .  
+stratumProvince 5 Rural               1.9630     0.8230   2.385   0.0180 *  
+stratumSudoorpaschim province Rural   5.4450     0.7998   6.808 1.03e-10 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 9
-#######chi-square test for comparison
-Pearson's X^2: Rao & Scott adjustment
-
-data:  svychisq(~UN16AA + stratum, hh_design)
-F = 50.266, ndf = 2.7501, ddf = 591.2739, p-value < 2.2e-16
 #############
-2. Call:
+2.Call:
 svyglm(formula = UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
 
 Survey design:
@@ -60,18 +55,19 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)      -5.1764     0.3955 -13.089  < 2e-16 *** fourth
-windex5rMiddle    1.2448     0.5423   2.295   0.0227 *  
-windex5rPoorest   3.1376     0.4926   6.370 1.17e-09 ***
-windex5rRichest   0.3922     0.5600   0.700   0.4845    
-windex5rSecond    2.5192     0.4736   5.319 2.65e-07 ***
+(Intercept)      -5.1705     0.3961 -13.052  < 2e-16 *** #fourth
+windex5rMiddle    1.2447     0.5428   2.293   0.0228 *  
+windex5rPoorest   3.1256     0.4922   6.351 1.30e-09 ***
+windex5rRichest   0.3886     0.5605   0.693   0.4889    
+windex5rSecond    2.5177     0.4742   5.309 2.79e-07 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 7
-3. Call:
+
+3.Call:
 svyglm(formula = UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
 
 Survey design:
@@ -79,19 +75,947 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
     data = merged_data_new)
 
 Coefficients:
-               Estimate Std. Error t value Pr(>|t|)    
-(Intercept)     -3.3036     0.2264 -14.592  < 2e-16 *** children aged below 5
-HH51_grouped1    0.0991     0.2094   0.473  0.63660    
-HH51_grouped2    0.7076     0.2453   2.885  0.00432 ** 
-HH51_grouped3+   0.5077     0.4967   1.022  0.30784    
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)              -3.3091     0.2235 -14.805  < 2e-16 *** #children aged below 5
+HH51_grouped1             0.1086     0.2054   0.529  0.59762    
+HH51_grouped2             0.7083     0.2441   2.901  0.00411 ** 
+HH51_groupedmore than 3   0.5180     0.4946   1.047  0.29610    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
-4. Call:
-svyglm(formula = UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
+4. Number of Fisher Scoring iterations: 6
+
+> #12.  
+> # Weighted logistic regression
+> weighted_logit12F <- svyglm(UN16AF ~ welevel1, design = hh_design, family = quasibinomial)
+> summary(weighted_logit12F)
+
+Call:
+svyglm(formula = UN16AF ~ welevel1, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -3.4622     0.2110 -16.408   <2e-16 ***
+welevel1Higher     -0.5175     0.5113  -1.012   0.3126    
+welevel1None       -0.1270     0.1723  -0.737   0.4617    
+welevel1Secondary  -0.4292     0.2339  -1.835   0.0679 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #13
+> # Weighted logistic regression
+> weighted_logit13F <- svyglm(UN16AF ~ HC15, design = hh_design, family = quasibinomial)
+> summary(weighted_logit13F)
+
+Call:
+svyglm(formula = UN16AF ~ HC15, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -4.3296     0.4260  -10.16   <2e-16 ***
+HC15YES       0.7530     0.3922    1.92   0.0562 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #14
+> # Weighted logistic regression
+> weighted_logit14F <- svyglm(UN16AF ~ EthnicityGroup, design = hh_design, family = quasibinomial)
+> summary(weighted_logit14F)
+
+Call:
+svyglm(formula = UN16AF ~ EthnicityGroup, design = hh_design, 
+    family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                                            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                                  -2.8275     0.2292 -12.338  < 2e-16 ***
+EthnicityGroupDalits                         -0.4400     0.4083  -1.078 0.282385    
+EthnicityGroupJanajati                       -2.2605     0.4327  -5.224 4.23e-07 ***
+EthnicityGroupMuslim                        -15.8293     0.3733 -42.400  < 2e-16 ***
+EthnicityGroupNewar                         -15.8342     0.3630 -43.626  < 2e-16 ***
+EthnicityGroupOther                          -2.0650     0.6492  -3.181 0.001692 ** 
+EthnicityGroupTarai or Madhesi Other Castes  -1.6217     0.4570  -3.549 0.000478 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9487755)
+
+Number of Fisher Scoring iterations: 17
+
+> # 6th regression table
+> table1F <- weighted_logit_F %>%
++   tbl_regression(label = list(stratum = "Region"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table2F <- weighted_logit2F %>%
++   tbl_regression(label = list(windex5r = "Rural Wealth Index Quintile"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table3F <- weighted_logit3F %>%
++   tbl_regression(label = list(HH51_grouped = "Number of Children Aged below five"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table4F <- weighted_logit4F %>%
++   tbl_regression(label = list(HH52_grouped = "Number of Children Aged 5-17"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table5F <- weighted_logit5F %>%
++   tbl_regression(label = list(HC1A_combined = "Religion"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table6F <- weighted_logit6F %>%
++   tbl_regression(label = list(helevel1 = "Education of Household Head"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table7F <- weighted_logit7F %>%
++   tbl_regression(label = list(HHAGEx = "Age of Household Head"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table8F <- weighted_logit8F %>%
++   tbl_regression(label = list(HHSEX = "Sex of Household Head"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table9F <- weighted_logit9F %>%
++   tbl_regression(label = list(WAGE = "Age of Women"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table10F <- weighted_logit10F %>%
++   tbl_regression(label = list(CM4_grouped = "Number of daughters living together"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table11F <- weighted_logit11F %>%
++   tbl_regression(label = list(MSTATUS_grouped = "Marital Status"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table12F <- weighted_logit12F %>%
++   tbl_regression(label = list(welevel1 = "Education of Women"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table13F <- weighted_logit13F %>%
++   tbl_regression(label = list(HC15 = "Owns Agricultural Land"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> table14F <- weighted_logit14F %>%
++   tbl_regression(label = list(EthnicityGroup = "Ethnicity"),
++                  exponentiate = TRUE,
++                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
++   ) %>%
++   add_global_p() %>%
++   bold_p(t = 0.10) %>%
++   bold_labels() %>%
++   italicize_levels()
+> # Stack the tables vertically
+> stacked_tableF <- tbl_stack(
++   tbls = list(table1F, table2F, table3F, table4F, table5F, table6F, table7F, table8F, table9F, table10F, table11F, table12F, table13F, table14F)
++ )
+> # Convert the gtsummary table to a gt table
+> stacked_gtF <- as_gt(stacked_tableF)
+> # Save the gt table as an image
+> gtsave(stacked_gtF, "staying_away_from_school_work.png")
+file:////var/folders/l1/wjxtm1y94g94hrtsqs46x1dh0000gn/T//Rtmpa8qWsp/filef692659f41f.html screenshot completed
+> library(dplyr)
+> library(haven)
+> library(labelled)
+> library(readxl)
+> library(survey)
+> library(readr)
+> library(psych)
+> library(tidyr)
+> library(broom)
+> library(tableone)
+> library(gtsummary)
+> library(gt)
+> library(stargazer)
+> library(webshot2) 
+> library(stringr)
+> setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
+> #open dataset
+> data_wm <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019/Nepal 2019/Nepal MICS6 SPSS Datasets/wm.sav")
+> data_hh <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019/Nepal 2019/Nepal MICS6 SPSS Datasets/hh.sav")
+> head(data_wm)
+# A tibble: 6 × 414
+    HH1   HH2    LN   WM1   WM2   WM3 WMINT   WM4   WM5  WM6D WM6M        WM6Y WM8         WM9    
+  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl+lbl>  <dbl> <dbl+lbl>   <dbl+l>
+1     1     3     4     1     3     4   103   100   103     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+2     1     5     2     1     5     2   101   100   101     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+3     1     6     2     1     6     2   102   100   102     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+4     1     6     3     1     6     3   103   100   103     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+5     1     7     2     1     7     2   103   100   103     8 2 [JESTHA]  2076 1 [YES, IN… 1 [YES]
+6     1     8     2     1     8     2   101   100   101     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+# ℹ 400 more variables: WM17 <dbl+lbl>, WM7H <dbl>, WM7M <dbl+lbl>, WM10H <dbl>, WM10M <dbl+lbl>,
+#   WM11 <dbl+lbl>, WM12 <dbl+lbl>, WM13 <dbl+lbl>, WM14 <dbl+lbl>, WM15 <dbl+lbl>, WMHINT <dbl>,
+#   WMFIN <dbl+lbl>, WB3M <dbl+lbl>, WB3Y <dbl+lbl>, WB4 <dbl>, WB5 <dbl+lbl>, WB6B <dbl+lbl>,
+#   WB7 <dbl+lbl>, WB9 <dbl+lbl>, WB10B <dbl+lbl>, WB11 <dbl+lbl>, WB12B <dbl+lbl>,
+#   WB14 <dbl+lbl>, WB15 <dbl+lbl>, WB16 <dbl+lbl>, WB17A <dbl+lbl>, WB17 <dbl+lbl>,
+#   WB18 <dbl+lbl>, WB19A <chr+lbl>, WB19B <chr+lbl>, WB19C <chr+lbl>, WB19D <chr+lbl>,
+#   WB19X <chr+lbl>, WB19NR <chr+lbl>, MT1 <dbl+lbl>, MT2 <dbl+lbl>, MT3 <dbl+lbl>, …
+# ℹ Use `colnames()` to see all variable names
+> # Convert labelled vectors to character vectors
+> data_hh <- labelled::to_character(data_hh)
+> data_wm <- labelled::to_character(data_wm)
+> # Use subset to filter only cases where the interview is completed and only rural areas
+> filtered_data_wm <- subset(data_wm, WM17 == "COMPLETED" & HH6 == "RURAL")
+> # Function to clean the data
+> clean_data <- function(df, columns) {
++   df %>%
++     mutate(across(all_of(columns), 
++                   ~ toupper(str_trim(gsub("[^[:print:]]", "", .))))) %>%
++     mutate(across(all_of(columns), ~ na_if(., "NO RESPONSE")))
++ }
+> # Specify the columns to clean
+> columns_to_clean <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF", "UN16AG", "UN16AH")
+> # Clean the data
+> filtered_data_wm <- clean_data(filtered_data_wm, columns_to_clean)
+> # Create a logical condition to filter out rows with "NO RESPONSE" or NA
+> condition <- !(
++   is.na(filtered_data_wm$UN16AA) | is.na(filtered_data_wm$UN16AB) | 
++     is.na(filtered_data_wm$UN16AC) | is.na(filtered_data_wm$UN16AD) | 
++     is.na(filtered_data_wm$UN16AE) | is.na(filtered_data_wm$UN16AF) | 
++     is.na(filtered_data_wm$UN16AG) | is.na(filtered_data_wm$UN16AH)
++ )
+> # Use subset to filter the data
+> updated_data <- subset(filtered_data_wm, condition)
+> # Verify the filtering
+> summary(updated_data)
+      HH1             HH2              LN              WM1             WM2       
+ Min.   :  1.0   Min.   : 1.00   Min.   : 1.000   Min.   :  1.0   Min.   : 1.00  
+ 1st Qu.: 97.0   1st Qu.: 6.00   1st Qu.: 2.000   1st Qu.: 97.0   1st Qu.: 6.00  
+      WM3             WMINT             WM4              WM5              WM6D     
+ Min.   : 1.000   Min.   : 101.0   Min.   : 100.0   Min.   : 101.0   Min.   : 1.0  
+ 1st Qu.: 2.000   1st Qu.: 501.0   1st Qu.: 500.0   1st Qu.: 501.0   1st Qu.: 5.0  
+     WM6M                WM6Y          WM8                WM9                WM17          
+ Length:5470        Min.   :2076   Length:5470        Length:5470        Length:5470       
+ Class :character   1st Qu.:2076   Class :character   Class :character   Class :character  
+      WM7H           WM7M               WM10H          WM10M               WM11          
+ Min.   : 6.00   Length:5470        Min.   : 6.00   Length:5470        Length:5470       
+ 1st Qu.: 9.00   Class :character   1st Qu.:10.00   Class :character   Class :character  
+     WM12               WM13               WM14               WM15               WMHINT      
+ Length:5470        Length:5470        Length:5470        Length:5470        Min.   : 101.0  
+ Class :character   Class :character   Class :character   Class :character   1st Qu.: 501.0  
+    WMFIN               WB3M               WB3Y                WB4            WB5           
+ Length:5470        Length:5470        Length:5470        Min.   :15.00   Length:5470       
+ Class :character   Class :character   Class :character   1st Qu.:21.00   Class :character  
+     WB6B               WB7                WB9               WB10B               WB11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    WB12B               WB14               WB15               WB16              WB17A          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     WB17               WB18              WB19A              WB19B              WB19C          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    WB19D              WB19X              WB19NR              MT1                MT2           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT3                MT4                MT5                MT6A               MT6B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT6C               MT6D               MT6E               MT6F               MT6G          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT6H               MT6I               MT9                MT10               MT11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT12               MA1                MA2                MA3                MA4           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MA5                MA6                MA7                MA8M               MA8Y          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MA11               CM1                CM2                 CM3             CM4       
+ Length:5470        Length:5470        Length:5470        Min.   :0.000   Min.   :0.000  
+ Class :character   Class :character   Class :character   1st Qu.:1.000   1st Qu.:0.000  
+     CM5                 CM6             CM7            CM8                 CM9       
+ Length:5470        Min.   :0.000   Min.   :0.000   Length:5470        Min.   :0.000  
+ Class :character   1st Qu.:0.000   1st Qu.:0.000   Class :character   1st Qu.:0.000  
+      CM10            CM11           CM12               CM15               CM17          
+ Min.   :0.000   Min.   : 0.00   Length:5470        Length:5470        Length:5470       
+ 1st Qu.:0.000   1st Qu.: 1.00   Class :character   Class :character   Class :character  
+     BH11               DB2                DB4                MN2                MN3A          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN3B               MN3C               MN3D               MN3E               MN3H          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN3F               MN3G               MN3X              MN3NR              MN4AU          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN4AN               MN5                MN6A               MN6B               MN6C          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN7                MN8                MN9                MN11               MN12          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN14               MN16               MN17              MN18A              MN18B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN18C              MN18X              MN18NR             MN19A              MN19B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN19C              MN19D              MN19E              MN19I              MN19F          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN19G              MN19H              MN19X              MN19Y              MN19NR         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN20               MN21               MN22               MN23               MN24          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN25              MN26U              MN26N               MN28               MN29          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN30              MN31A              MN31B              MN31C              MN31D          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN31E              MN31F              MN31G              MN31X              MN31Z          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN31NR              MN32               MN33              MN34A               MN34          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN35               MN36              MN37U              MN37N               MN38          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN39A              MN39B              MN39C              MN39D              MN39E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN39F              MN39G              MN39H              MN39I              MN39J          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN39X              MN39Y              MN39NR              PN3U               PN3N          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN4                PN5                PN6                PN8                PN9           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN10               PN11               PN12              PN13U              PN13N          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN14A              PN14B              PN14C              PN14D              PN14E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN14I              PN14F              PN14G              PN14H              PN14X          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN14NR              PN15               PN17               PN19               PN20          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN21              PN22U              PN22N              PN23A              PN23B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN23C              PN23D              PN23E              PN23I              PN23F          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN23G              PN23H              PN23X              PN23NR              PN24          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN25A              PN25B              PN25C               PN27               PN29          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN30               CP1                CP2                CP3                CP4A          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     CP4B               CP4C               CP4D               CP4E               CP4F          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     CP4G               CP4H               CP4I               CP4J               CP4L          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     CP4M               CP4X              CP4NR               UN2                UN4           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     UN5                UN7                UN8U               UN8N               UN11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN12A              UN12B              UN12C              UN12D              UN12E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN12F              UN12G              UN12H              UN12I              UN12X          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN12Z              UN12NR             UN14U              UN14N              UN16AA         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN16AB             UN16AC             UN16AD             UN16AE             UN16AF         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN16AG             UN16AH              UN17               UN18               UN19          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     DV1A               DV1B               DV1C               DV1D               DV1E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     DV2A               DV2B               DV2C               DV2D               DV2E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     DV2F               HT1                HT2A               HT2B               HT2C          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HT2D               HT2E               HT2F               HT2G               HT2H          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HT2I               AF2                AF3                AF6                AF8           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     AF9                AF10               AF11               AF12               HA1           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA2                HA3                HA4                HA5                HA6           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA7                HA8A               HA8B               HA8C               HA10          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    HA13A              HA13B              HA13C              HA13D               HA14          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA15               HA16               HA18               HA19               HA20          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA22               HA23               HA24               HA25               HA26          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA27               HA28               HA29               HA30               HA31          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA32               HA33               HA34               HA35               HA36          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA1                TA2                TA3                TA4                TA5           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA6                TA7                TA8A               TA8B               TA8D          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA8X              TA8NR               TA9                TA10               TA11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    TA12A              TA12B              TA12C              TA12X              TA12NR         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA13               TA14               TA15               TA16               TA17          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     LS1                LS2                LS3                LS4                 HH4        
+ Length:5470        Length:5470        Length:5470        Length:5470        Min.   : 100.0  
+ Class :character   Class :character   Class :character   Class :character   1st Qu.: 500.0  
+     HH6                HH7                 WDOI          WAGE                WDOB     
+ Length:5470        Length:5470        Min.   :2113   Length:5470        Min.   :1515  
+ Class :character   Class :character   1st Qu.:2114   Class :character   1st Qu.:1679  
+      WDOM          WAGEM           WDOBFC         WDOBLC       MSTATUS               CEB        
+ Min.   :1628   Min.   : 5.00   Min.   :1705   Min.   :1718   Length:5470        Min.   : 0.000  
+ 1st Qu.:1878   1st Qu.:16.00   1st Qu.:1899   1st Qu.:1991   Class :character   1st Qu.: 0.000  
+     CSURV           CDEAD          BH3_first          BH4D_first         BH4M_first       
+ Min.   : 0.00   Min.   :0.00000   Length:5470        Length:5470        Length:5470       
+ 1st Qu.: 0.00   1st Qu.:0.00000   Class :character   Class :character   Class :character  
+  BH4Y_first         BH6_first           BH3_last          BH4D_last          BH4M_last        
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+  BH4Y_last           BH6_last           welevel1           welevel2          insurance        
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+  disability            HH7b               HH7c              WB17b              wmweight     
+ Length:5470        Length:5470        Length:5470        Length:5470        Min.   :0.1188  
+ Class :character   Class :character   Class :character   Class :character   1st Qu.:0.4474  
+     wscore          windex5            windex10            wscoreu       windex5u        
+ Min.   :-1.9615   Length:5470        Length:5470        Min.   : NA    Length:5470       
+ 1st Qu.:-1.0231   Class :character   Class :character   1st Qu.: NA    Class :character  
+  windex10u            wscorer           windex5r          windex10r           ListCat         
+ Length:5470        Min.   :-2.03922   Length:5470        Length:5470        Length:5470       
+ Class :character   1st Qu.:-0.74663   Class :character   Class :character   Class :character  
+      PSU          dstratum           stratum         
+ Min.   :  1.0   Length:5470        Length:5470       
+ 1st Qu.: 97.0   Class :character   Class :character  
+ [ reached getOption("max.print") -- omitted 5 rows ]
+> # Define the mapping of each ethnicity to its group
+> ethnicity_mapping <- list(
++   "Brahman or Chhetri" = c("Brahman - Hill", "Chhetree", "Thakuri", "Sanyasi/Dashnami", "Brahman - Tarai", "Rajput", "Kayastha"),
++   "Tarai or Madhesi Other Castes" = c("Teli", "Terai Others", "Rajbansi", "Gangai", "Yadav", "Bantaba", "Jhangad/Dhagar", "Bantar/Sardar", 
++                                       "Kewat", "Kahar", "Musahar", "Hajam/Thakur", "Koiri/Kushwaha", "Sonar", "Bangali", "Dhimal", "Danuwar", 
++                                       "Tajpuriya", "Kurmi", "Dhanuk", "Meche", "Koche", "Khawas", "Mallaha", "Kori", "Marwadi", "Kalwar", 
++                                       "Tatma/Tatwa", "Sarbaria", "Mali", "Dhobi", "Amat", "Baraee", "Dom", "Gaderi/Bhedhar", "Sudhi", "Lohar", 
++                                       "Kumhar", "Kanu", "Kathbaniyan", "Nuniya", "Dev", "Khatwe", "Kamar", "Badhaee", "Bin", "Rajbhar", 
++                                       "Lodh", "Chidimar"),
++   "Dalits" = c("Sarki", "Damai/Dholi", "Dalit Others", "Kami", "Chamar/Harijan/Ram", "Dusadh/Pasawan/Pasi", "Badi"),
++   "Newar" = c("Newar"),
++   "Janajati" = c("Gharti/Bhujel", "Limbu", "Tamang", "Gurung", "Rai", "Kulung", "Sherpa", "Magar", "Majhi", "Lepcha", "Aathpariya", 
++                  "Chamling", "Yakkha", "Hayu", "Jirel", "Chepang/Praja", "Brahmu/Baramo", "Dura", "Thakali", "Kisan", "Chhantyal/Chhantel", 
++                  "Bote", "Darai", "Byasi/Sanka", "Mewahang Bala", "Kusunda", "Raji", "Sunuwar", "Ghale", "Pahari", "Natuwa", "Thami", 
++                  "Raute", "Gurung"),
++   "Muslim" = c("Musalman"),
++   "Other" = c("Others")
++ )
+> # Function to map ethnicities to groups, including handling NAs
+> map_ethnicity <- function(ethnicity) {
++   if (is.na(ethnicity)) {
++     return("Missing")
++   }
++   for (group in names(ethnicity_mapping)) {
++     if (ethnicity %in% ethnicity_mapping[[group]]) {
++       return(group)
++     }
++   }
++   return("Other")  # Default to "Other" if no match is found
++ }
+> # Apply the mapping to create a new variable
+> data_hh <- data_hh %>%
++   mutate(EthnicityGroup = sapply(HC2, map_ethnicity))
+> #Recode HHAGE into HHAGEx (4 groups)
+> data_hh <- data_hh %>%
++   mutate(
++     HHAGEx = case_when(
++       HHAGE >= 15 & HHAGE <= 19 ~ 1,
++       HHAGE >= 20 & HHAGE <= 24 ~ 2,
++       HHAGE >= 25 & HHAGE <= 49 ~ 3,
++       HHAGE >= 50 ~ 4
++     )
++   )
+> # Convert HHAGEx to a factor with appropriate labels
+> data_hh$HHAGEx <- factor(data_hh$HHAGEx, levels = c(1, 2, 3, 4), labels = c("15-19", "20-24", "25-49", "50 plus"))
+> # Check the summary to ensure the recoding worked
+> summary(data_hh$HHAGEx)
+  15-19   20-24   25-49 50 plus    NA's 
+     76     512    6548    5519     145 
+> # Convert "NO RESPONSE" to NA for the HC15 column
+> data_hh <- data_hh %>%
++   mutate(HC15 = na_if(toupper(str_trim(gsub("[^[:print:]]", "", HC15))), "NO RESPONSE"))
+> # Remove rows with NA values in HC15
+> cleaned_data_hh <- subset(data_hh, !is.na(HC15))
+> # Verify the unique values in HC15 after cleaning
+> unique(cleaned_data_hh$HC15)
+[1] "YES" "NO" 
+> # Select relevant variables from the household dataset
+> selected_data_hh <- cleaned_data_hh %>%
++   select(HH1, HH2, HH6, HH7, HH49, stratum, windex5r, HH51, HH52, HC1A, EthnicityGroup, HC15, helevel1, hhweight, HHAGEx, HHSEX, HHAGE)
+> # Select relevant variables from the women's dataset
+> selected_data_wm <- updated_data %>%
++   select(HH1, HH2, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH, WAGE, WM17, CM4, MSTATUS, welevel1, wmweight, WB4)
+> # Merge the datasets on HH1 and HH2
+> merged_data_new <- merge(selected_data_hh, selected_data_wm, by = c("HH1", "HH2"))
+> View(merged_data_new)
+> #Table for the number of women following practices in different regions
+> xtabs(~UN16AA + HH7, data=merged_data_new)
+      HH7
+UN16AA GANDAKI PROVINCE KARNALI PROVINCE PROVINCE NO. 1 PROVINCE NO. 2 PROVINCE NO. 3
+   NO               625              617            826            812            743
+   YES                5               74              7              5              2
+      HH7
+UN16AA PROVINCE NO. 5 SUDOORPASCHIM PROVINCE
+   NO             980                    578
+   YES              9                    182
+> # Combine low count categories for demonstration
+> merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
+> # Create a new grouped variable for CM4
+> merged_data_new$CM4_grouped <- ifelse(merged_data_new$CM4 >= 3, "More than 2", as.character(merged_data_new$CM4))
+> # Convert the new variable to a factor
+> merged_data_new$CM4_grouped <- factor(merged_data_new$CM4_grouped, levels = c("0", "1", "2", "More than 2"))
+> #Group MSTATUS into two groups
+> merged_data_new$MSTATUS_grouped <- ifelse(merged_data_new$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
+> # Convert the new variable to a factor
+> merged_data_new$MSTATUS_grouped <- factor(merged_data_new$MSTATUS_grouped, levels = c("Ever Married", "Never Married"))
+> # Create a new variable HH51_grouped in the dataset
+> merged_data_new$HH51_grouped <- ifelse(merged_data_new$HH51 > 2, "more than 3", as.character(merged_data_new$HH51))
+> # Convert to a factor with meaningful levels
+> merged_data_new$HH51_grouped <- factor(merged_data_new$HH51_grouped, levels = c("0", "1", "2", "more than 3"))
+> # Check the distribution of the new variable
+> table(merged_data_new$HH51_grouped)
+
+          0           1           2 more than 3 
+       2761        1940         619         145 
+> # Create a new variable HH51_grouped in the dataset
+> merged_data_new$HH52_grouped <- ifelse(merged_data_new$HH52 > 3, "more than 4", as.character(merged_data_new$HH52))
+> # Convert to a factor with meaningful levels
+> merged_data_new$HH52_grouped <- factor(merged_data_new$HH52_grouped, levels = c("0", "1", "2", "3", "more than 4"))
+> # Check the distribution of the new variable
+> table(merged_data_new$HH52_grouped)
+
+          0           1           2           3 more than 4 
+       1429        1530        1250         781         475 
+> # Convert character variables to factors
+> merged_data_new <- merged_data_new %>%
++   mutate(
++     HH6 = as.factor(HH6),
++     HH7 = as.factor(HH7),
++     stratum = as.factor(stratum),
++     windex5r = as.factor(windex5r),
++     HC1A = as.factor(HC1A),
++     EthnicityGroup = as.factor(EthnicityGroup),
++     HC15 = as.factor(HC15),
++     helevel1 = as.factor(helevel1),
++     HHSEX = as.factor(HHSEX),
++     UN16AA = as.factor(UN16AA),
++     UN16AB = as.factor(UN16AB),
++     UN16AC = as.factor(UN16AC),
++     UN16AD = as.factor(UN16AD),
++     UN16AE = as.factor(UN16AE),
++     UN16AF = as.factor(UN16AF),
++     UN16AG = as.factor(UN16AG),
++     UN16AH = as.factor(UN16AH),
++     WAGE = as.factor(WAGE),
++     WM17 = as.factor(WM17),
++     welevel1 = as.factor(welevel1),
++     HC1A_combined = as.factor(HC1A_combined)
++   )
+> # Verify the conversion
+> str(merged_data_new)
+'data.frame':	5465 obs. of  37 variables:
+ $ HH1            : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ HH2            : num  11 12 14 14 16 16 17 18 19 20 ...
+ $ HH6            : Factor w/ 1 level "RURAL": 1 1 1 1 1 1 1 1 1 1 ...
+ $ HH7            : Factor w/ 7 levels "GANDAKI PROVINCE",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ HH49           : num  1 1 2 2 2 2 1 1 1 1 ...
+ $ stratum        : Factor w/ 7 levels "Bagmati province Rural",..: 4 4 4 4 4 4 4 4 4 4 ...
+ $ windex5r       : Factor w/ 5 levels "Fourth","Middle",..: 5 5 3 3 3 3 3 5 3 5 ...
+ $ HH51           : num  1 2 0 0 1 1 0 0 0 0 ...
+ $ HH52           : num  0 4 4 4 1 1 0 1 0 0 ...
+ $ HC1A           : Factor w/ 10 levels "BON","BUDDHIST",..: 7 7 4 4 4 4 4 4 7 4 ...
+ $ EthnicityGroup : Factor w/ 7 levels "Brahman or Chhetri",..: 3 3 1 1 3 3 2 2 3 3 ...
+ $ HC15           : Factor w/ 2 levels "NO","YES": 2 2 2 2 2 2 2 2 2 1 ...
+ $ helevel1       : Factor w/ 4 levels "Basic (Gr 1-8)",..: 4 1 4 4 4 4 3 3 1 3 ...
+ $ hhweight       : num  0.503 0.503 1.318 1.318 1.318 ...
+ $ HHAGEx         : Factor w/ 4 levels "15-19","20-24",..: 4 3 3 3 4 4 3 4 3 4 ...
+ $ HHSEX          : Factor w/ 2 levels "Female","Male": 2 2 2 2 2 2 2 2 2 2 ...
+ $ HHAGE          : num  73 37 38 38 56 56 48 86 30 78 ...
+ $ UN16AA         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AB         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AC         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AD         : Factor w/ 2 levels "NO","YES": 1 1 2 2 1 1 1 1 1 1 ...
+ $ UN16AE         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AF         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AG         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AH         : Factor w/ 2 levels "NO","YES": 1 2 2 2 2 2 2 2 2 2 ...
+ $ WAGE           : Factor w/ 7 levels "15-19","20-24",..: 4 5 5 1 2 4 7 5 2 2 ...
+ $ WM17           : Factor w/ 1 level "COMPLETED": 1 1 1 1 1 1 1 1 1 1 ...
+ $ CM4            : num  0 2 3 NA 1 NA NA 1 NA NA ...
+ $ MSTATUS        : chr  "Currently married/in union" "Currently married/in union" "Currently married/in union" "Never married/in union" ...
+ $ welevel1       : Factor w/ 4 levels "Basic (Gr 1-8)",..: 4 3 4 4 4 4 3 2 1 4 ...
+ $ wmweight       : num  0.509 0.509 1.333 1.333 1.333 ...
+ $ WB4            : num  31 37 38 16 24 30 45 37 23 20 ...
+ $ HC1A_combined  : Factor w/ 5 levels "BUDDHIST","CHRISTIAN",..: 5 5 3 3 3 3 3 3 5 3 ...
+ $ CM4_grouped    : Factor w/ 4 levels "0","1","2","More than 2": 1 3 4 NA 2 NA NA 2 NA NA ...
+ $ MSTATUS_grouped: Factor w/ 2 levels "Ever Married",..: 1 1 1 2 1 1 1 1 1 2 ...
+ $ HH51_grouped   : Factor w/ 4 levels "0","1","2","more than 3": 2 3 1 1 2 2 1 1 1 1 ...
+ $ HH52_grouped   : Factor w/ 5 levels "0","1","2","3",..: 1 5 5 5 2 2 1 2 1 1 ...
+> #If you want to save the document, run the following by choosing the directory
+> write.csv(merged_data_new, file = "/Users/nasib/Desktop/Nepal MICS/merged_data_with_NAs_2019.csv")
+> ####################################Creating a frequency distribution (summary) table on unweighted data
+> # Select the desired variables including the new summary index
+> d <- merged_data_new %>% 
++   select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, WAGE, welevel1, MSTATUS_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
+> # Example variable labels
+> variable_labels <- list(
++   stratum = "Region",
++   windex5r = "Rural Wealth Index Quintile",
++   HH51_grouped = "Number of Children Under Age 5",
++   HH52_grouped = "Number of Children Age 5-17",
++   EthnicityGroup = "Ethnicity of Household Head",
++   MSTATUS_grouped = "Marital Status",
++   HC1A_combined = "Religion of Household Head",
++   HC15 = "Owns Agricultural Land",
++   helevel1 = "Education Level of Household Head",
++   HHAGEx = "Age of Household Head",
++   HHSEX = "Sex of Household Head",
++   WAGE = "Age Range of Women",
++   welevel1 = "Education of Women",
++   UN16AA = "Staying in a chaupadi/chhapro",
++   UN16AB = "Staying in a separate room ",
++   UN16AC = "Staying in the cowshed",
++   UN16AD = "Eating in a separate place",
++   UN16AE = "Bathing in a separate place",
++   UN16AF = "Staying away from school or work",
++   UN16AG = "Staying away from social gatherings",
++   UN16AH = "Staying away from religious work "
++ )
+> # Create the summary table with custom labels
+> summary_table <- tbl_summary(
++   d,
++   label = variable_labels
++ )
+> # Display the summary table
+> summary_table
+> #Save it 
+> summary_gt <- as_gt(summary_table)
+> gtsave(summary_gt, filename = "summary_table1.png")
+file:////var/folders/l1/wjxtm1y94g94hrtsqs46x1dh0000gn/T//Rtmpa8qWsp/filef6926ba8f0a.html screenshot completed
+> ##########################################
+> #convert Yes and NO to 1 and 0 in the practices columns
+> merged_data_new <- merged_data_new %>%
++   mutate(across(c(UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
+> # Renaming levels of the factor
+> # Step 1: Trim whitespace from the levels
+> merged_data_new$helevel1 <- trimws(merged_data_new$helevel1)
+> merged_data_new$welevel1 <- trimws(merged_data_new$welevel1)
+> # Step 2: Convert factor levels with the cleaned data
+> merged_data_new$helevel1 <- factor(merged_data_new$helevel1, 
++                                    levels = c("Basic (Gr 1-8)", "Higher", "None", "Secondary (Gr 9-12)") ,
++                                    labels = c("Basic", "Higher", "None", "Secondary"))
+> merged_data_new$welevel1 <- factor(merged_data_new$welevel1, 
++                                    levels = c("Basic (Gr 1-8)", "Higher", "None", "Secondary (Gr 9-12)") ,
++                                    labels = c("Basic", "Higher", "None", "Secondary"))
+> merged_data_new$HHAGEx <- factor(merged_data_new$HHAGEx, 
++                                    levels = c("15-19", "20-24","25-49", "50 plus" ),
++                                    labels = c("15 to 19", "20 to 24","25 to 49", "50 plus"   ))
+> merged_data_new$WAGE <- factor(merged_data_new$WAGE, 
++                                  levels = c("15-19", "20-24", "25-29", "30-34", "35-39",  "40-44", "45-49" ),
++                                  labels = c("15 to 19", "20 to 24", "25 to 29","30 to 34", "35 to 39", "40 to 44",  "45 to 49" ))
+> # Create survey design objects for each level
+> hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
+> wm_design <- svydesign(id = ~HH1, weights = ~wmweight,strata = ~stratum, data = merged_data_new)
+> summary(hh_design)
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (222) clusters.
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+Probabilities:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.4934  1.0633  1.5139  1.8031  2.2685  8.5346 
+Stratum Sizes: 
+           Bagmati province Rural Gandaki province Rural Karnali province Rural Province 1 Rural
+obs                           745                    630                    691              833
+design.PSU                     33                     30                     28               36
+actual.PSU                     33                     30                     28               36
+           Province 2 Rural Province 5 Rural Sudoorpaschim province Rural
+obs                     817              989                          760
+design.PSU               31               36                           28
+actual.PSU               31               36                           28
+Data variables:
+ [1] "HH1"             "HH2"             "HH6"             "HH7"             "HH49"           
+ [6] "stratum"         "windex5r"        "HH51"            "HH52"            "HC1A"           
+[11] "EthnicityGroup"  "HC15"            "helevel1"        "hhweight"        "HHAGEx"         
+[16] "HHSEX"           "HHAGE"           "UN16AA"          "UN16AB"          "UN16AC"         
+[21] "UN16AD"          "UN16AE"          "UN16AF"          "UN16AG"          "UN16AH"         
+[26] "WAGE"            "WM17"            "CM4"             "MSTATUS"         "welevel1"       
+[31] "wmweight"        "WB4"             "HC1A_combined"   "CM4_grouped"     "MSTATUS_grouped"
+[36] "HH51_grouped"    "HH52_grouped"   
+> svymean(~WB4, hh_design) #mean age of women just to check the difference
+      mean     SE
+WB4 29.109 0.1547
+> svymean(~WB4, wm_design)
+     mean     SE
+WB4 29.11 0.1548
+> mean(merged_data_new$WB4) #mean age without applying weights
+[1] 28.77237
+> # Unweighted frequencies for household 
+> if (nrow(merged_data_new) > 0) { 
++   cat('!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
++   unweighted_freq <- lapply(merged_data_new[c("stratum")], table)
++   print(unweighted_freq)
++ } else {
++   cat('No rows match the filtering criteria.\n')
++ }
+!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!
+$stratum
+
+      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                         745                          630                          691 
+            Province 1 Rural             Province 2 Rural             Province 5 Rural 
+                         833                          817                          989 
+Sudoorpaschim province Rural 
+                         760 
+
+> # Weighted frequencies for household
+> cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
+!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!
+> weighted_freq <- svytable(~stratum, hh_design)
+> print(weighted_freq)
+stratum
+      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                    563.5017                     344.0732                     312.5547 
+            Province 1 Rural             Province 2 Rural             Province 5 Rural 
+                    763.0279                     601.4027                     955.3646 
+Sudoorpaschim province Rural 
+                    439.6831 
+> ############################## Change the Variable names (labels) names
+> attr(merged_data_new[["stratum"]], "label") <- "Region"
+> attr(merged_data_new[["windex5r"]], "label") <- "Rural Wealth Index Quintile"
+> attr(merged_data_new[["HH51_grouped"]], "label") <- "Number of Chilren Aged below 5"
+> attr(merged_data_new[["HH52_grouped"]], "label") <- "Number of Chilren Aged 5-17"
+> attr(merged_data_new[["HC1A_combined"]], "label") <- "Religion"
+> attr(merged_data_new[["EthnicityGroup"]], "label") <- "Ethnicity"
+> attr(merged_data_new[["HC15"]], "label") <- "Owns Agricultural Land"
+> attr(merged_data_new[["helevel1"]], "label") <- "Education of Household Head"
+> attr(merged_data_new[["HHAGEx"]], "label") <- "Age of Household Head"
+> attr(merged_data_new[["HHSEX"]], "label") <- "Sex of Household Head"
+> attr(merged_data_new[["UN16AA"]], "label") <- "Staying in a chaupadi/chhapro"
+> attr(merged_data_new[["UN16AB"]], "label") <- "Staying in a separate room "
+> attr(merged_data_new[["UN16AC"]], "label") <- "Staying in the cowshed"
+> attr(merged_data_new[["UN16AD"]], "label") <- "Eating in a separate place"
+> attr(merged_data_new[["UN16AE"]], "label") <- "Bathing in a separate place"
+> attr(merged_data_new[["UN16AF"]], "label") <- "Staying away from school or work"
+> attr(merged_data_new[["UN16AG"]], "label") <- "Staying away from social gatherings"
+> attr(merged_data_new[["UN16AH"]], "label") <- "Staying away from religious work "
+> attr(merged_data_new[["WAGE"]], "label") <- "Age of Women "
+> attr(merged_data_new[["CM4"]], "label") <- "Number of daughters living together "
+> attr(merged_data_new[["MSTATUS_grouped"]], "label") <- "Marital Status "
+> attr(merged_data_new[["welevel1"]], "label") <- "Education of women"
+> #1.Unweighted logistic regression
+> unweighted_logit <- glm(UN16AA ~ stratum, data = merged_data_new, family = binomial)
+> summary(unweighted_logit)
+
+Call:
+glm(formula = UN16AA ~ stratum, family = binomial, data = merged_data_new)
+
+Coefficients:
+                                    Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                          -5.9175     0.7080  -8.358  < 2e-16 ***
+stratumGandaki province Rural         1.0892     0.8384   1.299    0.194    
+stratumKarnali province Rural         3.7967     0.7186   5.284 1.27e-07 ***
+stratumProvince 1 Rural               1.1469     0.8033   1.428    0.153    
+stratumProvince 2 Rural               0.8275     0.8381   0.987    0.324    
+stratumProvince 5 Rural               1.2272     0.7832   1.567    0.117    
+stratumSudoorpaschim province Rural   4.7620     0.7131   6.678 2.42e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2232.6  on 5464  degrees of freedom
+Residual deviance: 1637.4  on 5458  degrees of freedom
+AIC: 1651.4
+
+Number of Fisher Scoring iterations: 8
+
+> # Weighted logistic regression
+> weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
+> summary(weighted_logit)
+
+Call:
+svyglm(formula = UN16AA ~ stratum, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                          -6.6020     0.7266  -9.086  < 2e-16 ***
+stratumGandaki province Rural         1.4947     0.9117   1.640   0.1026    
+stratumKarnali province Rural         4.4788     0.8348   5.365 2.14e-07 ***
+stratumProvince 1 Rural               1.5600     0.8454   1.845   0.0664 .  
+stratumProvince 2 Rural               1.4937     0.8759   1.705   0.0896 .  
+stratumProvince 5 Rural               1.9630     0.8230   2.385   0.0180 *  
+stratumSudoorpaschim province Rural   5.4450     0.7998   6.808 1.03e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 9
+
+> #to check the frequency 
+> xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
+      stratum
+UN16AA Bagmati province Rural Gandaki province Rural Karnali province Rural Province 1 Rural
+     0                    743                    625                    617              826
+     1                      2                      5                     74                7
+      stratum
+UN16AA Province 2 Rural Province 5 Rural Sudoorpaschim province Rural
+     0              812              980                          578
+     1                5                9                          182
+> svytable(~UN16AA + stratum, hh_design) #for weighted
+      stratum
+UN16AA Bagmati province Rural Gandaki province Rural Karnali province Rural Province 1 Rural
+     0            562.7376731            342.0032093            279.1562021      758.1296442
+     1              0.7639866              2.0699823             33.3984878        4.8982521
+      stratum
+UN16AA Province 2 Rural Province 5 Rural Sudoorpaschim province Rural
+     0      597.7883594      946.2173905                  334.5060946
+     1        3.6143706        9.1471856                  105.1769817
+> #2. 
+> # Weighted logistic regression
+> weighted_logit2 <- svyglm(UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
+> summary(weighted_logit2)
+
+Call:
+svyglm(formula = UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
 
 Survey design:
 svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
@@ -99,15 +1023,66 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)    -3.504868   0.250521 -13.990  < 2e-16 ***
-HH52_grouped1   0.005627   0.217574   0.026  0.97939    
-HH52_grouped2   0.520892   0.230826   2.257  0.02506 *  
-HH52_grouped3   0.570745   0.247447   2.307  0.02205 *  
-HH52_grouped4+  0.868571   0.325598   2.668  0.00823 ** 
+(Intercept)      -5.1705     0.3961 -13.052  < 2e-16 ***
+windex5rMiddle    1.2447     0.5428   2.293   0.0228 *  
+windex5rPoorest   3.1256     0.4922   6.351 1.30e-09 ***
+windex5rRichest   0.3886     0.5605   0.693   0.4889    
+windex5rSecond    2.5177     0.4742   5.309 2.79e-07 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 7
+
+> #3. 
+> # Weighted logistic regression
+> weighted_logit3 <- svyglm(UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
+> summary(weighted_logit3)
+
+Call:
+svyglm(formula = UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)              -3.3091     0.2235 -14.805  < 2e-16 ***
+HH51_grouped1             0.1086     0.2054   0.529  0.59762    
+HH51_grouped2             0.7083     0.2441   2.901  0.00411 ** 
+HH51_groupedmore than 3   0.5180     0.4946   1.047  0.29610    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #4 
+> # Weighted logistic regression
+> weighted_logit4 <- svyglm(UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
+> summary(weighted_logit4)
+
+Call:
+svyglm(formula = UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                         Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -3.495851   0.250728 -13.943   <2e-16 *** #children aged 5-17
+HH52_grouped1            0.003718   0.217625   0.017   0.9864    
+HH52_grouped2            0.507496   0.230898   2.198   0.0290 *  
+HH52_grouped3            0.565457   0.247375   2.286   0.0233 *  
+HH52_groupedmore than 4  0.818614   0.336131   2.435   0.0157 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
 5. Call:
@@ -120,17 +1095,18 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                         Estimate Std. Error t value Pr(>|t|)    
-(Intercept)             -5.13456    0.60971  -8.421 5.71e-15 *** buddhist
-HC1A_combinedCHRISTIAN -12.49782    0.67204 -18.597  < 2e-16 ***
-HC1A_combinedHINDU       2.10990    0.64026   3.295  0.00115 ** 
-HC1A_combinedISLAM       0.07545    1.21009   0.062  0.95035    
-HC1A_combinedOTHER       1.58920    0.92278   1.722  0.08650 .  
+(Intercept)             -5.12737    0.60979  -8.408  6.2e-15 *** #buddhist
+HC1A_combinedCHRISTIAN -12.50491    0.67221 -18.603  < 2e-16 ***
+HC1A_combinedHINDU       2.09981    0.64011   3.280  0.00121 ** 
+HC1A_combinedISLAM       0.08391    1.21061   0.069  0.94481    
+HC1A_combinedOTHER       1.58200    0.92282   1.714  0.08794 .  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 0.9794844)
+(Dispersion parameter for quasibinomial family taken to be 0.9791836)
 
 Number of Fisher Scoring iterations: 16
+
 6. Call:
 svyglm(formula = UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
 
@@ -139,15 +1115,15 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
     data = merged_data_new)
 
 Coefficients:
-                            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                  -3.3455     0.2327 -14.376   <2e-16 *** #basic
-helevel1Higher              -14.2329     0.2541 -56.003   <2e-16 ***
-helevel1None                  0.3371     0.2079   1.621    0.106    
-helevel1Secondary (Gr 9-12)   0.1922     0.2255   0.852    0.395    
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -3.3442     0.2336 -14.318   <2e-16 *** #basic
+helevel1Higher    -14.2342     0.2549 -55.846   <2e-16 ***
+helevel1None        0.3308     0.2069   1.598    0.111    
+helevel1Secondary   0.1917     0.2263   0.847    0.398    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 0.9780046)
+(Dispersion parameter for quasibinomial family taken to be 0.9776964)
 
 Number of Fisher Scoring iterations: 16
 7. Call:
@@ -158,15 +1134,15 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
     data = merged_data_new)
 
 Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  -0.8502     0.6208  -1.369  0.17231    #15-19
-HHAGEx20-24  -1.7009     0.5949  -2.859  0.00467 ** 
-HHAGEx25-49  -2.3012     0.5744  -4.006 8.55e-05 ***
-HHAGEx50+    -2.4933     0.6131  -4.067 6.72e-05 ***
+               Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -0.8502     0.6208  -1.369  0.17231    #15-19
+HHAGEx20 to 24  -1.6890     0.5948  -2.840  0.00496 ** 
+HHAGEx25 to 49  -2.3069     0.5728  -4.027 7.86e-05 ***
+HHAGEx50 plus   -2.4906     0.6131  -4.062 6.84e-05 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
 8. Call:
@@ -178,15 +1154,15 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
             Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  -2.9369     0.2112 -13.903   <2e-16 ***
-HHSEXMale    -0.3312     0.2121  -1.562     0.12    
+(Intercept)  -2.9487     0.2147  -13.74   <2e-16 ***
+HHSEXMale    -0.3168     0.2216   -1.43    0.154    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
-9. Call:
+9.Call:
 svyglm(formula = UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
 
 Survey design:
@@ -194,21 +1170,21 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
     data = merged_data_new)
 
 Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept) -3.21692    0.22745 -14.143   <2e-16 ***
-WAGE20-24    0.05340    0.16736   0.319    0.750    
-WAGE25-29   -0.09195    0.20756  -0.443    0.658    
-WAGE30-34    0.26569    0.22618   1.175    0.241    
-WAGE35-39    0.09737    0.22397   0.435    0.664    
-WAGE40-44   -0.07528    0.18588  -0.405    0.686    
-WAGE45-49   -0.05327    0.27126  -0.196    0.844    
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -3.22522    0.22602 -14.270   <2e-16 ***
+WAGE20 to 24  0.06814    0.16358   0.417    0.677    
+WAGE25 to 29 -0.08365    0.20732  -0.404    0.687    
+WAGE30 to 34  0.26211    0.22989   1.140    0.256    
+WAGE35 to 39  0.10958    0.22810   0.480    0.631    
+WAGE40 to 44 -0.05972    0.18617  -0.321    0.749    
+WAGE45 to 49 -0.05766    0.27555  -0.209    0.834    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
-10. Call:##### Number of daughters living together######there are 1739 NAs so the result must be distorted!!
+10. Call:
 svyglm(formula = UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
 
 Survey design:
@@ -217,14 +1193,14 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                        Estimate Std. Error t value Pr(>|t|)    
-(Intercept)             -3.2739     0.2186 -14.973   <2e-16 ***
-CM4_grouped1             0.1534     0.1715   0.894   0.3721    
-CM4_grouped2             0.3463     0.2065   1.677   0.0949 .  
-CM4_groupedMore than 2   0.7713     0.2990   2.580   0.0106 *  
+(Intercept)             -3.2696     0.2187 -14.954   <2e-16 *** #number of daughters living together
+CM4_grouped1             0.1519     0.1714   0.886   0.3766    
+CM4_grouped2             0.3232     0.2097   1.541   0.1248    
+CM4_groupedMore than 2   0.7596     0.3010   2.524   0.0124 *  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 0.949597)
+(Dispersion parameter for quasibinomial family taken to be 0.9497072)
 
 Number of Fisher Scoring iterations: 6
 11. Call:
@@ -237,15 +1213,990 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                              Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -3.1258     0.1870 -16.715   <2e-16 ***
-MSTATUS_groupedNever Married  -0.2497     0.1553  -1.607    0.109    
+(Intercept)                   -3.1266     0.1868 -16.738   <2e-16 ***
+MSTATUS_groupedNever Married  -0.2582     0.1552  -1.664   0.0976 .  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
-12. 
+12. Call:
+svyglm(formula = UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -3.2463     0.2097 -15.482   <2e-16 ***
+welevel1Higher     -1.5230     0.7589  -2.007   0.0460 *  
+welevel1None        0.3932     0.1635   2.404   0.0171 *  
+welevel1Secondary  -0.2100     0.2056  -1.021   0.3083    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 7
+13. > library(gtsummary)
+> library(gt)
+> library(stargazer)
+> library(webshot2) 
+> library(stringr)
+> setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
+> #open dataset
+> data_wm <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019/Nepal 2019/Nepal MICS6 SPSS Datasets/wm.sav")
+> data_hh <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019/Nepal 2019/Nepal MICS6 SPSS Datasets/hh.sav")
+> head(data_wm)
+# A tibble: 6 × 414
+    HH1   HH2    LN   WM1   WM2   WM3 WMINT   WM4   WM5  WM6D WM6M        WM6Y WM8         WM9    
+  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl+lbl>  <dbl> <dbl+lbl>   <dbl+l>
+1     1     3     4     1     3     4   103   100   103     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+2     1     5     2     1     5     2   101   100   101     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+3     1     6     2     1     6     2   102   100   102     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+4     1     6     3     1     6     3   103   100   103     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+5     1     7     2     1     7     2   103   100   103     8 2 [JESTHA]  2076 1 [YES, IN… 1 [YES]
+6     1     8     2     1     8     2   101   100   101     8 2 [JESTHA]  2076 2 [NO, FIR… 1 [YES]
+# ℹ 400 more variables: WM17 <dbl+lbl>, WM7H <dbl>, WM7M <dbl+lbl>, WM10H <dbl>, WM10M <dbl+lbl>,
+#   WM11 <dbl+lbl>, WM12 <dbl+lbl>, WM13 <dbl+lbl>, WM14 <dbl+lbl>, WM15 <dbl+lbl>, WMHINT <dbl>,
+#   WMFIN <dbl+lbl>, WB3M <dbl+lbl>, WB3Y <dbl+lbl>, WB4 <dbl>, WB5 <dbl+lbl>, WB6B <dbl+lbl>,
+#   WB7 <dbl+lbl>, WB9 <dbl+lbl>, WB10B <dbl+lbl>, WB11 <dbl+lbl>, WB12B <dbl+lbl>,
+#   WB14 <dbl+lbl>, WB15 <dbl+lbl>, WB16 <dbl+lbl>, WB17A <dbl+lbl>, WB17 <dbl+lbl>,
+#   WB18 <dbl+lbl>, WB19A <chr+lbl>, WB19B <chr+lbl>, WB19C <chr+lbl>, WB19D <chr+lbl>,
+#   WB19X <chr+lbl>, WB19NR <chr+lbl>, MT1 <dbl+lbl>, MT2 <dbl+lbl>, MT3 <dbl+lbl>, …
+# ℹ Use `colnames()` to see all variable names
+> # Convert labelled vectors to character vectors
+> data_hh <- labelled::to_character(data_hh)
+> data_wm <- labelled::to_character(data_wm)
+> # Use subset to filter only cases where the interview is completed and only rural areas
+> filtered_data_wm <- subset(data_wm, WM17 == "COMPLETED" & HH6 == "RURAL")
+> # Function to clean the data
+> clean_data <- function(df, columns) {
++   df %>%
++     mutate(across(all_of(columns), 
++                   ~ toupper(str_trim(gsub("[^[:print:]]", "", .))))) %>%
++     mutate(across(all_of(columns), ~ na_if(., "NO RESPONSE")))
++ }
+> # Specify the columns to clean
+> columns_to_clean <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF", "UN16AG", "UN16AH")
+> # Clean the data
+> filtered_data_wm <- clean_data(filtered_data_wm, columns_to_clean)
+> # Create a logical condition to filter out rows with "NO RESPONSE" or NA
+> condition <- !(
++   is.na(filtered_data_wm$UN16AA) | is.na(filtered_data_wm$UN16AB) | 
++     is.na(filtered_data_wm$UN16AC) | is.na(filtered_data_wm$UN16AD) | 
++     is.na(filtered_data_wm$UN16AE) | is.na(filtered_data_wm$UN16AF) | 
++     is.na(filtered_data_wm$UN16AG) | is.na(filtered_data_wm$UN16AH)
++ )
+> # Use subset to filter the data
+> updated_data <- subset(filtered_data_wm, condition)
+> # Verify the filtering
+> summary(updated_data)
+      HH1             HH2              LN              WM1             WM2       
+ Min.   :  1.0   Min.   : 1.00   Min.   : 1.000   Min.   :  1.0   Min.   : 1.00  
+ 1st Qu.: 97.0   1st Qu.: 6.00   1st Qu.: 2.000   1st Qu.: 97.0   1st Qu.: 6.00  
+      WM3             WMINT             WM4              WM5              WM6D     
+ Min.   : 1.000   Min.   : 101.0   Min.   : 100.0   Min.   : 101.0   Min.   : 1.0  
+ 1st Qu.: 2.000   1st Qu.: 501.0   1st Qu.: 500.0   1st Qu.: 501.0   1st Qu.: 5.0  
+     WM6M                WM6Y          WM8                WM9                WM17          
+ Length:5470        Min.   :2076   Length:5470        Length:5470        Length:5470       
+ Class :character   1st Qu.:2076   Class :character   Class :character   Class :character  
+      WM7H           WM7M               WM10H          WM10M               WM11          
+ Min.   : 6.00   Length:5470        Min.   : 6.00   Length:5470        Length:5470       
+ 1st Qu.: 9.00   Class :character   1st Qu.:10.00   Class :character   Class :character  
+     WM12               WM13               WM14               WM15               WMHINT      
+ Length:5470        Length:5470        Length:5470        Length:5470        Min.   : 101.0  
+ Class :character   Class :character   Class :character   Class :character   1st Qu.: 501.0  
+    WMFIN               WB3M               WB3Y                WB4            WB5           
+ Length:5470        Length:5470        Length:5470        Min.   :15.00   Length:5470       
+ Class :character   Class :character   Class :character   1st Qu.:21.00   Class :character  
+     WB6B               WB7                WB9               WB10B               WB11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    WB12B               WB14               WB15               WB16              WB17A          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     WB17               WB18              WB19A              WB19B              WB19C          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    WB19D              WB19X              WB19NR              MT1                MT2           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT3                MT4                MT5                MT6A               MT6B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT6C               MT6D               MT6E               MT6F               MT6G          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT6H               MT6I               MT9                MT10               MT11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MT12               MA1                MA2                MA3                MA4           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MA5                MA6                MA7                MA8M               MA8Y          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MA11               CM1                CM2                 CM3             CM4       
+ Length:5470        Length:5470        Length:5470        Min.   :0.000   Min.   :0.000  
+ Class :character   Class :character   Class :character   1st Qu.:1.000   1st Qu.:0.000  
+     CM5                 CM6             CM7            CM8                 CM9       
+ Length:5470        Min.   :0.000   Min.   :0.000   Length:5470        Min.   :0.000  
+ Class :character   1st Qu.:0.000   1st Qu.:0.000   Class :character   1st Qu.:0.000  
+      CM10            CM11           CM12               CM15               CM17          
+ Min.   :0.000   Min.   : 0.00   Length:5470        Length:5470        Length:5470       
+ 1st Qu.:0.000   1st Qu.: 1.00   Class :character   Class :character   Class :character  
+     BH11               DB2                DB4                MN2                MN3A          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN3B               MN3C               MN3D               MN3E               MN3H          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN3F               MN3G               MN3X              MN3NR              MN4AU          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN4AN               MN5                MN6A               MN6B               MN6C          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN7                MN8                MN9                MN11               MN12          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN14               MN16               MN17              MN18A              MN18B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN18C              MN18X              MN18NR             MN19A              MN19B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN19C              MN19D              MN19E              MN19I              MN19F          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN19G              MN19H              MN19X              MN19Y              MN19NR         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN20               MN21               MN22               MN23               MN24          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN25              MN26U              MN26N               MN28               MN29          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN30              MN31A              MN31B              MN31C              MN31D          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN31E              MN31F              MN31G              MN31X              MN31Z          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN31NR              MN32               MN33              MN34A               MN34          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     MN35               MN36              MN37U              MN37N               MN38          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN39A              MN39B              MN39C              MN39D              MN39E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN39F              MN39G              MN39H              MN39I              MN39J          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    MN39X              MN39Y              MN39NR              PN3U               PN3N          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN4                PN5                PN6                PN8                PN9           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN10               PN11               PN12              PN13U              PN13N          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN14A              PN14B              PN14C              PN14D              PN14E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN14I              PN14F              PN14G              PN14H              PN14X          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN14NR              PN15               PN17               PN19               PN20          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN21              PN22U              PN22N              PN23A              PN23B          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN23C              PN23D              PN23E              PN23I              PN23F          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN23G              PN23H              PN23X              PN23NR              PN24          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    PN25A              PN25B              PN25C               PN27               PN29          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     PN30               CP1                CP2                CP3                CP4A          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     CP4B               CP4C               CP4D               CP4E               CP4F          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     CP4G               CP4H               CP4I               CP4J               CP4L          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     CP4M               CP4X              CP4NR               UN2                UN4           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     UN5                UN7                UN8U               UN8N               UN11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN12A              UN12B              UN12C              UN12D              UN12E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN12F              UN12G              UN12H              UN12I              UN12X          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN12Z              UN12NR             UN14U              UN14N              UN16AA         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN16AB             UN16AC             UN16AD             UN16AE             UN16AF         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    UN16AG             UN16AH              UN17               UN18               UN19          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     DV1A               DV1B               DV1C               DV1D               DV1E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     DV2A               DV2B               DV2C               DV2D               DV2E          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     DV2F               HT1                HT2A               HT2B               HT2C          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HT2D               HT2E               HT2F               HT2G               HT2H          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HT2I               AF2                AF3                AF6                AF8           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     AF9                AF10               AF11               AF12               HA1           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA2                HA3                HA4                HA5                HA6           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA7                HA8A               HA8B               HA8C               HA10          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    HA13A              HA13B              HA13C              HA13D               HA14          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA15               HA16               HA18               HA19               HA20          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA22               HA23               HA24               HA25               HA26          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA27               HA28               HA29               HA30               HA31          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     HA32               HA33               HA34               HA35               HA36          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA1                TA2                TA3                TA4                TA5           
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA6                TA7                TA8A               TA8B               TA8D          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA8X              TA8NR               TA9                TA10               TA11          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+    TA12A              TA12B              TA12C              TA12X              TA12NR         
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     TA13               TA14               TA15               TA16               TA17          
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+     LS1                LS2                LS3                LS4                 HH4        
+ Length:5470        Length:5470        Length:5470        Length:5470        Min.   : 100.0  
+ Class :character   Class :character   Class :character   Class :character   1st Qu.: 500.0  
+     HH6                HH7                 WDOI          WAGE                WDOB     
+ Length:5470        Length:5470        Min.   :2113   Length:5470        Min.   :1515  
+ Class :character   Class :character   1st Qu.:2114   Class :character   1st Qu.:1679  
+      WDOM          WAGEM           WDOBFC         WDOBLC       MSTATUS               CEB        
+ Min.   :1628   Min.   : 5.00   Min.   :1705   Min.   :1718   Length:5470        Min.   : 0.000  
+ 1st Qu.:1878   1st Qu.:16.00   1st Qu.:1899   1st Qu.:1991   Class :character   1st Qu.: 0.000  
+     CSURV           CDEAD          BH3_first          BH4D_first         BH4M_first       
+ Min.   : 0.00   Min.   :0.00000   Length:5470        Length:5470        Length:5470       
+ 1st Qu.: 0.00   1st Qu.:0.00000   Class :character   Class :character   Class :character  
+  BH4Y_first         BH6_first           BH3_last          BH4D_last          BH4M_last        
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+  BH4Y_last           BH6_last           welevel1           welevel2          insurance        
+ Length:5470        Length:5470        Length:5470        Length:5470        Length:5470       
+ Class :character   Class :character   Class :character   Class :character   Class :character  
+  disability            HH7b               HH7c              WB17b              wmweight     
+ Length:5470        Length:5470        Length:5470        Length:5470        Min.   :0.1188  
+ Class :character   Class :character   Class :character   Class :character   1st Qu.:0.4474  
+     wscore          windex5            windex10            wscoreu       windex5u        
+ Min.   :-1.9615   Length:5470        Length:5470        Min.   : NA    Length:5470       
+ 1st Qu.:-1.0231   Class :character   Class :character   1st Qu.: NA    Class :character  
+  windex10u            wscorer           windex5r          windex10r           ListCat         
+ Length:5470        Min.   :-2.03922   Length:5470        Length:5470        Length:5470       
+ Class :character   1st Qu.:-0.74663   Class :character   Class :character   Class :character  
+      PSU          dstratum           stratum         
+ Min.   :  1.0   Length:5470        Length:5470       
+ 1st Qu.: 97.0   Class :character   Class :character  
+ [ reached getOption("max.print") -- omitted 5 rows ]
+> # Define the mapping of each ethnicity to its group
+> ethnicity_mapping <- list(
++   "Brahman or Chhetri" = c("Brahman - Hill", "Chhetree", "Thakuri", "Sanyasi/Dashnami", "Brahman - Tarai", "Rajput", "Kayastha"),
++   "Tarai or Madhesi Other Castes" = c("Teli", "Terai Others", "Rajbansi", "Gangai", "Yadav", "Bantaba", "Jhangad/Dhagar", "Bantar/Sardar", 
++                                       "Kewat", "Kahar", "Musahar", "Hajam/Thakur", "Koiri/Kushwaha", "Sonar", "Bangali", "Dhimal", "Danuwar", 
++                                       "Tajpuriya", "Kurmi", "Dhanuk", "Meche", "Koche", "Khawas", "Mallaha", "Kori", "Marwadi", "Kalwar", 
++                                       "Tatma/Tatwa", "Sarbaria", "Mali", "Dhobi", "Amat", "Baraee", "Dom", "Gaderi/Bhedhar", "Sudhi", "Lohar", 
++                                       "Kumhar", "Kanu", "Kathbaniyan", "Nuniya", "Dev", "Khatwe", "Kamar", "Badhaee", "Bin", "Rajbhar", 
++                                       "Lodh", "Chidimar"),
++   "Dalits" = c("Sarki", "Damai/Dholi", "Dalit Others", "Kami", "Chamar/Harijan/Ram", "Dusadh/Pasawan/Pasi", "Badi"),
++   "Newar" = c("Newar"),
++   "Janajati" = c("Gharti/Bhujel", "Limbu", "Tamang", "Gurung", "Rai", "Kulung", "Sherpa", "Magar", "Majhi", "Lepcha", "Aathpariya", 
++                  "Chamling", "Yakkha", "Hayu", "Jirel", "Chepang/Praja", "Brahmu/Baramo", "Dura", "Thakali", "Kisan", "Chhantyal/Chhantel", 
++                  "Bote", "Darai", "Byasi/Sanka", "Mewahang Bala", "Kusunda", "Raji", "Sunuwar", "Ghale", "Pahari", "Natuwa", "Thami", 
++                  "Raute", "Gurung"),
++   "Muslim" = c("Musalman"),
++   "Other" = c("Others")
++ )
+> # Function to map ethnicities to groups, including handling NAs
+> map_ethnicity <- function(ethnicity) {
++   if (is.na(ethnicity)) {
++     return("Missing")
++   }
++   for (group in names(ethnicity_mapping)) {
++     if (ethnicity %in% ethnicity_mapping[[group]]) {
++       return(group)
++     }
++   }
++   return("Other")  # Default to "Other" if no match is found
++ }
+> # Apply the mapping to create a new variable
+> data_hh <- data_hh %>%
++   mutate(EthnicityGroup = sapply(HC2, map_ethnicity))
+> #Recode HHAGE into HHAGEx (4 groups)
+> data_hh <- data_hh %>%
++   mutate(
++     HHAGEx = case_when(
++       HHAGE >= 15 & HHAGE <= 19 ~ 1,
++       HHAGE >= 20 & HHAGE <= 24 ~ 2,
++       HHAGE >= 25 & HHAGE <= 49 ~ 3,
++       HHAGE >= 50 ~ 4
++     )
++   )
+> # Convert HHAGEx to a factor with appropriate labels
+> data_hh$HHAGEx <- factor(data_hh$HHAGEx, levels = c(1, 2, 3, 4), labels = c("15-19", "20-24", "25-49", "50 plus"))
+> # Check the summary to ensure the recoding worked
+> summary(data_hh$HHAGEx)
+  15-19   20-24   25-49 50 plus    NA's 
+     76     512    6548    5519     145 
+> # Convert "NO RESPONSE" to NA for the HC15 column
+> data_hh <- data_hh %>%
++   mutate(HC15 = na_if(toupper(str_trim(gsub("[^[:print:]]", "", HC15))), "NO RESPONSE"))
+> # Remove rows with NA values in HC15
+> cleaned_data_hh <- subset(data_hh, !is.na(HC15))
+> # Verify the unique values in HC15 after cleaning
+> unique(cleaned_data_hh$HC15)
+[1] "YES" "NO" 
+> # Select relevant variables from the household dataset
+> selected_data_hh <- cleaned_data_hh %>%
++   select(HH1, HH2, HH6, HH7, HH49, stratum, windex5r, HH51, HH52, HC1A, EthnicityGroup, HC15, helevel1, hhweight, HHAGEx, HHSEX, HHAGE)
+> # Select relevant variables from the women's dataset
+> selected_data_wm <- updated_data %>%
++   select(HH1, HH2, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH, WAGE, WM17, CM4, MSTATUS, welevel1, wmweight, WB4)
+> # Merge the datasets on HH1 and HH2
+> merged_data_new <- merge(selected_data_hh, selected_data_wm, by = c("HH1", "HH2"))
+> View(merged_data_new)
+> #Table for the number of women following practices in different regions
+> xtabs(~UN16AA + HH7, data=merged_data_new)
+      HH7
+UN16AA GANDAKI PROVINCE KARNALI PROVINCE PROVINCE NO. 1 PROVINCE NO. 2 PROVINCE NO. 3
+   NO               625              617            826            812            743
+   YES                5               74              7              5              2
+      HH7
+UN16AA PROVINCE NO. 5 SUDOORPASCHIM PROVINCE
+   NO             980                    578
+   YES              9                    182
+> # Combine low count categories for demonstration
+> merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
+> # Create a new grouped variable for CM4
+> merged_data_new$CM4_grouped <- ifelse(merged_data_new$CM4 >= 3, "More than 2", as.character(merged_data_new$CM4))
+> # Convert the new variable to a factor
+> merged_data_new$CM4_grouped <- factor(merged_data_new$CM4_grouped, levels = c("0", "1", "2", "More than 2"))
+> #Group MSTATUS into two groups
+> merged_data_new$MSTATUS_grouped <- ifelse(merged_data_new$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
+> # Convert the new variable to a factor
+> merged_data_new$MSTATUS_grouped <- factor(merged_data_new$MSTATUS_grouped, levels = c("Ever Married", "Never Married"))
+> # Create a new variable HH51_grouped in the dataset
+> merged_data_new$HH51_grouped <- ifelse(merged_data_new$HH51 > 2, "more than 3", as.character(merged_data_new$HH51))
+> # Convert to a factor with meaningful levels
+> merged_data_new$HH51_grouped <- factor(merged_data_new$HH51_grouped, levels = c("0", "1", "2", "more than 3"))
+> # Check the distribution of the new variable
+> table(merged_data_new$HH51_grouped)
+
+          0           1           2 more than 3 
+       2761        1940         619         145 
+> # Create a new variable HH51_grouped in the dataset
+> merged_data_new$HH52_grouped <- ifelse(merged_data_new$HH52 > 3, "more than 4", as.character(merged_data_new$HH52))
+> # Convert to a factor with meaningful levels
+> merged_data_new$HH52_grouped <- factor(merged_data_new$HH52_grouped, levels = c("0", "1", "2", "3", "more than 4"))
+> # Check the distribution of the new variable
+> table(merged_data_new$HH52_grouped)
+
+          0           1           2           3 more than 4 
+       1429        1530        1250         781         475 
+> # Convert character variables to factors
+> merged_data_new <- merged_data_new %>%
++   mutate(
++     HH6 = as.factor(HH6),
++     HH7 = as.factor(HH7),
++     stratum = as.factor(stratum),
++     windex5r = as.factor(windex5r),
++     HC1A = as.factor(HC1A),
++     EthnicityGroup = as.factor(EthnicityGroup),
++     HC15 = as.factor(HC15),
++     helevel1 = as.factor(helevel1),
++     HHSEX = as.factor(HHSEX),
++     UN16AA = as.factor(UN16AA),
++     UN16AB = as.factor(UN16AB),
++     UN16AC = as.factor(UN16AC),
++     UN16AD = as.factor(UN16AD),
++     UN16AE = as.factor(UN16AE),
++     UN16AF = as.factor(UN16AF),
++     UN16AG = as.factor(UN16AG),
++     UN16AH = as.factor(UN16AH),
++     WAGE = as.factor(WAGE),
++     WM17 = as.factor(WM17),
++     welevel1 = as.factor(welevel1),
++     HC1A_combined = as.factor(HC1A_combined)
++   )
+> # Verify the conversion
+> str(merged_data_new)
+'data.frame':	5465 obs. of  37 variables:
+ $ HH1            : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ HH2            : num  11 12 14 14 16 16 17 18 19 20 ...
+ $ HH6            : Factor w/ 1 level "RURAL": 1 1 1 1 1 1 1 1 1 1 ...
+ $ HH7            : Factor w/ 7 levels "GANDAKI PROVINCE",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ HH49           : num  1 1 2 2 2 2 1 1 1 1 ...
+ $ stratum        : Factor w/ 7 levels "Bagmati province Rural",..: 4 4 4 4 4 4 4 4 4 4 ...
+ $ windex5r       : Factor w/ 5 levels "Fourth","Middle",..: 5 5 3 3 3 3 3 5 3 5 ...
+ $ HH51           : num  1 2 0 0 1 1 0 0 0 0 ...
+ $ HH52           : num  0 4 4 4 1 1 0 1 0 0 ...
+ $ HC1A           : Factor w/ 10 levels "BON","BUDDHIST",..: 7 7 4 4 4 4 4 4 7 4 ...
+ $ EthnicityGroup : Factor w/ 7 levels "Brahman or Chhetri",..: 3 3 1 1 3 3 2 2 3 3 ...
+ $ HC15           : Factor w/ 2 levels "NO","YES": 2 2 2 2 2 2 2 2 2 1 ...
+ $ helevel1       : Factor w/ 4 levels "Basic (Gr 1-8)",..: 4 1 4 4 4 4 3 3 1 3 ...
+ $ hhweight       : num  0.503 0.503 1.318 1.318 1.318 ...
+ $ HHAGEx         : Factor w/ 4 levels "15-19","20-24",..: 4 3 3 3 4 4 3 4 3 4 ...
+ $ HHSEX          : Factor w/ 2 levels "Female","Male": 2 2 2 2 2 2 2 2 2 2 ...
+ $ HHAGE          : num  73 37 38 38 56 56 48 86 30 78 ...
+ $ UN16AA         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AB         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AC         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AD         : Factor w/ 2 levels "NO","YES": 1 1 2 2 1 1 1 1 1 1 ...
+ $ UN16AE         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AF         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AG         : Factor w/ 2 levels "NO","YES": 1 1 1 1 1 1 1 1 1 1 ...
+ $ UN16AH         : Factor w/ 2 levels "NO","YES": 1 2 2 2 2 2 2 2 2 2 ...
+ $ WAGE           : Factor w/ 7 levels "15-19","20-24",..: 4 5 5 1 2 4 7 5 2 2 ...
+ $ WM17           : Factor w/ 1 level "COMPLETED": 1 1 1 1 1 1 1 1 1 1 ...
+ $ CM4            : num  0 2 3 NA 1 NA NA 1 NA NA ...
+ $ MSTATUS        : chr  "Currently married/in union" "Currently married/in union" "Currently married/in union" "Never married/in union" ...
+ $ welevel1       : Factor w/ 4 levels "Basic (Gr 1-8)",..: 4 3 4 4 4 4 3 2 1 4 ...
+ $ wmweight       : num  0.509 0.509 1.333 1.333 1.333 ...
+ $ WB4            : num  31 37 38 16 24 30 45 37 23 20 ...
+ $ HC1A_combined  : Factor w/ 5 levels "BUDDHIST","CHRISTIAN",..: 5 5 3 3 3 3 3 3 5 3 ...
+ $ CM4_grouped    : Factor w/ 4 levels "0","1","2","More than 2": 1 3 4 NA 2 NA NA 2 NA NA ...
+ $ MSTATUS_grouped: Factor w/ 2 levels "Ever Married",..: 1 1 1 2 1 1 1 1 1 2 ...
+ $ HH51_grouped   : Factor w/ 4 levels "0","1","2","more than 3": 2 3 1 1 2 2 1 1 1 1 ...
+ $ HH52_grouped   : Factor w/ 5 levels "0","1","2","3",..: 1 5 5 5 2 2 1 2 1 1 ...
+> #If you want to save the document, run the following by choosing the directory
+> write.csv(merged_data_new, file = "/Users/nasib/Desktop/Nepal MICS/merged_data_with_NAs_2019.csv")
+> ####################################Creating a frequency distribution (summary) table on unweighted data
+> # Select the desired variables including the new summary index
+> d <- merged_data_new %>% 
++   select(stratum, windex5r, HH51_grouped, HH52_grouped, EthnicityGroup, HC1A_combined, HC15, helevel1, HHAGEx, HHSEX, WAGE, welevel1, MSTATUS_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
+> # Example variable labels
+> variable_labels <- list(
++   stratum = "Region",
++   windex5r = "Rural Wealth Index Quintile",
++   HH51_grouped = "Number of Children Under Age 5",
++   HH52_grouped = "Number of Children Age 5-17",
++   EthnicityGroup = "Ethnicity of Household Head",
++   MSTATUS_grouped = "Marital Status",
++   HC1A_combined = "Religion of Household Head",
++   HC15 = "Owns Agricultural Land",
++   helevel1 = "Education Level of Household Head",
++   HHAGEx = "Age of Household Head",
++   HHSEX = "Sex of Household Head",
++   WAGE = "Age Range of Women",
++   welevel1 = "Education of Women",
++   UN16AA = "Staying in a chaupadi/chhapro",
++   UN16AB = "Staying in a separate room ",
++   UN16AC = "Staying in the cowshed",
++   UN16AD = "Eating in a separate place",
++   UN16AE = "Bathing in a separate place",
++   UN16AF = "Staying away from school or work",
++   UN16AG = "Staying away from social gatherings",
++   UN16AH = "Staying away from religious work "
++ )
+> # Create the summary table with custom labels
+> summary_table <- tbl_summary(
++   d,
++   label = variable_labels
++ )
+> # Display the summary table
+> summary_table
+> #Save it 
+> summary_gt <- as_gt(summary_table)
+> gtsave(summary_gt, filename = "summary_table1.png")
+file:////var/folders/l1/wjxtm1y94g94hrtsqs46x1dh0000gn/T//Rtmpa8qWsp/filef6926ba8f0a.html screenshot completed
+> ##########################################
+> #convert Yes and NO to 1 and 0 in the practices columns
+> merged_data_new <- merged_data_new %>%
++   mutate(across(c(UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
+> # Renaming levels of the factor
+> # Step 1: Trim whitespace from the levels
+> merged_data_new$helevel1 <- trimws(merged_data_new$helevel1)
+> merged_data_new$welevel1 <- trimws(merged_data_new$welevel1)
+> # Step 2: Convert factor levels with the cleaned data
+> merged_data_new$helevel1 <- factor(merged_data_new$helevel1, 
++                                    levels = c("Basic (Gr 1-8)", "Higher", "None", "Secondary (Gr 9-12)") ,
++                                    labels = c("Basic", "Higher", "None", "Secondary"))
+> merged_data_new$welevel1 <- factor(merged_data_new$welevel1, 
++                                    levels = c("Basic (Gr 1-8)", "Higher", "None", "Secondary (Gr 9-12)") ,
++                                    labels = c("Basic", "Higher", "None", "Secondary"))
+> merged_data_new$HHAGEx <- factor(merged_data_new$HHAGEx, 
++                                    levels = c("15-19", "20-24","25-49", "50 plus" ),
++                                    labels = c("15 to 19", "20 to 24","25 to 49", "50 plus"   ))
+> merged_data_new$WAGE <- factor(merged_data_new$WAGE, 
++                                  levels = c("15-19", "20-24", "25-29", "30-34", "35-39",  "40-44", "45-49" ),
++                                  labels = c("15 to 19", "20 to 24", "25 to 29","30 to 34", "35 to 39", "40 to 44",  "45 to 49" ))
+> # Create survey design objects for each level
+> hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
+> wm_design <- svydesign(id = ~HH1, weights = ~wmweight,strata = ~stratum, data = merged_data_new)
+> summary(hh_design)
+Stratified 1 - level Cluster Sampling design (with replacement)
+With (222) clusters.
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+Probabilities:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.4934  1.0633  1.5139  1.8031  2.2685  8.5346 
+Stratum Sizes: 
+           Bagmati province Rural Gandaki province Rural Karnali province Rural Province 1 Rural
+obs                           745                    630                    691              833
+design.PSU                     33                     30                     28               36
+actual.PSU                     33                     30                     28               36
+           Province 2 Rural Province 5 Rural Sudoorpaschim province Rural
+obs                     817              989                          760
+design.PSU               31               36                           28
+actual.PSU               31               36                           28
+Data variables:
+ [1] "HH1"             "HH2"             "HH6"             "HH7"             "HH49"           
+ [6] "stratum"         "windex5r"        "HH51"            "HH52"            "HC1A"           
+[11] "EthnicityGroup"  "HC15"            "helevel1"        "hhweight"        "HHAGEx"         
+[16] "HHSEX"           "HHAGE"           "UN16AA"          "UN16AB"          "UN16AC"         
+[21] "UN16AD"          "UN16AE"          "UN16AF"          "UN16AG"          "UN16AH"         
+[26] "WAGE"            "WM17"            "CM4"             "MSTATUS"         "welevel1"       
+[31] "wmweight"        "WB4"             "HC1A_combined"   "CM4_grouped"     "MSTATUS_grouped"
+[36] "HH51_grouped"    "HH52_grouped"   
+> svymean(~WB4, hh_design) #mean age of women just to check the difference
+      mean     SE
+WB4 29.109 0.1547
+> svymean(~WB4, wm_design)
+     mean     SE
+WB4 29.11 0.1548
+> mean(merged_data_new$WB4) #mean age without applying weights
+[1] 28.77237
+> # Unweighted frequencies for household 
+> if (nrow(merged_data_new) > 0) { 
++   cat('!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
++   unweighted_freq <- lapply(merged_data_new[c("stratum")], table)
++   print(unweighted_freq)
++ } else {
++   cat('No rows match the filtering criteria.\n')
++ }
+!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!
+$stratum
+
+      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                         745                          630                          691 
+            Province 1 Rural             Province 2 Rural             Province 5 Rural 
+                         833                          817                          989 
+Sudoorpaschim province Rural 
+                         760 
+
+> # Weighted frequencies for household
+> cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
+!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!
+> weighted_freq <- svytable(~stratum, hh_design)
+> print(weighted_freq)
+stratum
+      Bagmati province Rural       Gandaki province Rural       Karnali province Rural 
+                    563.5017                     344.0732                     312.5547 
+            Province 1 Rural             Province 2 Rural             Province 5 Rural 
+                    763.0279                     601.4027                     955.3646 
+Sudoorpaschim province Rural 
+                    439.6831 
+> ############################## Change the Variable names (labels) names
+> attr(merged_data_new[["stratum"]], "label") <- "Region"
+> attr(merged_data_new[["windex5r"]], "label") <- "Rural Wealth Index Quintile"
+> attr(merged_data_new[["HH51_grouped"]], "label") <- "Number of Chilren Aged below 5"
+> attr(merged_data_new[["HH52_grouped"]], "label") <- "Number of Chilren Aged 5-17"
+> attr(merged_data_new[["HC1A_combined"]], "label") <- "Religion"
+> attr(merged_data_new[["EthnicityGroup"]], "label") <- "Ethnicity"
+> attr(merged_data_new[["HC15"]], "label") <- "Owns Agricultural Land"
+> attr(merged_data_new[["helevel1"]], "label") <- "Education of Household Head"
+> attr(merged_data_new[["HHAGEx"]], "label") <- "Age of Household Head"
+> attr(merged_data_new[["HHSEX"]], "label") <- "Sex of Household Head"
+> attr(merged_data_new[["UN16AA"]], "label") <- "Staying in a chaupadi/chhapro"
+> attr(merged_data_new[["UN16AB"]], "label") <- "Staying in a separate room "
+> attr(merged_data_new[["UN16AC"]], "label") <- "Staying in the cowshed"
+> attr(merged_data_new[["UN16AD"]], "label") <- "Eating in a separate place"
+> attr(merged_data_new[["UN16AE"]], "label") <- "Bathing in a separate place"
+> attr(merged_data_new[["UN16AF"]], "label") <- "Staying away from school or work"
+> attr(merged_data_new[["UN16AG"]], "label") <- "Staying away from social gatherings"
+> attr(merged_data_new[["UN16AH"]], "label") <- "Staying away from religious work "
+> attr(merged_data_new[["WAGE"]], "label") <- "Age of Women "
+> attr(merged_data_new[["CM4"]], "label") <- "Number of daughters living together "
+> attr(merged_data_new[["MSTATUS_grouped"]], "label") <- "Marital Status "
+> attr(merged_data_new[["welevel1"]], "label") <- "Education of women"
+> #1.Unweighted logistic regression
+> unweighted_logit <- glm(UN16AA ~ stratum, data = merged_data_new, family = binomial)
+> summary(unweighted_logit)
+
+Call:
+glm(formula = UN16AA ~ stratum, family = binomial, data = merged_data_new)
+
+Coefficients:
+                                    Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                          -5.9175     0.7080  -8.358  < 2e-16 ***
+stratumGandaki province Rural         1.0892     0.8384   1.299    0.194    
+stratumKarnali province Rural         3.7967     0.7186   5.284 1.27e-07 ***
+stratumProvince 1 Rural               1.1469     0.8033   1.428    0.153    
+stratumProvince 2 Rural               0.8275     0.8381   0.987    0.324    
+stratumProvince 5 Rural               1.2272     0.7832   1.567    0.117    
+stratumSudoorpaschim province Rural   4.7620     0.7131   6.678 2.42e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2232.6  on 5464  degrees of freedom
+Residual deviance: 1637.4  on 5458  degrees of freedom
+AIC: 1651.4
+
+Number of Fisher Scoring iterations: 8
+
+> # Weighted logistic regression
+> weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
+> summary(weighted_logit)
+
+Call:
+svyglm(formula = UN16AA ~ stratum, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                          -6.6020     0.7266  -9.086  < 2e-16 ***
+stratumGandaki province Rural         1.4947     0.9117   1.640   0.1026    
+stratumKarnali province Rural         4.4788     0.8348   5.365 2.14e-07 ***
+stratumProvince 1 Rural               1.5600     0.8454   1.845   0.0664 .  
+stratumProvince 2 Rural               1.4937     0.8759   1.705   0.0896 .  
+stratumProvince 5 Rural               1.9630     0.8230   2.385   0.0180 *  
+stratumSudoorpaschim province Rural   5.4450     0.7998   6.808 1.03e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 9
+
+> #to check the frequency 
+> xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
+      stratum
+UN16AA Bagmati province Rural Gandaki province Rural Karnali province Rural Province 1 Rural
+     0                    743                    625                    617              826
+     1                      2                      5                     74                7
+      stratum
+UN16AA Province 2 Rural Province 5 Rural Sudoorpaschim province Rural
+     0              812              980                          578
+     1                5                9                          182
+> svytable(~UN16AA + stratum, hh_design) #for weighted
+      stratum
+UN16AA Bagmati province Rural Gandaki province Rural Karnali province Rural Province 1 Rural
+     0            562.7376731            342.0032093            279.1562021      758.1296442
+     1              0.7639866              2.0699823             33.3984878        4.8982521
+      stratum
+UN16AA Province 2 Rural Province 5 Rural Sudoorpaschim province Rural
+     0      597.7883594      946.2173905                  334.5060946
+     1        3.6143706        9.1471856                  105.1769817
+> #2. 
+> # Weighted logistic regression
+> weighted_logit2 <- svyglm(UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
+> summary(weighted_logit2)
+
+Call:
+svyglm(formula = UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      -5.1705     0.3961 -13.052  < 2e-16 ***
+windex5rMiddle    1.2447     0.5428   2.293   0.0228 *  
+windex5rPoorest   3.1256     0.4922   6.351 1.30e-09 ***
+windex5rRichest   0.3886     0.5605   0.693   0.4889    
+windex5rSecond    2.5177     0.4742   5.309 2.79e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 7
+
+> #3. 
+> # Weighted logistic regression
+> weighted_logit3 <- svyglm(UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
+> summary(weighted_logit3)
+
+Call:
+svyglm(formula = UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)              -3.3091     0.2235 -14.805  < 2e-16 ***
+HH51_grouped1             0.1086     0.2054   0.529  0.59762    
+HH51_grouped2             0.7083     0.2441   2.901  0.00411 ** 
+HH51_groupedmore than 3   0.5180     0.4946   1.047  0.29610    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #4 
+> # Weighted logistic regression
+> weighted_logit4 <- svyglm(UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
+> summary(weighted_logit4)
+
+Call:
+svyglm(formula = UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                         Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -3.495851   0.250728 -13.943   <2e-16 ***
+HH52_grouped1            0.003718   0.217625   0.017   0.9864    
+HH52_grouped2            0.507496   0.230898   2.198   0.0290 *  
+HH52_grouped3            0.565457   0.247375   2.286   0.0233 *  
+HH52_groupedmore than 4  0.818614   0.336131   2.435   0.0157 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #5. 
+> # Weighted logistic regression
+> weighted_logit5 <- svyglm(UN16AA ~ HC1A_combined, design = hh_design, family = quasibinomial)
+> summary(weighted_logit5)
+
+Call:
+svyglm(formula = UN16AA ~ HC1A_combined, design = hh_design, 
+    family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -5.12737    0.60979  -8.408  6.2e-15 ***
+HC1A_combinedCHRISTIAN -12.50491    0.67221 -18.603  < 2e-16 ***
+HC1A_combinedHINDU       2.09981    0.64011   3.280  0.00121 ** 
+HC1A_combinedISLAM       0.08391    1.21061   0.069  0.94481    
+HC1A_combinedOTHER       1.58200    0.92282   1.714  0.08794 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9791836)
+
+Number of Fisher Scoring iterations: 16
+
+> #6. 
+> # Weighted logistic regression
+> weighted_logit6 <- svyglm(UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
+> summary(weighted_logit6)
+
+Call:
+svyglm(formula = UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -3.3442     0.2336 -14.318   <2e-16 ***
+helevel1Higher    -14.2342     0.2549 -55.846   <2e-16 ***
+helevel1None        0.3308     0.2069   1.598    0.111    
+helevel1Secondary   0.1917     0.2263   0.847    0.398    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9776964)
+
+Number of Fisher Scoring iterations: 16
+
+> #7.  
+> # Weighted logistic regression
+> weighted_logit7 <- svyglm(UN16AA ~ HHAGEx, design = hh_design, family = quasibinomial)
+> summary(weighted_logit7)
+
+Call:
+svyglm(formula = UN16AA ~ HHAGEx, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -0.8502     0.6208  -1.369  0.17231    
+HHAGEx20 to 24  -1.6890     0.5948  -2.840  0.00496 ** 
+HHAGEx25 to 49  -2.3069     0.5728  -4.027 7.86e-05 ***
+HHAGEx50 plus   -2.4906     0.6131  -4.062 6.84e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #8.  
+> # Weighted logistic regression
+> weighted_logit8 <- svyglm(UN16AA ~ HHSEX, design = hh_design, family = quasibinomial)
+> summary(weighted_logit8)
+
+Call:
+svyglm(formula = UN16AA ~ HHSEX, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -2.9487     0.2147  -13.74   <2e-16 ***
+HHSEXMale    -0.3168     0.2216   -1.43    0.154    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #9.  
+> # Weighted logistic regression
+> weighted_logit9 <- svyglm(UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
+> summary(weighted_logit9)
+
+Call:
+svyglm(formula = UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -3.22522    0.22602 -14.270   <2e-16 ***
+WAGE20 to 24  0.06814    0.16358   0.417    0.677    
+WAGE25 to 29 -0.08365    0.20732  -0.404    0.687    
+WAGE30 to 34  0.26211    0.22989   1.140    0.256    
+WAGE35 to 39  0.10958    0.22810   0.480    0.631    
+WAGE40 to 44 -0.05972    0.18617  -0.321    0.749    
+WAGE45 to 49 -0.05766    0.27555  -0.209    0.834    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #10.  
+> # Weighted logistic regression
+> weighted_logit10 <- svyglm(UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
+> summary(weighted_logit10)
+
+Call:
+svyglm(formula = UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                       Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -3.2696     0.2187 -14.954   <2e-16 ***
+CM4_grouped1             0.1519     0.1714   0.886   0.3766    
+CM4_grouped2             0.3232     0.2097   1.541   0.1248    
+CM4_groupedMore than 2   0.7596     0.3010   2.524   0.0124 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.9497072)
+
+Number of Fisher Scoring iterations: 6
+
+> #11.  
+> # Weighted logistic regression
+> weighted_logit11 <- svyglm(UN16AA ~ MSTATUS_grouped, design = hh_design, family = quasibinomial)
+> summary(weighted_logit11)
+
+Call:
+svyglm(formula = UN16AA ~ MSTATUS_grouped, design = hh_design, 
+    family = quasibinomial)
+
+Survey design:
+svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, 
+    data = merged_data_new)
+
+Coefficients:
+                             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                   -3.1266     0.1868 -16.738   <2e-16 ***
+MSTATUS_groupedNever Married  -0.2582     0.1552  -1.664   0.0976 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
+
+Number of Fisher Scoring iterations: 6
+
+> #12.  
+> # Weighted logistic regression
+> weighted_logit12 <- svyglm(UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
+> summary(weighted_logit12)
+
 Call:
 svyglm(formula = UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
 
@@ -254,19 +2205,19 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
     data = merged_data_new)
 
 Coefficients:
-                            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                  -3.2516     0.2096 -15.512   <2e-16 ***
-welevel1Higher               -1.5211     0.7588  -2.005   0.0463 *  
-welevel1None                  0.4011     0.1645   2.439   0.0155 *  
-welevel1Secondary (Gr 9-12)  -0.1965     0.2063  -0.952   0.3420    
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -3.2463     0.2097 -15.482   <2e-16 ***
+welevel1Higher     -1.5230     0.7589  -2.007   0.0460 *  
+welevel1None        0.3932     0.1635   2.404   0.0171 *  
+welevel1Secondary  -0.2100     0.2056  -1.021   0.3083    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 7
-13. 
-Call:
+
+13. Call:
 svyglm(formula = UN16AA ~ HC15, design = hh_design, family = quasibinomial)
 
 Survey design:
@@ -274,17 +2225,16 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
     data = merged_data_new)
 
 Coefficients:
-                Estimate Std. Error t value Pr(>|t|)    
-(Intercept)      -4.0475     0.4085  -9.907   <2e-16 ***
-HC15NO RESPONSE   3.5372     1.1410   3.100   0.0022 ** 
-HC15YES           0.9487     0.4067   2.333   0.0206 *  
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -4.0413     0.4089  -9.883   <2e-16 ***
+HC15YES       0.9457     0.4071   2.323   0.0211 *  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 6
-14. Call:
+14.Call:
 svyglm(formula = UN16AA ~ EthnicityGroup, design = hh_design, 
     family = quasibinomial)
 
@@ -294,19 +2244,20 @@ svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum,
 
 Coefficients:
                                             Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                                  -2.2050     0.2464  -8.948  < 2e-16 *** brahman/Chetri
-EthnicityGroupDalits                         -0.7471     0.3670  -2.036  0.04301 *  
-EthnicityGroupJanajati                       -2.6309     0.4035  -6.521 5.17e-10 ***
-EthnicityGroupMuslim                         -2.8708     1.0663  -2.692  0.00767 ** 
-EthnicityGroupNewar                          -2.7124     0.9862  -2.750  0.00648 ** 
-EthnicityGroupOther                          -4.1922     1.0438  -4.016 8.24e-05 ***
-EthnicityGroupTarai or Madhesi Other Castes  -2.2122     0.4634  -4.774 3.39e-06 ***
+(Intercept)                                  -2.2125     0.2453  -9.020  < 2e-16 *** #Brahman/chetri
+EthnicityGroupDalits                         -0.7339     0.3658  -2.006  0.04613 *  
+EthnicityGroupJanajati                       -2.6162     0.4026  -6.499 5.84e-10 ***
+EthnicityGroupMuslim                         -2.8445     1.0667  -2.667  0.00826 ** 
+EthnicityGroupNewar                          -2.6924     0.9840  -2.736  0.00675 ** 
+EthnicityGroupOther                          -4.1829     1.0434  -4.009 8.49e-05 ***
+EthnicityGroupTarai or Madhesi Other Castes  -2.2023     0.4635  -4.752 3.75e-06 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 1.000379)
+(Dispersion parameter for quasibinomial family taken to be 1.000183)
 
 Number of Fisher Scoring iterations: 8
+
 ############################################################################################################
 #Staying in a separate room 
 1. Call:
