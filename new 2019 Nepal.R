@@ -153,7 +153,7 @@ selected_data_wm <- updated_data %>%
 merged_data_new <- merge(selected_data_hh, selected_data_wm, by = c("HH1", "HH2"))
 
 #Table for the number of women following practices in different regions
-xtabs(~UN16AA + HH7, data=updated_data)
+xtabs(~UN16AA + HH7, data=merged_data_new)
 
 # Combine low count categories for demonstration
 merged_data_new$HC1A_combined <- with(merged_data_new, ifelse(HC1A %in% c("JAIN", "NO RELIGION", "OTHERS", "PRAKRITI", "BON", "KIRAT"), "OTHER", HC1A))
@@ -190,7 +190,6 @@ merged_data_new <- merged_data_new %>%
     HC15 = as.factor(HC15),
     helevel1 = as.factor(helevel1),
     HHSEX = as.factor(HHSEX),
-    UN16AA = as.factor(UN16AA),
     UN16AB = as.factor(UN16AB),
     UN16AC = as.factor(UN16AC),
     UN16AD = as.factor(UN16AD),
@@ -268,7 +267,8 @@ merged_data_new$WAGE <- factor(merged_data_new$WAGE,
                                  levels = c("15-19", "20-24", "25-29", "30-34", "35-39",  "40-44", "45-49" ),
                                  labels = c("15 to 19", "20 to 24", "25 to 29","30 to 34", "35 to 39", "40 to 44",  "45 to 49" ))
 
-
+# Ensure UN16AA is a factor
+merged_data_new$UN16AA <- factor(merged_data_new$UN16AA, levels = c(0, 1))
 
 # Create survey design objects for each level
 hh_design <- svydesign(id = ~HH1, weights = ~hhweight,strata = ~stratum, data = merged_data_new)
@@ -318,12 +318,97 @@ attr(merged_data_new[["welevel1"]], "label") <- "Education of women"
 #1.Unweighted logistic regression
 unweighted_logit <- glm(UN16AA ~ stratum, data = merged_data_new, family = binomial)
 summary(unweighted_logit)
+
+# Let's assume Bagmati province Rural is the desired reference category
+merged_data_new$stratum <- relevel(merged_data_new$stratum, ref = "Sudoorpaschim province Rural")
+
+# Verify the releveling
+levels(merged_data_new$stratum)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+
+# Run the weighted logistic regression
+weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
+
+# Print the summary of the model
+summary(weighted_logit)
+tbl_regression(weighted_logit, exponentiate = TRUE)
+
 # Weighted logistic regression
 weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
 summary(weighted_logit)
+weighted_logitH <- svyglm(UN16AH ~ stratum, design = hh_design, family = quasibinomial)
+summary(weighted_logitH)
+tbl_regression(weighted_logitH, exponentiate = TRUE)
+# Round values (if appropriate)
+# Assuming hh_design is your survey design object
+hh_design$variables$UN16AA <- as.numeric(as.character(hh_design$variables$UN16AA))
+
+# Print the structure of the modified variable
+str(hh_design$variables$UN16AA)
+hh_design$variables$UN16AA <- round(hh_design$variables$UN16AA)
+weighted_logit1 <- svyglm(UN16AA ~ stratum, design = hh_design, family = binomial)
+summary(weighted_logit1)
 #to check the frequency 
 xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
 svytable(~UN16AA + stratum, hh_design) #for weighted
+
+# Run Firth logistic regression
+firth_logit <- logistf(UN16AA ~ stratum, data = hh_design$variables, weights = hh_design$variables$hhweight)
+summary(firth_logit)
+
+# Combine sparse categories into new groups
+merged_data_new <- merged_data_new %>%
+  mutate(stratum_combined = case_when(
+    stratum %in% c("Province 1 Rural", "Province 2 Rural", "Province 5 Rural") ~ "Province 1, 2, 5",
+    stratum %in% c("Gandaki province Rural", "Karnali province Rural") ~ "Gandaki and Karnali",
+    stratum == "Sudoorpaschim province Rural" ~ "Sudoorpaschim province Rural",
+    TRUE ~ stratum # Keep other categories as they are
+  ))
+
+# Ensure 'stratum_combined' is a factor
+merged_data_new$stratum_combined <- as.factor(merged_data_new$stratum_combined)
+# Relevel 'stratum_combined' to make 'Sudoorpaschim province Rural' the reference category
+merged_data_new$stratum_combined <- relevel(merged_data_new$stratum_combined, ref = "Sudoorpaschim province Rural")
+# Check the new distribution to verify the combination
+table(merged_data_new$UN16AA, merged_data_new$stratum_combined)
+
+# Create survey design object with the new combined stratum
+hh_design_combined <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum_combined, data = merged_data_new)
+
+# Fit the logistic regression model using the combined stratum
+weighted_logit_combined <- svyglm(UN16AA ~ stratum_combined, design = hh_design_combined, family = quasibinomial)
+
+# Summary of the model
+summary(weighted_logit_combined)
+tbl_regression(weighted_logit_combined, exponentiate = TRUE)
+
+# Firth logistic regression for UN16AH with combined and original strata
+firth_logit_AA <- logistf(UN16AA ~ stratum_combined, data = merged_data_new, pl = TRUE)
+
+# Summary of the Firth logistic regression model
+summary(firth_logit_AA)
+tbl_regression(firth_logit_AA, exponentiate = TRUE)
+
+# Fit the logistic regression model using the combined stratum
+weighted_logit_combinedH <- svyglm(UN16AH ~ stratum_combined, design = hh_design_combined, family = quasibinomial)
+
+# Summary of the model
+summary(weighted_logit_combinedH)
+tbl_regression(weighted_logit_combinedH, exponentiate = TRUE)
+weighted_logitH <- svyglm(UN16AH ~ stratum, design = hh_design, family = quasibinomial)
+summary(weighted_logitH)
+tbl_regression(weighted_logitH, exponentiate = TRUE)
+# Firth logistic regression for UN16AH with combined and original strata
+firth_logit_AH <- logistf(UN16AH ~ stratum_combined, data = merged_data_new, pl = TRUE)
+
+# Summary of the Firth logistic regression model
+summary(firth_logit_AH)
+tbl_regression(firth_logit_AH, exponentiate = TRUE)
+
+
+
+
 
 #2. 
 # Weighted logistic regression
@@ -402,6 +487,7 @@ tbl_regression(weighted_logit4, exponentiate = TRUE)
 tbl_regression(weighted_logit3, exponentiate = TRUE)
 tbl_regression(weighted_logit2, exponentiate = TRUE)
 tbl_regression(weighted_logit, exponentiate = TRUE)
+tbl_regression(firth_logit, exponentiate = TRUE)
 
 # format results into data frame with global p-values
 weighted_logit %>%
