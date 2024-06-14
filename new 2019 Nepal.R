@@ -190,13 +190,6 @@ merged_data_new <- merged_data_new %>%
     HC15 = as.factor(HC15),
     helevel1 = as.factor(helevel1),
     HHSEX = as.factor(HHSEX),
-    UN16AB = as.factor(UN16AB),
-    UN16AC = as.factor(UN16AC),
-    UN16AD = as.factor(UN16AD),
-    UN16AE = as.factor(UN16AE),
-    UN16AF = as.factor(UN16AF),
-    UN16AG = as.factor(UN16AG),
-    UN16AH = as.factor(UN16AH),
     WAGE = as.factor(WAGE),
     WM17 = as.factor(WM17),
     welevel1 = as.factor(welevel1),
@@ -319,20 +312,17 @@ attr(merged_data_new[["welevel1"]], "label") <- "Education of women"
 unweighted_logit <- glm(UN16AA ~ stratum, data = merged_data_new, family = binomial)
 summary(unweighted_logit)
 
-# Let's assume Bagmati province Rural is the desired reference category
+# Let's make Sudoorpaschim province Rural the desired reference category
 merged_data_new$stratum <- relevel(merged_data_new$stratum, ref = "Sudoorpaschim province Rural")
-
 # Verify the releveling
 levels(merged_data_new$stratum)
 # Recreate the survey design object
 hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
-
 # Run the weighted logistic regression
-weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
-
+weighted_logitA <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
 # Print the summary of the model
-summary(weighted_logit)
-tbl_regression(weighted_logit, exponentiate = TRUE)
+summary(weighted_logitA)
+tbl_regression(weighted_logitA, exponentiate = TRUE)
 
 # Weighted logistic regression
 weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
@@ -340,24 +330,17 @@ summary(weighted_logit)
 weighted_logitH <- svyglm(UN16AH ~ stratum, design = hh_design, family = quasibinomial)
 summary(weighted_logitH)
 tbl_regression(weighted_logitH, exponentiate = TRUE)
-# Round values (if appropriate)
-# Assuming hh_design is your survey design object
-hh_design$variables$UN16AA <- as.numeric(as.character(hh_design$variables$UN16AA))
 
-# Print the structure of the modified variable
-str(hh_design$variables$UN16AA)
-hh_design$variables$UN16AA <- round(hh_design$variables$UN16AA)
-weighted_logit1 <- svyglm(UN16AA ~ stratum, design = hh_design, family = binomial)
-summary(weighted_logit1)
 #to check the frequency 
 xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
 svytable(~UN16AA + stratum, hh_design) #for weighted
 
-# Run Firth logistic regression
+# Run Firth logistic regression (if OR/CI is too high)
 firth_logit <- logistf(UN16AA ~ stratum, data = hh_design$variables, weights = hh_design$variables$hhweight)
 summary(firth_logit)
+tbl_regression(firth_logit, exponentiate = TRUE)
 
-# Combine sparse categories into new groups
+# Combine sparse categories into new groups (If OR/CI is too high)
 merged_data_new <- merged_data_new %>%
   mutate(stratum_combined = case_when(
     stratum %in% c("Province 1 Rural", "Province 2 Rural", "Province 5 Rural") ~ "Province 1, 2, 5",
@@ -411,68 +394,145 @@ tbl_regression(firth_logit_AH, exponentiate = TRUE)
 
 
 #2. 
-# Weighted logistic regression
+# Let's make Poorest the desired reference category
+merged_data_new$windex5r <- relevel(merged_data_new$windex5r, ref = "Poorest")
+# Verify the releveling
+levels(merged_data_new$windex5r)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+# Run the weighted logistic regression
 weighted_logit2 <- svyglm(UN16AA ~ windex5r, design = hh_design, family = quasibinomial)
+# Print the summary of the model
 summary(weighted_logit2)
+tbl_regression(weighted_logit2, exponentiate = TRUE)
 
-#3. 
+#3.  
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit3 <- svyglm(UN16AA ~ HH51_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit3)
+tbl_regression(weighted_logit3, exponentiate = TRUE)
 
-#4 
+#4 # Let's make 2 the desired reference category
+merged_data_new$HH52_grouped <- relevel(merged_data_new$HH52_grouped, ref = "2")
+# Verify the releveling
+levels(merged_data_new$HH52_grouped)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit4 <- svyglm(UN16AA ~ HH52_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit4)
+tbl_regression(weighted_logit4, exponentiate = TRUE)
+
+# format results into data frame with global p-values
+weighted_logit4 %>%
+  tbl_regression(label = list(stratum = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
 
 #5. 
+# Let's make Hindu the desired reference category
+merged_data_new$HC1A_combined <- relevel(merged_data_new$HC1A_combined, ref = "HINDU")
+# Verify the releveling
+levels(merged_data_new$HC1A_combined)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit5 <- svyglm(UN16AA ~ HC1A_combined, design = hh_design, family = quasibinomial)
 summary(weighted_logit5)
+tbl_regression(weighted_logit5, exponentiate = TRUE)
 
-#6. 
+#6.
+# Let's make None the desired reference category
+merged_data_new$helevel1 <- relevel(merged_data_new$helevel1, ref = "None")
+# Verify the releveling
+levels(merged_data_new$helevel1)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit6 <- svyglm(UN16AA ~ helevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit6)
 
-#7.  
+#7.
+# Let's make 25-49 the desired reference category
+merged_data_new$HHAGEx <- relevel(merged_data_new$HHAGEx, ref = "15 to 19")
+# Verify the releveling
+levels(merged_data_new$HHAGEx)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit7 <- svyglm(UN16AA ~ HHAGEx, design = hh_design, family = quasibinomial)
 summary(weighted_logit7)
+tbl_regression(weighted_logit7, exponentiate = TRUE)
 
 #8.  
 # Weighted logistic regression
 weighted_logit8 <- svyglm(UN16AA ~ HHSEX, design = hh_design, family = quasibinomial)
 summary(weighted_logit8)
+tbl_regression(weighted_logit8, exponentiate = TRUE)
 
 #9.  
 # Weighted logistic regression
 weighted_logit9 <- svyglm(UN16AA ~ WAGE, design = hh_design, family = quasibinomial)
 summary(weighted_logit9)
+tbl_regression(weighted_logit9, exponentiate = TRUE)
 
-#10.  
-# Weighted logistic regression
-weighted_logit10 <- svyglm(UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
+#10.
+#chnage reference# Let's make 1 the desired reference category
+merged_data_new$CM4_grouped <- relevel(merged_data_new$CM4_grouped, ref = "1")
+# Verify the releveling
+levels(merged_data_new$CM4_grouped)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+weighted_logit10<- svyglm(UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit10)
+tbl_regression(weighted_logit10, exponentiate = TRUE)
 
 #11.  
 # Weighted logistic regression
 weighted_logit11 <- svyglm(UN16AA ~ MSTATUS_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit11)
+tbl_regression(weighted_logit11, exponentiate = TRUE)
 
-#12.  
+#12.# Let's make None the desired reference category
+merged_data_new$welevel1 <- relevel(merged_data_new$welevel1, ref = "None")
+# Verify the releveling
+levels(merged_data_new$welevel1)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit12 <- svyglm(UN16AA ~ welevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit12)
-#13
+tbl_regression(weighted_logit12, exponentiate = TRUE)
+
+#13# Let's make YES the desired reference category
+merged_data_new$HC15 <- relevel(merged_data_new$HC15, ref = "YES")
+# Verify the releveling
+levels(merged_data_new$HC15)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit13 <- svyglm(UN16AA ~ HC15, design = hh_design, family = quasibinomial)
 summary(weighted_logit13)
+tbl_regression(weighted_logit13, exponentiate = TRUE)
 
-#14
+#14# Let's make Brahman or Chhetri the desired reference category
+merged_data_new$EthnicityGroup <- relevel(merged_data_new$EthnicityGroup, ref = "Brahman or Chhetri")
+# Verify the releveling
+levels(merged_data_new$EthnicityGroup)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit14 <- svyglm(UN16AA ~ EthnicityGroup, design = hh_design, family = quasibinomial)
 summary(weighted_logit14)
+tbl_regression(weighted_logit14, exponentiate = TRUE)
+
 
 #Tables for each regression
 tbl_regression(weighted_logit12, exponentiate = TRUE)
@@ -490,7 +550,7 @@ tbl_regression(weighted_logit, exponentiate = TRUE)
 tbl_regression(firth_logit, exponentiate = TRUE)
 
 # format results into data frame with global p-values
-weighted_logit %>%
+weighted_logitA %>%
   tbl_regression(label = list(stratum = "Region"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -501,7 +561,7 @@ weighted_logit %>%
   italicize_levels()
 
 # First regression table
-table1 <- weighted_logit %>%
+table1 <- weighted_logitA %>%
   tbl_regression(label = list(stratum = "Region"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
@@ -648,87 +708,154 @@ stacked_table <- tbl_stack(
 # Convert the gtsummary table to a gt table
 stacked_gt <- as_gt(stacked_table)
 # Save the gt table as an image
-gtsave(stacked_gt, "staying_in_chaupadi.png")
+gtsave(stacked_gt, "staying_in_chaupadi_2019.png")
 
 ###############################################################################################
 #Staying in a separate room UN16AB
 
-#1.
-# Weighted logistic regression
-weighted_logit_B <- svyglm(UN16AB ~ stratum, design = hh_design, family = quasibinomial)
-summary(weighted_logit_B)
-#to check the frequency 
-svytable(~UN16AB + stratum, hh_design) #for weighted
+#1. Let's make Sudoorpaschim province Rural the desired reference category
+merged_data_new$stratum <- relevel(merged_data_new$stratum, ref = "Sudoorpaschim province Rural")
+# Verify the releveling
+levels(merged_data_new$stratum)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+# Run the weighted logistic regression
+weighted_logitB <- svyglm(UN16AB ~ stratum, design = hh_design, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logitB)
+tbl_regression(weighted_logitB, exponentiate = TRUE)
 
 #2. 
-# Weighted logistic regression
+# Let's make Poorest the desired reference category
+merged_data_new$windex5r <- relevel(merged_data_new$windex5r, ref = "Poorest")
+# Verify the releveling
+levels(merged_data_new$windex5r)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+# Run the weighted logistic regression
 weighted_logit2B <- svyglm(UN16AB ~ windex5r, design = hh_design, family = quasibinomial)
+# Print the summary of the model
 summary(weighted_logit2B)
+tbl_regression(weighted_logit2B, exponentiate = TRUE)
 
-#3. 
+#3.  
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit3B <- svyglm(UN16AB ~ HH51_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit3B)
+tbl_regression(weighted_logit3B, exponentiate = TRUE)
 
-#4 
+#4 # Let's make 2 the desired reference category
+merged_data_new$HH52_grouped <- relevel(merged_data_new$HH52_grouped, ref = "2")
+# Verify the releveling
+levels(merged_data_new$HH52_grouped)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit4B <- svyglm(UN16AB ~ HH52_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit4B)
+tbl_regression(weighted_logit4B, exponentiate = TRUE)
 
 #5. 
+# Let's make Hindu the desired reference category
+merged_data_new$HC1A_combined <- relevel(merged_data_new$HC1A_combined, ref = "HINDU")
+# Verify the releveling
+levels(merged_data_new$HC1A_combined)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit5B <- svyglm(UN16AB ~ HC1A_combined, design = hh_design, family = quasibinomial)
 summary(weighted_logit5B)
+tbl_regression(weighted_logit5B, exponentiate = TRUE)
 
-#6. 
+#6.
+# Let's make None the desired reference category
+merged_data_new$helevel1 <- relevel(merged_data_new$helevel1, ref = "None")
+# Verify the releveling
+levels(merged_data_new$helevel1)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit6B <- svyglm(UN16AB ~ helevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit6B)
 
-#7.  
+#7.
+# Let's make 25-49 the desired reference category
+merged_data_new$HHAGEx <- relevel(merged_data_new$HHAGEx, ref = "15 to 19")
+# Verify the releveling
+levels(merged_data_new$HHAGEx)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit7B <- svyglm(UN16AB ~ HHAGEx, design = hh_design, family = quasibinomial)
 summary(weighted_logit7B)
+tbl_regression(weighted_logit7B, exponentiate = TRUE)
 
 #8.  
 # Weighted logistic regression
 weighted_logit8B <- svyglm(UN16AB ~ HHSEX, design = hh_design, family = quasibinomial)
 summary(weighted_logit8B)
+tbl_regression(weighted_logit8B, exponentiate = TRUE)
 
 #9.  
 # Weighted logistic regression
 weighted_logit9B <- svyglm(UN16AB ~ WAGE, design = hh_design, family = quasibinomial)
 summary(weighted_logit9B)
+tbl_regression(weighted_logit9B, exponentiate = TRUE)
 
-#10.  
-# Weighted logistic regression
-weighted_logit10B <- svyglm(UN16AB ~ CM4_grouped, design = hh_design, family = quasibinomial)
+#10.
+#chnage reference# Let's make 1 the desired reference category
+merged_data_new$CM4_grouped <- relevel(merged_data_new$CM4_grouped, ref = "1")
+# Verify the releveling
+levels(merged_data_new$CM4_grouped)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+weighted_logit10B<- svyglm(UN16AA ~ CM4_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit10B)
+tbl_regression(weighted_logit10B, exponentiate = TRUE)
 
 #11.  
 # Weighted logistic regression
 weighted_logit11B <- svyglm(UN16AB ~ MSTATUS_grouped, design = hh_design, family = quasibinomial)
 summary(weighted_logit11B)
+tbl_regression(weighted_logit11B, exponentiate = TRUE)
 
-#12.  
+#12.# Let's make None the desired reference category
+merged_data_new$welevel1 <- relevel(merged_data_new$welevel1, ref = "None")
+# Verify the releveling
+levels(merged_data_new$welevel1)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit12B <- svyglm(UN16AB ~ welevel1, design = hh_design, family = quasibinomial)
 summary(weighted_logit12B)
-#13
-# Weighted logistic regression
-weighted_logit13B <- svyglm(UN16AB ~ HC15, design = hh_design, family = quasibinomial)
-summary(weighted_logit13B)
+tbl_regression(weighted_logit12B, exponentiate = TRUE)
 
-#14
+#13# Let's make YES the desired reference category
+merged_data_new$HC15 <- relevel(merged_data_new$HC15, ref = "YES")
+# Verify the releveling
+levels(merged_data_new$HC15)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+# Weighted logistic regression
+weighted_logit13B <- svyglm(UN16AA ~ HC15, design = hh_design, family = quasibinomial)
+summary(weighted_logit13B)
+tbl_regression(weighted_logit13B, exponentiate = TRUE)
+
+#14# Let's make Brahman or Chhetri the desired reference category
+merged_data_new$EthnicityGroup <- relevel(merged_data_new$EthnicityGroup, ref = "Brahman or Chhetri")
+# Verify the releveling
+levels(merged_data_new$EthnicityGroup)
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
 # Weighted logistic regression
 weighted_logit14B <- svyglm(UN16AB ~ EthnicityGroup, design = hh_design, family = quasibinomial)
 summary(weighted_logit14B)
-
-
-tbl_regression(weighted_logit_B, exponentiate = TRUE)
+tbl_regression(weighted_logit14B, exponentiate = TRUE)
 
 # Second regression table
-table1B <- weighted_logit_B %>%
+table1B <- weighted_logitB %>%
   tbl_regression(label = list(stratum = "Region"),
                  exponentiate = TRUE,
                  pvalue_fun = ~ style_pvalue(.x, digits = 2),
