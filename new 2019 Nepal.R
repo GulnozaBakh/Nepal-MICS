@@ -2625,7 +2625,7 @@ weighted_logit14H <- svyglm(UN16AH ~ EthnicityGroup, design = hh_design, family 
 summary(weighted_logit14H)
 tbl_regression(weighted_logit14H, exponentiate = TRUE)
 
-# 7th regression table
+# 8th regression table
 table1H <- weighted_logitH %>%
   tbl_regression(label = list(stratum = "Region"),
                  exponentiate = TRUE,
@@ -2775,11 +2775,23 @@ stacked_gtH <- as_gt(stacked_tableH)
 # Save the gt table as an image
 gtsave(stacked_gtH, "staying_away_from_religious_work.png")
 
+###############################################################################
+#Multivariate regression 
+chaupadi <- glm(UN16AA ~ stratum + windex5r + HC15 + EthnicityGroup + HHAGEx, data = merged_data_new, family = "binomial")
+summary(chaupadi)           # for p-values
+exp(chaupadi$coefficients)  # for odds ratios
 
 
+# Extract model summary with tidy
+model_summary <- tidy(chaupadi, conf.int = TRUE, exponentiate = TRUE)
 
+# Display the tidy summary
+print(model_summary)
+# Create a regression table with gtsummary
+regression_table <- tbl_regression(chaupadi, exponentiate = TRUE)
 
-
+# Print the regression table
+print(regression_table)
 
 
 
