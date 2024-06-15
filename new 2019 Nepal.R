@@ -2848,20 +2848,12 @@ combined_summary <- tbl_merge(
     gt_summaryB,
     gt_summaryC,
     gt_summaryD,
-    gt_summaryE,
-    gt_summaryF,
-    gt_summaryG,
-    gt_summaryH
   ),
   tab_spanner = c(
     "Chaupadi",
     "Separate Room",
     "Cowshed",
     "Eating Separate",
-    "Bathing Separate",
-    "Away from Work or School",
-    "Away from Social Gatherings",
-    "Away from Religious Work"
   )
 )
 
@@ -2870,11 +2862,41 @@ combined_summary <- combined_summary %>%
   modify_caption("Multivariate Regression Results: Odds Ratios, Confidence Intervals, and P-values for Various Conditions")
 
 combined_summary
-# Save the combined summary as a PNG file
-gtsave(combined_summary, file = "combined_summary.png") #the picture is too big to save as a picture
+# Convert the gtsummary table to a gt table
+combined_summary <- as_gt(combined_summary)
+# Save the gt table as an image
+gtsave(combined_summary, "combined_summary1.png")
 
-# Save the gt table as an HTML file
-gtsave(combined, "combined_summary.html") #optimal way to save 
+# Merge the rest summary tables into one
+combined_summary <- tbl_merge(
+  tbls = list(
+    gt_summaryE,
+    gt_summaryF,
+    gt_summaryG,
+    gt_summaryH
+  ),
+  tab_spanner = c(
+    "Bathing in a separate place",
+    "Staying away from school or work",
+    "Staying away from social gatherings",
+    "Staying away from religious work"
+  )
+)
+
+# Add a caption and print the combined table
+combined_summary2 <- combined_summary %>%
+  modify_caption("Multivariate Regression Results: Odds Ratios, Confidence Intervals, and P-values for Various Conditions")
+
+combined_summary2
+# Convert the gtsummary table to a gt table
+combined_summary2 <- as_gt(combined_summary2)
+# Save the gt table as an image
+gtsave(combined_summary2, "combined_summary2.png")
+
+
+
+
+
 
 #Export data to csv
 write.csv(data_wm, file = "/Users/nasib/Desktop/data_wm.csv")
