@@ -26,6 +26,7 @@ library(gt)
 library(stargazer)
 library(webshot2) 
 library(stringr)
+library(purrr)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
  
@@ -323,73 +324,24 @@ weighted_logitA <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibi
 summary(weighted_logitA)
 tbl_regression(weighted_logitA, exponentiate = TRUE)
 
-# Weighted logistic regression
-weighted_logit <- svyglm(UN16AA ~ stratum, design = hh_design, family = quasibinomial)
-summary(weighted_logit)
-weighted_logitH <- svyglm(UN16AH ~ stratum, design = hh_design, family = quasibinomial)
-summary(weighted_logitH)
-tbl_regression(weighted_logitH, exponentiate = TRUE)
+# Predict the probabilities in order to check the regressions accuracy 
+probabilities <- predict(weighted_logitA, merged_data_new, type = "response")
+# Check if there are any NA values in the predicted probabilities
+print(sum(is.na(probabilities)))
+# Convert probabilities to predicted classes
+predicted.classes <- ifelse(probabilities > 0.5, "pos", "neg")
+# Ensure that the predicted classes are in the same format as the actual classes
+actual_classes <- ifelse(merged_data_new$UN16AA == 1, "pos", "neg")
+# Check the unique values of actual and predicted classes
+print(unique(actual_classes))
+print(unique(predicted.classes))
+# Calculate the accuracy
+accuracy <- mean(predicted.classes == actual_classes)
+print(accuracy)
 
 #to check the frequency 
 xtabs(~UN16AA + stratum, data=merged_data_new) #for unweighted
 svytable(~UN16AA + stratum, hh_design) #for weighted
-
-# Run Firth logistic regression (if OR/CI is too high)
-firth_logit <- logistf(UN16AA ~ stratum, data = hh_design$variables, weights = hh_design$variables$hhweight)
-summary(firth_logit)
-tbl_regression(firth_logit, exponentiate = TRUE)
-
-# Combine sparse categories into new groups (If OR/CI is too high)
-merged_data_new <- merged_data_new %>%
-  mutate(stratum_combined = case_when(
-    stratum %in% c("Province 1 Rural", "Province 2 Rural", "Province 5 Rural") ~ "Province 1, 2, 5",
-    stratum %in% c("Gandaki province Rural", "Karnali province Rural") ~ "Gandaki and Karnali",
-    stratum == "Sudoorpaschim province Rural" ~ "Sudoorpaschim province Rural",
-    TRUE ~ stratum # Keep other categories as they are
-  ))
-
-# Ensure 'stratum_combined' is a factor
-merged_data_new$stratum_combined <- as.factor(merged_data_new$stratum_combined)
-# Relevel 'stratum_combined' to make 'Sudoorpaschim province Rural' the reference category
-merged_data_new$stratum_combined <- relevel(merged_data_new$stratum_combined, ref = "Sudoorpaschim province Rural")
-# Check the new distribution to verify the combination
-table(merged_data_new$UN16AA, merged_data_new$stratum_combined)
-
-# Create survey design object with the new combined stratum
-hh_design_combined <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum_combined, data = merged_data_new)
-
-# Fit the logistic regression model using the combined stratum
-weighted_logit_combined <- svyglm(UN16AA ~ stratum_combined, design = hh_design_combined, family = quasibinomial)
-
-# Summary of the model
-summary(weighted_logit_combined)
-tbl_regression(weighted_logit_combined, exponentiate = TRUE)
-
-# Firth logistic regression for UN16AH with combined and original strata
-firth_logit_AA <- logistf(UN16AA ~ stratum_combined, data = merged_data_new, pl = TRUE)
-
-# Summary of the Firth logistic regression model
-summary(firth_logit_AA)
-tbl_regression(firth_logit_AA, exponentiate = TRUE)
-
-# Fit the logistic regression model using the combined stratum
-weighted_logit_combinedH <- svyglm(UN16AH ~ stratum_combined, design = hh_design_combined, family = quasibinomial)
-
-# Summary of the model
-summary(weighted_logit_combinedH)
-tbl_regression(weighted_logit_combinedH, exponentiate = TRUE)
-weighted_logitH <- svyglm(UN16AH ~ stratum, design = hh_design, family = quasibinomial)
-summary(weighted_logitH)
-tbl_regression(weighted_logitH, exponentiate = TRUE)
-# Firth logistic regression for UN16AH with combined and original strata
-firth_logit_AH <- logistf(UN16AH ~ stratum_combined, data = merged_data_new, pl = TRUE)
-
-# Summary of the Firth logistic regression model
-summary(firth_logit_AH)
-tbl_regression(firth_logit_AH, exponentiate = TRUE)
-
-
-
 
 
 #2. 
@@ -459,7 +411,7 @@ weighted_logit6 <- svyglm(UN16AA ~ helevel1, design = hh_design, family = quasib
 summary(weighted_logit6)
 
 #7.
-# Let's make 25-49 the desired reference category
+# Let's make 15-49 the desired reference category
 merged_data_new$HHAGEx <- relevel(merged_data_new$HHAGEx, ref = "15 to 19")
 # Verify the releveling
 levels(merged_data_new$HHAGEx)
@@ -531,22 +483,6 @@ hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data =
 weighted_logit14 <- svyglm(UN16AA ~ EthnicityGroup, design = hh_design, family = quasibinomial)
 summary(weighted_logit14)
 tbl_regression(weighted_logit14, exponentiate = TRUE)
-
-
-#Tables for each regression
-tbl_regression(weighted_logit12, exponentiate = TRUE)
-tbl_regression(weighted_logit11, exponentiate = TRUE)
-tbl_regression(weighted_logit10, exponentiate = TRUE)
-tbl_regression(weighted_logit9, exponentiate = TRUE)
-tbl_regression(weighted_logit8, exponentiate = TRUE)
-tbl_regression(weighted_logit7, exponentiate = TRUE)
-tbl_regression(weighted_logit6, exponentiate = TRUE)
-tbl_regression(weighted_logit5, exponentiate = TRUE)
-tbl_regression(weighted_logit4, exponentiate = TRUE)
-tbl_regression(weighted_logit3, exponentiate = TRUE)
-tbl_regression(weighted_logit2, exponentiate = TRUE)
-tbl_regression(weighted_logit, exponentiate = TRUE)
-tbl_regression(firth_logit, exponentiate = TRUE)
 
 # format results into data frame with global p-values
 weighted_logitA %>%
@@ -1042,6 +978,7 @@ tbl_regression(weighted_logit3C, exponentiate = TRUE)
 
 #4 # Let's make 2 the desired reference category
 merged_data_new$HH52_grouped <- relevel(merged_data_new$HH52_grouped, ref = "2")
+
 # Verify the releveling
 levels(merged_data_new$HH52_grouped)
 # Recreate the survey design object
@@ -1514,6 +1451,7 @@ table7D <- weighted_logit7D %>%
   bold_p(t = 0.10) %>%
   bold_labels() %>%
   italicize_levels()
+
 
 table8D <- weighted_logit8D %>%
   tbl_regression(label = list(HHSEX = "Sex of Household Head"),
@@ -2777,21 +2715,45 @@ gtsave(stacked_gtH, "staying_away_from_religious_work.png")
 
 ###############################################################################
 #Multivariate regression 
-chaupadi <- glm(UN16AA ~ stratum + windex5r + HC15 + EthnicityGroup + HHAGEx, data = merged_data_new, family = "binomial")
+chaupadi <- svyglm(UN16AA ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup, design = hh_design, family = "quasibinomial")
 summary(chaupadi)           # for p-values
-exp(chaupadi$coefficients)  # for odds ratios
+
+# Tidy the model results
+tidy_chaupadi <- tidy(chaupadi, exponentiate = TRUE, conf.int = TRUE)
+
+# Create the summary table using gtsummary
+gt_summary <- tbl_regression(chaupadi, exponentiate = TRUE)
+
+# Add a table caption
+gt_summary <- gt_summary %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
+
+# Print the table
+gt_summary
+
+#staying in a separate room 
+separate_room <- svyglm(UN16AB ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup, design = hh_design, family = "quasibinomial")
+summary(separate_room)           # for p-values
+
+# Tidy the model results
+tidy_separate_room <- tidy(separate_room, exponentiate = TRUE, conf.int = TRUE)
+
+# Create the summary table using gtsummary
+gt_summary <- tbl_regression(separate_room, exponentiate = TRUE)
+
+# Add a table caption
+gt_summary <- gt_summary %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
+
+# Print the table
+gt_summary
 
 
-# Extract model summary with tidy
-model_summary <- tidy(chaupadi, conf.int = TRUE, exponentiate = TRUE)
 
-# Display the tidy summary
-print(model_summary)
-# Create a regression table with gtsummary
-regression_table <- tbl_regression(chaupadi, exponentiate = TRUE)
-
-# Print the regression table
-print(regression_table)
 
 
 
