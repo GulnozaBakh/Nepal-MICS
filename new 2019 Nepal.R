@@ -1264,6 +1264,7 @@ weighted_logit2D <- svyglm(UN16AD ~ windex5r, design = hh_design, family = quasi
 summary(weighted_logit2D)
 tbl_regression(weighted_logit2D, exponentiate = TRUE)
 
+
 #3.  
 # Recreate the survey design object
 hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
@@ -2715,7 +2716,9 @@ gtsave(stacked_gtH, "staying_away_from_religious_work.png")
 
 ###############################################################################
 #Multivariate regression 
-chaupadi <- svyglm(UN16AA ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup, design = hh_design, family = "quasibinomial")
+# Recreate the survey design object
+hh_design <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_new)
+chaupadi <- svyglm(UN16AA ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
 summary(chaupadi)           # for p-values
 
 # Tidy the model results
@@ -2734,29 +2737,144 @@ gt_summary <- gt_summary %>%
 gt_summary
 
 #staying in a separate room 
-separate_room <- svyglm(UN16AB ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup, design = hh_design, family = "quasibinomial")
+separate_room <- svyglm(UN16AB ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
 summary(separate_room)           # for p-values
-
 # Tidy the model results
 tidy_separate_room <- tidy(separate_room, exponentiate = TRUE, conf.int = TRUE)
-
 # Create the summary table using gtsummary
-gt_summary <- tbl_regression(separate_room, exponentiate = TRUE)
-
+gt_summaryB <- tbl_regression(separate_room, exponentiate = TRUE)
 # Add a table caption
-gt_summary <- gt_summary %>%
+gt_summaryB <- gt_summaryB %>%
   modify_header(label = "Variable") %>%
   modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-
+  modify_caption("Staying in a separate room: Odds Ratios, Confidence Intervals, and P-values")
 # Print the table
-gt_summary
+gt_summaryB
 
+#staying in the cowshed
+cowshed <- svyglm(UN16AC ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
+summary(cowshed)           # for p-values
+# Tidy the model results
+tidy_cowshed <- tidy(cowshed, exponentiate = TRUE, conf.int = TRUE)
+# Create the summary table using gtsummary
+gt_summaryC <- tbl_regression(cowshed, exponentiate = TRUE)
+# Add a table caption
+gt_summaryC <- gt_summaryC %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Staying in a cowshed: Odds Ratios, Confidence Intervals, and P-values")
+# Print the table
+gt_summaryC
 
+#eating in a separate place
+eating_separate <- svyglm(UN16AD ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
+summary(eating_separate)           # for p-values
+# Tidy the model results
+tidy_eating <- tidy(eating_separate, exponentiate = TRUE, conf.int = TRUE)
+# Create the summary table using gtsummary
+gt_summaryD <- tbl_regression(eating_separate, exponentiate = TRUE)
+# Add a table caption
+gt_summaryD <- gt_summaryD %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Eating in a separate place: Odds Ratios, Confidence Intervals, and P-values")
+# Print the table
+gt_summaryD
 
+#bathing in a separate place
+bathing_separate <- svyglm(UN16AE ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
+summary(bathing_separate)           # for p-values
+# Tidy the model results
+tidy_bathing <- tidy(bathing_separate, exponentiate = TRUE, conf.int = TRUE)
+# Create the summary table using gtsummary
+gt_summaryE <- tbl_regression(bathing_separate, exponentiate = TRUE)
+# Add a table caption
+gt_summaryE <- gt_summaryE %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Eating in a separate place: Odds Ratios, Confidence Intervals, and P-values")
+# Print the table
+gt_summaryE
 
+#staying awy from school or work
+away_from_work_school <- svyglm(UN16AF ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
+summary(away_from_work_school)           # for p-values
+# Tidy the model results
+tidy_away_from_work_school <- tidy(away_from_work_school, exponentiate = TRUE, conf.int = TRUE)
+# Create the summary table using gtsummary
+gt_summaryF <- tbl_regression(away_from_work_school, exponentiate = TRUE)
+# Add a table caption
+gt_summaryF <- gt_summaryF %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Staying away from school or work: Odds Ratios, Confidence Intervals, and P-values")
+# Print the table
+gt_summaryF
 
+#staying awy from social gatherings
+away_from_gatherings <- svyglm(UN16AG ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
+summary(away_from_gatherings)           # for p-values
+# Tidy the model results
+tidy_away_from_gatherings <- tidy(away_from_gatherings, exponentiate = TRUE, conf.int = TRUE)
+# Create the summary table using gtsummary
+gt_summaryG <- tbl_regression(away_from_gatherings, exponentiate = TRUE)
+# Add a table caption
+gt_summaryG <- gt_summaryG %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Staying away from social gatherings: Odds Ratios, Confidence Intervals, and P-values")
+# Print the table
+gt_summaryG
 
+#staying awy from religious work
+away_from_religious_work <- svyglm(UN16AH ~ stratum + windex5r + HC1A_combined + HC15 + EthnicityGroup + HH52_grouped + helevel1 + welevel1 + HHAGEx, design = hh_design, family = "quasibinomial")
+summary(away_from_religious_work)           # for p-values
+# Tidy the model results
+tidy_away_from_religious_work <- tidy(away_from_religious_work, exponentiate = TRUE, conf.int = TRUE)
+# Create the summary table using gtsummary
+gt_summaryH <- tbl_regression(away_from_religious_work, exponentiate = TRUE)
+# Add a table caption
+gt_summaryH <- gt_summaryH %>%
+  modify_header(label = "Variable") %>%
+  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
+  modify_caption("Staying away from religious work: Odds Ratios, Confidence Intervals, and P-values")
+# Print the table
+gt_summaryH
+
+# Merge the summary tables into one
+combined_summary <- tbl_merge(
+  tbls = list(
+    gt_summary,
+    gt_summaryB,
+    gt_summaryC,
+    gt_summaryD,
+    gt_summaryE,
+    gt_summaryF,
+    gt_summaryG,
+    gt_summaryH
+  ),
+  tab_spanner = c(
+    "Chaupadi",
+    "Separate Room",
+    "Cowshed",
+    "Eating Separate",
+    "Bathing Separate",
+    "Away from Work or School",
+    "Away from Social Gatherings",
+    "Away from Religious Work"
+  )
+)
+
+# Add a caption and print the combined table
+combined_summary <- combined_summary %>%
+  modify_caption("Multivariate Regression Results: Odds Ratios, Confidence Intervals, and P-values for Various Conditions")
+
+combined_summary
+# Save the combined summary as a PNG file
+gtsave(combined_summary, file = "combined_summary.png") #the picture is too big to save as a picture
+
+# Save the gt table as an HTML file
+gtsave(combined, "combined_summary.html") #optimal way to save 
 
 #Export data to csv
 write.csv(data_wm, file = "/Users/nasib/Desktop/data_wm.csv")
