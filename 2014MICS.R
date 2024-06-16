@@ -7,11 +7,23 @@ install.packages("kableExtra")
 
 library(dplyr)
 library(haven)
-library(readr)
 library(labelled)
+library(readxl)
 library(survey)
+library(readr)
+library(psych)
+library(tidyr)
+library(broom)
+library(tableone)
+library(gtsummary)
+library(gt)
+library(stargazer)
+library(webshot2) 
+library(stringr)
+library(purrr)
 library(kableExtra)
 
+setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
 #Load the data
 data_hh_2014 <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/Nepal MICS 2014 SPSS Datasets/hh.sav")
 data_wm_2014 <- read_sav("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/Nepal MICS 2014 SPSS Datasets/wm.sav")
@@ -28,179 +40,56 @@ colnames(data_wm_2014)
 str(data_hh_2014)
 str(data_wm_2014)
 
-#Tables to check household and women clusters
-# Summarize the data by counting occurrences to check household clusters (characterized)
-data_hh_2014_summary <- data_hh_2014 %>%
-  group_by(HH1) %>%
-  summarize(
-    HH6_counts = n(),
-    HH6_unique_values = paste(unique(HH6), collapse = ", "),
-    HH6_unique_count = n_distinct(HH6),
-    HH7_counts = n(),
-    HH7_unique_values = paste(unique(HH7), collapse = ", "),
-    HH7_unique_count = n_distinct(HH7)
-  )
-# Display the table
-data_hh_2014_summary %>%
-  kbl(caption = "Women's region and type of place of residence by cluster") %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+# Select relevant variables from the household dataset
+selected_hh_2014 <- data_hh_2014 %>%
+  select(HH1, HH2, HH6, HH7, SL1, stratum,HC1A, HC1C, HC11, HHSEX, helevel, hhweight, windex5r, PSU)
 
-# Summarize the women data by counting occurrences to check household clusters  (characterized)
-data_wm_2014_summary <- data_wm_2014 %>%
-  group_by(HH1) %>%
-  summarize(
-    HH6_counts = n(),
-    HH6_unique_values = paste(unique(HH6), collapse = ", "),
-    HH6_unique_count = n_distinct(HH6),
-    HH7_counts = n(),
-    HH7_unique_values = paste(unique(HH7), collapse = ", "),
-    HH7_unique_count = n_distinct(HH7)
-  )
-# Display the table
-data_wm_2014_summary %>%
-  kbl(caption = "Women's region and type of place of residence by cluster") %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+# Select relevant variables from the women's dataset
+selected_wm_2014 <- data_wm_2014 %>%
+  select(HH1, HH2, UN13AA, UN13AB, UN13AC, UN13AD, UN13AE, UN13AF, UN13AG, WAGE, WM7, MSTATUS, welevel, wmweight, CM5B)
 
-#Task 1. CREATE AGGREGATE FILE FROM WOMAN DATA FILE
-# Create indicator variables (woman= each number of women in the dataset, cwoman= number of women completed or not completed interviews)
-data_wm_2014 <- data_wm_2014 %>%
-  mutate(
-    woman = 1,
-    cwoman = ifelse(WM7 == "Completed", 1, 0)
-  )
-# Aggregate data
-aggregate_data <- data_wm_2014 %>%
-  group_by(HH1, HH2) %>%
-  summarize(
-    totwoman = sum(woman, na.rm = TRUE),
-    totcwoman = sum(cwoman, na.rm = TRUE)
-  )
-# Merge the aggregated women's data with the household data
-merged_data <- data_hh_2014 %>%
-  left_join(aggregate_data, by = c("HH1", "HH2"))
+# Merge the datasets on HH1 and HH2
+merged_data_2014 <- merge(selected_hh_2014, selected_wm_2014, by = c("HH1", "HH2"))
 
-#the variables changed from 210 to 212, so we can check the column names
-colnames(merged_data)
+# Use subset to filter only cases where the interview is completed and only rural areas
+merged_data_2014 <- subset(merged_data_2014, WM7 == "Completed" & HH6 == "Rural")
 
-# Save the merged data
-write.csv(merged_data, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data.csv")
-
-# Check for discrepancies between aggregated woman data and hh data
-# Check if columns exist (replace `HH12`, `HH13` with actual column names)
-if (!("HH12" %in% colnames(merged_data) & "HH13" %in% colnames(merged_data))) {
-  stop("Columns HH12 (total women) and/or HH13 (completed interviews women) not found in the household data.")
+# Function to clean the data
+clean_data <- function(df, columns) {
+  df %>%
+    mutate(across(all_of(columns), 
+                  ~ toupper(str_trim(gsub("[^[:print:]]", "", .))))) %>%
+    mutate(across(all_of(columns), ~ na_if(., "MISSING")))
 }
 
-# Create inconsistency flags
-merged_data <- merged_data %>%
-  mutate(
-    badwom   = ifelse(totwoman != HH12, 1, 0),  # Check total women
-    badcwom  = ifelse(totcwoman != HH13, 1, 0)   # Check completed women interviews
-  )
-# Filter for discrepancies (either total or completed interviews)
-discrepancies <- merged_data %>%
-  filter(badwom == 1 | badcwom == 1)
+# Specify the columns to clean
+columns_to_clean <- c("UN13AA", "UN13AB", "UN13AC", "UN13AD", "UN13AE", "UN13AF", "UN13AG")
 
-# Report discrepancies
-if (nrow(discrepancies) > 0) {
-  cat("MICS5 Listing of inconsistencies between cases reported at household level and within the women's file:\n\n")
-  print(discrepancies %>% select(HH1, HH2, HH12, totwoman, HH13, totcwoman)) 
-} else {
-  cat("No inconsistencies found.\n")
-}
+# Clean the data
+merged_data_2014 <- clean_data(merged_data_2014, columns_to_clean)
 
-#Task 2. CHECKCONSIS2. CHECK WOMEN'S FILE AGAINST THE HOUSEHOLD FILE
-# Create check variable in household data
-data_hh_2014$check <- 1
+# Filter out rows with NA in any of the selected columns
+merged_data_2014 <- merged_data_2014 %>%
+  filter(complete.cases(select(., all_of(columns_to_clean))))
+# Verify the filtering
+summary(merged_data_2014)
 
-# Sort both datasets
-data_hh_2014 <- data_hh_2014 %>% arrange(HH1, HH2)
-data_wm_2014 <- data_wm_2014 %>% arrange(HH1, HH2, LN)
+#convert Yes and NO to 1 and 0 in the practices columns
+merged_data_2014 <- merged_data_2014 %>%
+  mutate(across(c(UN13AA, UN13AB, UN13AC, UN13AD, UN13AE, UN13AF, UN13AG), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
 
-# Merge data
-merged_data2 <- left_join(data_wm_2014, data_hh_2014, by = c("HH1", "HH2"))
+#Total 15 Regions, which ones to include? 
+unique(data_hh_2014$HH7)
+#[1] "Eastern Mountain"     "Eastern Hill"         "Eastern Terai"        "Central Mountain"    
+#[5] "Central Hill"         "Central Terai"        "Western Mountain"     "Western  Hill"       
+#[9] "Western  Terai"       "MId-Western Mountain" "MId-Western Hill"     "MId-WesternTerai"    
+#[13] "Far-Western Mountain" "Far-Western Hill"     "Far-WesternTerai"   
 
-# Identify cases present in women's file but not in household file
-discrepancies <- merged_data2 %>%
-  filter(is.na(check)) %>%
-  select(HH1, HH2, LN)
 
-# Display discrepancies
-if (nrow(discrepancies) > 0) {
-  cat("Case present in WOMEN file but not in HOUSEHOLD file:\n")
-  print(discrepancies)
-} else {
-  cat("No discrepancies found.\n")
-}
-#save the merged data 2
-write.csv(merged_data2, file = "/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2014/Nepal_MICS5_Datasets/merged_data2.csv")
 
-#Task 3. CHECKSAMPLE Household weight checking frequencies
-# Check the structure of HH9 in HH data to understand the values it contains
-str(data_hh_2014$HH9)
-unique(data_hh_2014$HH9)
 
-# Filter the data in column HH9, making sure to handle any potential missing values
-filtered_hh_data <- data_hh_2014[data_hh_2014$HH9 == "Completed" & !is.na(data_hh_2014$HH9), ]
 
-# Check the unweighted frequencies for household 
-if (nrow(filtered_hh_data) > 0) { #if the filtered data is not empty
-  cat('!!! UNWEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
-  unweighted_hh_freq <- lapply(filtered_hh_data[c("HH6", "HH7")], table) #counts how often each value in HH6 and HH7 occurs in the dataset
-  print(unweighted_hh_freq)
-} else {
-  cat('No rows match the filtering criteria.\n')
-}
-# Check the weighted frequencies for household
-hh_design <- svydesign(ids = ~1, data = data_hh_2014, weights = ~hhweight) #original dataset is used for weighted calculations 
-cat('!!! WEIGHTED FREQUENCIES FOR HOUSEHOLD !!!\n')
-weighted_hh_freq <- svytable(~HH6 + HH7, hh_design) #shows how each combination of values in HH6 and HH7 occurs, taking into account survey weights
-print(weighted_hh_freq)
 
-#Women weight checking frequencies
-# Check the structure of WM7 in WM data to understand the values it contains
-str(data_wm_2014$WM7)
-unique(data_wm_2014$WM7)
 
-# Filter the data in column WM7, making sure to handle any potential missing values
-filtered_wm_data <- data_wm_2014[data_wm_2014$WM7 == "Completed" & !is.na(data_wm_2014$WM7),]
 
-# Check the unweighted frequencies for women 
-if (nrow(filtered_wm_data) > 0) {
-  cat('!!! UNWEIGHTED FREQUENCIES FOR WOMEN !!!\n')
-  unweighted_wm_freq <- lapply(filtered_wm_data[c("HH6", "HH7", "welevel", "WAGE")], table)
-  print(unweighted_wm_freq)
-} else {
-  cat('No rows match the filtering criteria.\n')
-}
 
-#Check the weighted frequencies for women 
-wm_design <- svydesign(ids = ~1, data = filtered_wm_data, weights = ~wmweight)
-cat('!!! WEIGHTED FREQUENCIES FOR WOMEN !!!\n')
-weighted_wm_freq_HH6_HH7 <- svytable(~HH6 + HH7, wm_design)
-weighted_wm_freq_welevel <- svytable(~welevel, wm_design)
-weighted_wm_freq_wage <- svytable(~WAGE, wm_design)
-
-print(weighted_wm_freq_HH6_HH7)
-print(weighted_wm_freq_welevel)
-print(weighted_wm_freq_wage)
-
-#Task 4. Calculating and appending background variables 
-#existing ethnicities in the data
-unique(data_hh_2014$HC1C) #need to know how to group ethnicities? 
-
-#Task 5. Create index for the types of practises followed
-# Define the columns related to practices
-practice_columns_wm <- c("UN13AA", "UN13AB", "UN13AC", "UN13AD", "UN13AE", "UN13AF", "UN13AG")
-
-# Filter to keep only "Yes" and "No" responses, excluding NA and "Missing"
-filtered_wm_data_practices <- data_wm_2014 %>%
-  select(all_of(practice_columns_wm)) %>%  
-  filter(if_any(all_of(practice_columns_wm), ~ .x %in% c("Yes", "No"))) 
-
-# Create the index
-practice_index <- filtered_wm_data_practices %>%
-  mutate(across(all_of(practice_columns_wm), ~ ifelse(.x == "Yes", 1, 0))) %>% 
-  rowwise() %>%
-  mutate(practice_index = sum(c_across(all_of(practice_columns_wm)))) %>%
-  ungroup()
