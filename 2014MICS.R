@@ -78,6 +78,12 @@ summary(merged_data_2014)
 merged_data_2014 <- merged_data_2014 %>%
   mutate(across(c(UN13AA, UN13AB, UN13AC, UN13AD, UN13AE, UN13AF, UN13AG), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
 
+ 
+# Combine low count categories for demonstration (Religion)
+merged_data_2014$HC1A <- with(merged_data_2014, ifelse(HC1A %in% c("Sikh", "No religion", "Others", "Prakriti", "Bon"), "OTHER", HC1A))
+
+
+
 #Total 15 Regions, which ones to include? 
 unique(data_hh_2014$HH7)
 #[1] "Eastern Mountain"     "Eastern Hill"         "Eastern Terai"        "Central Mountain"    
