@@ -839,7 +839,213 @@ stacked_gtC <- as_gt(stacked_tableC) %>%
 # Save the gt table as an image
 gtsave(stacked_gtC, "bivariate_living_in_animal_shed.png")
 
+###########################################################################################
+#Eating different type of food UN13AD
+#1. # Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logitD_2014 <- svyglm(UN13AD ~ HH7, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logitD_2014)
+tbl_regression(weighted_logitD_2014, exponentiate = TRUE)
 
+#2. Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit2D_2014 <- svyglm(UN13AD ~ HC1A, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit2D_2014)
+tbl_regression(weighted_logit2D_2014, exponentiate = TRUE)
+
+#3. Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit3D_2014 <- svyglm(UN13AD ~ Ethnicity, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit3D_2014)
+tbl_regression(weighted_logit3D_2014, exponentiate = TRUE)
+
+#4. Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit4D_2014 <- svyglm(UN13AD ~ windex5r, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit4D_2014)
+tbl_regression(weighted_logit4D_2014, exponentiate = TRUE)
+
+#5. Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit5D_2014 <- svyglm(UN13AD ~ HHSEX, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit5D_2014)
+tbl_regression(weighted_logit5D_2014, exponentiate = TRUE)
+
+#6. Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit6D_2014 <- svyglm(UN13AD ~ HC11, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit6D_2014)
+tbl_regression(weighted_logit6D_2014, exponentiate = TRUE)
+
+#7 #Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit7D_2014 <- svyglm(UN13AD ~ helevel, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit7D_2014)
+tbl_regression(weighted_logit7D_2014, exponentiate = TRUE)
+
+#8 #Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit8D_2014 <- svyglm(UN13AD ~ welevel, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit8D_2014)
+tbl_regression(weighted_logit8D_2014, exponentiate = TRUE)
+
+#9 #Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit9D_2014 <- svyglm(UN13AD ~ WAGE, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit9D_2014)
+tbl_regression(weighted_logit9D_2014, exponentiate = TRUE)
+
+#10 Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit10D_2014 <- svyglm(UN13AD ~ MSTATUS, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit10D_2014)
+tbl_regression(weighted_logit10D_2014, exponentiate = TRUE)
+
+#11 Recreate the survey design object
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+# Run the weighted logistic regression
+weighted_logit11D_2014 <- svyglm(UN13AD ~ SL1_group, design = design_2014, family = quasibinomial)
+# Print the summary of the model
+summary(weighted_logit11D_2014)
+tbl_regression(weighted_logit11D_2014, exponentiate = TRUE)
+
+# 4th regression table
+table1D <- weighted_logitD_2014 %>%
+  tbl_regression(label = list(HH7 = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table2D <- weighted_logit2D_2014 %>%
+  tbl_regression(label = list(HC1A = "Religion"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table3D <- weighted_logit3D_2014 %>%
+  tbl_regression(label = list(Ethnicity = "Ethnicity of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table4D <- weighted_logit4D_2014 %>%
+  tbl_regression(label = list(windex5r = "Rural Wealth Index"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table5D <- weighted_logit5D_2014 %>%
+  tbl_regression(label = list(HHSEX = "Sex of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table6D <- weighted_logit6D_2014 %>%
+  tbl_regression(label = list(HC11 = "Owns Agricultural Land"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table7D <- weighted_logit7D_2014 %>%
+  tbl_regression(label = list(helevel = "Education of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+table8D <- weighted_logit8D_2014 %>%
+  tbl_regression(label = list(welevel = "Education of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+table9D <- weighted_logit9D_2014 %>%
+  tbl_regression(label = list(WAGE = "Age of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+table10D <- weighted_logit10D_2014 %>%
+  tbl_regression(label = list(MSTATUS = "Marital Status of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+table11D <- weighted_logit11D_2014 %>%
+  tbl_regression(label = list(SL1_group = "Number of Children Aged 1-17"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+# Stack the tables vertically
+stacked_tableD <- tbl_stack(
+  tbls = list(table1D, table2D, table3D, table4D, table5D, table6D, table7D, table8D, table9D, table10D, table11D)
+)
+# Convert the gtsummary table to a gt table
+stacked_gtD <- as_gt(stacked_tableD) %>%
+  gt::tab_header("Eating different type of food")
+# Save the gt table as an image
+gtsave(stacked_gtD, "bivariate_eating_different_food.png")
 
 
 
