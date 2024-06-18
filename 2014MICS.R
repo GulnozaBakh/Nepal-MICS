@@ -1851,12 +1851,16 @@ create_regression_table <- function(model, labels) {
     italicize_levels() %>%
     add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}")
   
-  # Modify the headers to show OR and CI combined
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
   tbl <- tbl %>%
     modify_header(
       label = "**Characteristic**",
       estimate = "**OR, 95% CI**"
     )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
   
   return(tbl)
 }
@@ -1872,15 +1876,15 @@ summary_table1 <- tbl_merge(
   tab_spanner = c("**Living in a different house**", "**Living in a different room**", "**Staying in animal shed**")
 )
 
-# Hide the p.value column after merging
+# Hide the p.value columns after merging
 summary_table1 <- summary_table1 %>%
-  modify_table_styling(columns = p.value, hide = TRUE)
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
 
 # Convert the gtsummary table to a gt table
 summary_gt1 <- as_gt(summary_table1)
 
-
-
+# Save the gt table as an image
+gtsave(summary_gt1, "multivariate_table1.png")
 
 #Total 15 Regions 
 unique(data_hh_2014$HH7)
