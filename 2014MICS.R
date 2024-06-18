@@ -78,12 +78,41 @@ summary(merged_data_2014)
 merged_data_2014 <- merged_data_2014 %>%
   mutate(across(c(UN13AA, UN13AB, UN13AC, UN13AD, UN13AE, UN13AF, UN13AG), ~ ifelse(. == "YES", 1, ifelse(. == "NO", 0, NA))))
 
- 
-# Combine low count categories for demonstration (Religion)
+ # Combine low count categories for demonstration (Religion)
 merged_data_2014$HC1A <- with(merged_data_2014, ifelse(HC1A %in% c("Sikh", "No religion", "Others", "Prakriti", "Bon"), "OTHER", HC1A))
 
+#remove don't know and missing (total 5) from ethnicity answers
+merged_data_2014 <- merged_data_2014 %>%
+  filter(!HC1C %in% c("Don't know", "Missing"))
 
+# Clean the ethnicity labels in HC1C
+merged_data_2014 <- merged_data_2014 %>%
+  mutate(HC1C = toupper(str_trim(HC1C)))
 
+# Define the mapping of each ethnicity to its group
+ethnicity_mapping <- list(
+  "Brahman or Chhetri" = c("Brahman - Hill", "Brahman - Tarai", "Chame", "Chhetree", "Dev", "Hajam/Thakur", "Kayastha", "Rajput", "Sanyasi/Dashnami", "Thakuri"),
+  "Tarai or Madhesi Other Castes" = c("Badhaee", "Bantaba", "Bantar/Sardar", "Baraee ", "Bin", "Dhankar/Kharikar", "Haluwai", "Kahar", "Kalwar", "Kanu", "Kathbaniyan", "Kewat", "Khaling", "Koiri/Kushwaha", "Kumhar", "Kurmi", "Lodh", "Lohar", "Mali", "Mallaha", "Nuniya", "Rajbhar", "Sonar", "Sudhi", "Teli", "Terai Others", "Yadav" ),
+  "Dalits" = c(" Chamar/Harijan/Ram", "Dalit Others", "Damai/Dholi", "Dhobi", "Dusadh/Pasawan/Pasi", "Gaderi/Bhedhar", "Kami", "Khatwe", "Kori", "Musahar", "Rajdhob", "Sarki", "Tatma/Tatwa"),
+  "Newar" = c("Newar"),
+  "Janajati" = c("Bhote", "Chamling", "Chepang/Praja ", "Chhantyal/Chhantel", "Danuwar ", "Dhanuk", "Dhimal", "Gangai", "Ghale", "Gharti/Bhujel", "Gurung", "Janajati Others", "Jhangad/Dhagar", "Jirel", "Kumal", "Kulung", "Limbu", "Lhomi", "Magar", "Majhi", "Mewahang Bala", "Nachhiring", "Rai", "Rajbansi", "Samgpang", "Satar/Santhal", "Sherpa", "Sunuwar", "Tajpuriya", "Tamang", "Surel", "Thakali", "Thami", "Tharu", "Yakkha", "Thulung", "Yamphu" ),
+  "Muslim" = c("Churaute", "Musalman"),
+  "Other" = c("Undefined Others")
+  )
+ 
+# Create a reversed lookup table
+ethnicity_lookup <- unlist(ethnicity_mapping)
+ethnicity_lookup <- setNames(rep(names(ethnicity_mapping), lengths(ethnicity_mapping)), ethnicity_lookup)
+
+# Update the HC1C column directly with the mapped values
+merged_data_2014 <- merged_data_2014 %>%
+  mutate(HC1C = case_when(
+    HC1C %in% names(ethnicity_lookup) ~ ethnicity_lookup[HC1C],
+    TRUE ~ HC1C
+  ))
+
+# View the result
+table(merged_data_2014$HC1C)
 #Total 15 Regions, which ones to include? 
 unique(data_hh_2014$HH7)
 #[1] "Eastern Mountain"     "Eastern Hill"         "Eastern Terai"        "Central Mountain"    
