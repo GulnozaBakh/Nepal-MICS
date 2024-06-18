@@ -22,6 +22,7 @@ library(webshot2)
 library(stringr)
 library(purrr)
 library(kableExtra)
+library(forcats)
 
 setwd("/Users/nasib/Documents/my documents/Agripath RA/Gender Study/Nepal 2019")
 #Load the data
@@ -96,7 +97,6 @@ ethnicity_mapping1 <- list(
   "Muslim" = c("Churaute", "Musalman"),
   "Other" = c("Undefined Others")
   )
- 
 # Function to map ethnicities to groups, including handling NAs
 map_ethnicity1 <- function(ethnicity) {
   if (is.na(ethnicity)) {
@@ -146,6 +146,57 @@ merged_data_2014$MSTATUS <- ifelse(merged_data_2014$MSTATUS %in% c("Currently ma
 # Convert the new variable to a factor
 merged_data_2014$MSTATUS <- factor(merged_data_2014$MSTATUS, levels = c("Ever Married", "Never Married"))
 
+####################################Creating a frequency distribution (summary) table on unweighted data
+# Reorder the levels of the helevel, welevel, and windex5r variables
+merged_data_2014 <- merged_data_2014 %>%
+  mutate(
+    helevel = fct_relevel(helevel, "None", "Primary", "Secondary", "Higher"),
+    welevel = fct_relevel(welevel, "None", "Primary", "Secondary", "Higher"),
+    windex5r = fct_relevel(windex5r, "Poorest", "Second", "Middle", "Fourth", "Richest")
+  )
+
+# Select the desired variables including the new summary index
+d1 <- merged_data_2014 %>% 
+  select(HH7, SL1_group, HC1A, Ethnicity, HC11, HHSEX, helevel, windex5r, WAGE, MSTATUS, welevel, UN13AA, UN13AB, UN13AC, UN13AD, UN13AE, UN13AF, UN13AG)
+
+# Example variable labels
+variable_labels <- list(
+  HH7 = "Region",
+  SL1_group = "Number of children aged 1-17",
+  HC1A = "Religion",
+  Ethnicity = "Ethnicity of Household Head", 
+  HC11 = "Owns Agricultural Land", 
+  HHSEX = "Sex of Household Head", 
+  helevel = "Education of Household Head",
+  windex5r = "Rural Wealth Index",
+  WAGE = "Age Range of Women",
+  welevel = "Education of Women",
+  MSTATUS = "Marital Status",
+  UN13AA = "Live in different House",
+  UN13AB = "Live in different room of the same house ",
+  UN13AC = "Staying in animal shed",
+  UN13AD = "Eat different type of food",
+  UN13AE = "Bath in a separate place",
+  UN13AF = "Absent from school or work",
+  UN13AG = "Avoid social gatherings"
+)
+# Create the summary table with custom labels and add a caption
+summary_table_2014 <- tbl_summary(
+  d1,
+  label = variable_labels
+) %>%
+  modify_caption("**Table 1. Sociodemographic characteristics and the menstrual conditions of women, Nepal, 2014.**")
+
+# Display the summary table
+summary_table_2014
+#Save it 
+summary_gt1 <- as_gt(summary_table_2014)
+gtsave(summary_gt1, filename = "summary_table_2014.png")
+##########################################
+
+
+
+
 
 
 
@@ -171,5 +222,6 @@ unique(data_hh_2014$HH7)
 
 
 
-
+# save the document, run the following by choosing the directory
+write.csv(merged_data_2014, file = "/Users/nasib/Desktop/Nepal MICS/Data/clean_data_2014.csv")
 
