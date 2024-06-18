@@ -80,6 +80,7 @@ merged_data_2014 <- merged_data_2014 %>%
 
  # Combine low count categories for demonstration (Religion)
 merged_data_2014$HC1A <- with(merged_data_2014, ifelse(HC1A %in% c("Sikh", "No religion", "Others", "Prakriti", "Bon"), "OTHER", HC1A))
+merged_data_2014$HC1A <- factor(merged_data_2014$HC1A)
 
 #remove don't know and missing (total 5) from ethnicity answers
 merged_data_2014 <- merged_data_2014 %>%
@@ -111,6 +112,7 @@ map_ethnicity1 <- function(ethnicity) {
 # Apply the mapping to create a new variable
 merged_data_2014 <-merged_data_2014 %>%
   mutate(Ethnicity = sapply(HC1C, map_ethnicity1))
+merged_data_2014$Ethnicity <- factor(merged_data_2014$Ethnicity)
 
 # Convert WAGE to a factor 
 merged_data_2014$WAGE <- factor(merged_data_2014$WAGE)
@@ -127,7 +129,22 @@ mode_HC11 <- names(sort(table(merged_data_2014$HC11), decreasing = TRUE))[1]
 print(mode_HC11)
 # Impute "Missing" values with the mode
 merged_data_2014$HC11[merged_data_2014$HC11 == "Missing"] <- mode_HC11
+# Convert multiple columns to factors in one line
+merged_data_2014 <- merged_data_2014 %>%
+  mutate(across(c(HC11, HHSEX, windex5r, welevel, HH7), as.factor))
 
+# Find the mode of the helevel column excluding "Missing/DK" (inside of education of HH head there are 17 missing values, we can impute them into the mode)
+mode_helevel <- names(sort(table(merged_data_2014$helevel[merged_data_2014$helevel != "Missing/DK"]), decreasing = TRUE))[1]
+print(mode_helevel)  # This should print the most frequent education level
+# Impute "Missing/DK" values with the mode
+merged_data_2014$helevel[merged_data_2014$helevel == "Missing/DK"] <- mode_helevel
+# Convert helevel back to factor
+merged_data_2014$helevel <- factor(merged_data_2014$helevel)
+
+#Group MSTATUS into two groups
+merged_data_2014$MSTATUS <- ifelse(merged_data_2014$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
+# Convert the new variable to a factor
+merged_data_2014$MSTATUS <- factor(merged_data_2014$MSTATUS, levels = c("Ever Married", "Never Married"))
 
 
 
