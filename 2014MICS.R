@@ -85,35 +85,63 @@ merged_data_2014$HC1A <- with(merged_data_2014, ifelse(HC1A %in% c("Sikh", "No r
 merged_data_2014 <- merged_data_2014 %>%
   filter(!HC1C %in% c("Don't know", "Missing"))
 
-# Clean the ethnicity labels in HC1C
-merged_data_2014 <- merged_data_2014 %>%
-  mutate(HC1C = toupper(str_trim(HC1C)))
-
 # Define the mapping of each ethnicity to its group
-ethnicity_mapping <- list(
+ethnicity_mapping1 <- list(
   "Brahman or Chhetri" = c("Brahman - Hill", "Brahman - Tarai", "Chame", "Chhetree", "Dev", "Hajam/Thakur", "Kayastha", "Rajput", "Sanyasi/Dashnami", "Thakuri"),
   "Tarai or Madhesi Other Castes" = c("Badhaee", "Bantaba", "Bantar/Sardar", "Baraee ", "Bin", "Dhankar/Kharikar", "Haluwai", "Kahar", "Kalwar", "Kanu", "Kathbaniyan", "Kewat", "Khaling", "Koiri/Kushwaha", "Kumhar", "Kurmi", "Lodh", "Lohar", "Mali", "Mallaha", "Nuniya", "Rajbhar", "Sonar", "Sudhi", "Teli", "Terai Others", "Yadav" ),
-  "Dalits" = c(" Chamar/Harijan/Ram", "Dalit Others", "Damai/Dholi", "Dhobi", "Dusadh/Pasawan/Pasi", "Gaderi/Bhedhar", "Kami", "Khatwe", "Kori", "Musahar", "Rajdhob", "Sarki", "Tatma/Tatwa"),
+  "Dalits" = c("Chamar/Harijan/Ram", "Dalit Others", "Damai/Dholi", "Dhobi", "Dusadh/Pasawan/Pasi", "Gaderi/Bhedhar", "Kami", "Khatwe", "Kori", "Musahar", "Rajdhob", "Sarki", "Tatma/Tatwa"),
   "Newar" = c("Newar"),
   "Janajati" = c("Bhote", "Chamling", "Chepang/Praja ", "Chhantyal/Chhantel", "Danuwar ", "Dhanuk", "Dhimal", "Gangai", "Ghale", "Gharti/Bhujel", "Gurung", "Janajati Others", "Jhangad/Dhagar", "Jirel", "Kumal", "Kulung", "Limbu", "Lhomi", "Magar", "Majhi", "Mewahang Bala", "Nachhiring", "Rai", "Rajbansi", "Samgpang", "Satar/Santhal", "Sherpa", "Sunuwar", "Tajpuriya", "Tamang", "Surel", "Thakali", "Thami", "Tharu", "Yakkha", "Thulung", "Yamphu" ),
   "Muslim" = c("Churaute", "Musalman"),
   "Other" = c("Undefined Others")
   )
  
-# Create a reversed lookup table
-ethnicity_lookup <- unlist(ethnicity_mapping)
-ethnicity_lookup <- setNames(rep(names(ethnicity_mapping), lengths(ethnicity_mapping)), ethnicity_lookup)
+# Function to map ethnicities to groups, including handling NAs
+map_ethnicity1 <- function(ethnicity) {
+  if (is.na(ethnicity)) {
+    return("Missing")
+  }
+  for (group in names(ethnicity_mapping1)) {
+    if (ethnicity %in% ethnicity_mapping1[[group]]) {
+      return(group)
+    }
+  }
+  return("Other")  # Default to "Other" if no match is found
+}
+# Apply the mapping to create a new variable
+merged_data_2014 <-merged_data_2014 %>%
+  mutate(Ethnicity = sapply(HC1C, map_ethnicity1))
 
-# Update the HC1C column directly with the mapped values
-merged_data_2014 <- merged_data_2014 %>%
-  mutate(HC1C = case_when(
-    HC1C %in% names(ethnicity_lookup) ~ ethnicity_lookup[HC1C],
-    TRUE ~ HC1C
-  ))
+# Convert WAGE to a factor 
+merged_data_2014$WAGE <- factor(merged_data_2014$WAGE)
 
-# View the result
-table(merged_data_2014$HC1C)
-#Total 15 Regions, which ones to include? 
+# Define the breaks and labels for the groups
+breaks <- c(-Inf, 0, 1, 2, 3, Inf)  # Group boundaries
+labels <- c("0", "1", "2", "3", "4 or more")  # Group labels
+
+# Create the grouped variable
+merged_data_2014$SL1_group <- cut(merged_data_2014$SL1, breaks = breaks, labels = labels, right = TRUE)
+
+# Find the mode of the HC11 column (we have 2 missing values for owns hh land variable, so it is better to replace the missing values with the mode)
+mode_HC11 <- names(sort(table(merged_data_2014$HC11), decreasing = TRUE))[1]
+print(mode_HC11)
+# Impute "Missing" values with the mode
+merged_data_2014$HC11[merged_data_2014$HC11 == "Missing"] <- mode_HC11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Total 15 Regions 
 unique(data_hh_2014$HH7)
 #[1] "Eastern Mountain"     "Eastern Hill"         "Eastern Terai"        "Central Mountain"    
 #[5] "Central Hill"         "Central Terai"        "Western Mountain"     "Western  Hill"       
