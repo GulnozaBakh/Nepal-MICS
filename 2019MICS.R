@@ -2291,14 +2291,14 @@ summary_gt1_2019 <- as_gt(summary_table1_2019)
 gtsave(summary_gt1_2019, "multivariate_table1.png")
 
 ########################################################
-# Define the regression models for multivariate_table2
-different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+# Define the regression models for multivariate_table1
+bathing_separate <- svyglm(UN16AE ~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+away_from_school_work <- svyglm(UN16AF ~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+away_from_social_gatherings <- svyglm(UN16AG ~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+away_from_religious_work <- svyglm(UN16AH ~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
 
 # Function to create a regression table with common formatting
-create_regression_table2 <- function(model, labels) {
+create_regression_table2_2019 <- function(model, labels) {
   tbl <- tbl_regression(model, 
                         label = labels,
                         exponentiate = TRUE,
@@ -2323,27 +2323,26 @@ create_regression_table2 <- function(model, labels) {
 }
 
 # Create individual regression tables
-table4 <- create_regression_table2(different_food, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table5 <- create_regression_table2(bath_different_place, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table6 <- create_regression_table2(absent_school_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table7 <- create_regression_table2(avoid_social_gatherings, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table5_2019 <- create_regression_table2_2019(bathing_separate, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC15 = "Owns Agricultural Land", helevel1 = "Education of Household head", welevel1 = "Education of Women", HH52_grouped = "Number of Children Aged 5-17"))
+table6_2019 <- create_regression_table2_2019(away_from_school_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC15 = "Owns Agricultural Land", helevel1 = "Education of Household head", welevel1 = "Education of Women", HH52_grouped = "Number of Children Aged 5-17"))
+table7_2019 <- create_regression_table2_2019(away_from_social_gatherings, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC15 = "Owns Agricultural Land", helevel1 = "Education of Household head", welevel1 = "Education of Women", HH52_grouped = "Number of Children Aged 5-17"))
+table8_2019 <- create_regression_table2_2019(away_from_religious_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC15 = "Owns Agricultural Land", helevel1 = "Education of Household head", welevel1 = "Education of Women", HH52_grouped = "Number of Children Aged 5-17"))
 
 # Combine the tables into one summary table
-summary_table2 <- tbl_merge(
-  tbls = list(table4, table5, table6, table7),
-  tab_spanner = c("**Eating different food**", "**Bathing in a separate place**", "**Absent from school or work**", "**Avoid social gatherings**")
+summary_table2_2019 <- tbl_merge(
+  tbls = list(table5_2019, table6_2019, table7_2019, table8_2019),
+  tab_spanner = c("**Bathing in a separate place**", "**Staying away from school/work**", "**Staying away from social gatherings**", "**Staying away from religious work*")
 )
 
 # Hide the p.value columns after merging
-summary_table2 <- summary_table2 %>%
+summary_table2_2019 <- summary_table2_2019 %>%
   modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
 
 # Convert the gtsummary table to a gt table
-summary_gt2 <- as_gt(summary_table2)
+summary_gt2_2019 <- as_gt(summary_table2_2019)
 
 # Save the gt table as an image
-gtsave(summary_gt2, "multivariate_table2.png")
-
+gtsave(summary_gt2_2019, "multivariate_table2.png")
 
 
 
