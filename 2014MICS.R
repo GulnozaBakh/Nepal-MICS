@@ -117,7 +117,7 @@ merged_data_2014$Ethnicity <- factor(merged_data_2014$Ethnicity)
 # Convert WAGE to a factor 
 merged_data_2014$WAGE <- factor(merged_data_2014$WAGE)
 
-# Define the breaks and labels for the groups
+# Define the breaks and labels for the groups of the number of children SL1
 breaks <- c(-Inf, 0, 1, 2, 3, Inf)  # Group boundaries
 labels <- c("0", "1", "2", "3", "4 or more")  # Group labels
 
@@ -1674,168 +1674,7 @@ gtsave(stacked_gtG, "bivariate_avoid_social_gatherings.png")
 
 ##############################################################################################
 #Multivariate analysis
-#1. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(different_house)           # for p-values
-
-# Tidy the model results
-tidy_different_house <- tidy(different_house, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary <- tbl_regression(different_house, exponentiate = TRUE)
-# Add a table caption
-gt_summary <- gt_summary %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary
-
-#2. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(different_room)           # for p-values
-
-# Tidy the model results
-tidy_different_room <- tidy(different_room, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary2 <- tbl_regression(different_room, exponentiate = TRUE)
-# Add a table caption
-gt_summary2 <- gt_summary2 %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary2
-
-#3. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(animal_shed)           # for p-values
-
-# Tidy the model results
-tidy_animal_shed <- tidy(animal_shed, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary3 <- tbl_regression(animal_shed, exponentiate = TRUE)
-# Add a table caption
-gt_summary3 <- gt_summary3 %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary3
-
-#4. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-eating_different <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(eating_different)           # for p-values
-
-# Tidy the model results
-tidy_eating_different <- tidy(eating_different, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary4 <- tbl_regression(eating_different, exponentiate = TRUE)
-# Add a table caption
-gt_summary4 <- gt_summary4 %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary4
-
-#5. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-bathing_separate <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(bathing_separate)           # for p-values
-
-# Tidy the model results
-tidy_bathing_separate <- tidy(bathing_separate, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary5 <- tbl_regression(bathing_separate, exponentiate = TRUE)
-# Add a table caption
-gt_summary5 <- gt_summary5 %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary5
-
-#6. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(absent_school_work)           # for p-values
-
-# Tidy the model results
-tidy_absent_school_work <- tidy(absent_school_work, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary6 <- tbl_regression(absent_school_work, exponentiate = TRUE)
-# Add a table caption
-gt_summary6 <- gt_summary6 %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary6
-
-#7. Recreate the survey design object
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, data = merged_data_2014)
-avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-summary(avoid_social_gatherings)           # for p-values
-
-# Tidy the model results
-tidy_avoid_social_gatherings <- tidy(avoid_social_gatherings, exponentiate = TRUE, conf.int = TRUE)
-# Create the summary table using gtsummary
-gt_summary7 <- tbl_regression(avoid_social_gatherings, exponentiate = TRUE)
-# Add a table caption
-gt_summary7 <- gt_summary7 %>%
-  modify_header(label = "Variable") %>%
-  modify_footnote(all_stat_cols() ~ "OR = Odds Ratio, CI = Confidence Interval, p = P-value") %>%
-  modify_caption("Survey-Weighted Logistic Regression Results: Odds Ratios, Confidence Intervals, and P-values")
-# Print the table
-gt_summary7
-
-# Function to create a regression table with common formatting
-create_regression_table <- function(model, labels) {
-  tbl <- tbl_regression(model, 
-                        label = labels,
-                        exponentiate = TRUE,
-                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
-    bold_p(t = 0.10) %>%
-    bold_labels() %>%
-    italicize_levels() %>%
-    add_significance_stars(hide_ci = FALSE, hide_p = FALSE, pattern = "{estimate} ({conf.low}, {conf.high}){stars}")
-  
-  # Modify the headers to show OR, CI, and p-values
-  tbl <- tbl %>%
-    modify_header(
-      label = "**Characteristic**",
-      estimate = "**OR**",
-      ci = "**95% CI**",
-      p.value = "**p-value**"
-    ) %>%
-    modify_table_body(~ .x %>% select(-std.error))
-  
-  return(tbl)
-}
-
-# Create individual regression tables
-table1 <- create_regression_table(different_house, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table2 <- create_regression_table(different_room, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table3 <- create_regression_table(animal_shed, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-
-# Combine the tables into one summary table
-summary_table <- tbl_merge(
-  tbls = list(table1, table2, table3),
-  tab_spanner = c("**Living in a different house**", "**Living in a different room**", "**Staying in animal shed**")
-)
-
-# Convert the gtsummary table to a gt table
-summary_gt <- as_gt(summary_table)
-
-# Save the gt table as an image
-gtsave(summary_gt, "multivariate_table1.png")
-
-
-# Define the regression models
+# Define the regression models for multivariate_table1
 different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
@@ -1885,6 +1724,65 @@ summary_gt1 <- as_gt(summary_table1)
 
 # Save the gt table as an image
 gtsave(summary_gt1, "multivariate_table1.png")
+
+########################################################
+# Define the regression models for multivariate_table2
+different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+
+# Function to create a regression table with common formatting
+create_regression_table2 <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.10) %>%
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}")
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR, 95% CI**"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  return(tbl)
+}
+
+# Create individual regression tables
+table4 <- create_regression_table2(different_food, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table5 <- create_regression_table2(bath_different_place, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table6 <- create_regression_table2(absent_school_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table7 <- create_regression_table2(avoid_social_gatherings, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+
+# Combine the tables into one summary table
+summary_table2 <- tbl_merge(
+  tbls = list(table4, table5, table6, table7),
+  tab_spanner = c("**Eating different food**", "**Bathing in a separate place**", "**Absent from school or work**", "**Avoid social gatherings**")
+)
+
+# Hide the p.value columns after merging
+summary_table2 <- summary_table2 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt2 <- as_gt(summary_table2)
+
+# Save the gt table as an image
+gtsave(summary_gt2, "multivariate_table2.png")
+
+
+
+
+
 
 #Total 15 Regions 
 unique(data_hh_2014$HH7)
