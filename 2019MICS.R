@@ -113,14 +113,19 @@ merged_data_2019$HH52_grouped <- cut(merged_data_2019$HH52,
 merged_data_2019 <- merged_data_2019 %>%
   mutate(
     HHAGEx = case_when(
-      HHAGE >= 15 & HHAGE <= 19 ~ 1,
-      HHAGE >= 20 & HHAGE <= 24 ~ 2,
-      HHAGE >= 25 & HHAGE <= 49 ~ 3,
-      HHAGE >= 50 ~ 4
+      HHAGE >= 15 & HHAGE <= 24 ~ 1,
+      HHAGE >= 25 & HHAGE <= 29 ~ 2,
+      HHAGE >= 30 & HHAGE <= 34 ~ 3,
+      HHAGE >= 35 & HHAGE <= 39 ~ 4,
+      HHAGE >= 40 & HHAGE <= 44 ~ 5,
+      HHAGE >= 45 & HHAGE <= 49 ~ 6,
+      HHAGE >= 50 & HHAGE <= 59 ~ 7,
+      HHAGE >= 60 & HHAGE <= 69 ~ 8,
+      HHAGE >= 70 ~ 9
     )
   )
 # Convert HHAGEx to a factor with appropriate labels
-merged_data_2019$HHAGEx <- factor(merged_data_2019$HHAGEx, levels = c(1, 2, 3, 4), labels = c("15 to 19", "20 to 24", "25 to 49", "50 plus"))
+merged_data_2019$HHAGEx <- factor(merged_data_2019$HHAGEx, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9), labels = c("15 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 59", "60 to 69", "70 plus"))
 
 #Group MSTATUS into two groups
 merged_data_2019$MSTATUS <- ifelse(merged_data_2019$MSTATUS %in% c("Currently married/in union", "Formerly married/in union"), "Ever Married", "Never Married")
@@ -137,5 +142,84 @@ merged_data_2019 <- subset(merged_data_2019, !is.na(HC15))
 merged_data_2019 <- merged_data_2019 %>%
   mutate(across(c(HH7, HHSEX, HC15, helevel1, windex5r, welevel1), as.factor))
 
+####################################Creating a frequency distribution (summary) table on unweighted data
+# Reorder the levels of the helevel, welevel, and windex5r variables
+merged_data_2019 <- merged_data_2019 %>%
+  mutate(
+    helevel1 = fct_relevel(helevel1, "None", "Basic (Gr 1-8)", "Secondary (Gr 9-12)", "Higher"),
+    welevel1 = fct_relevel(welevel1, "None", "Basic (Gr 1-8)", "Secondary (Gr 9-12)", "Higher"),
+    windex5r = fct_relevel(windex5r, "Poorest", "Second", "Middle", "Fourth", "Richest"),
+    HC1A = fct_relevel(HC1A, "HINDU", "BUDDHIST", "CHRISTIAN", "ISLAM", "OTHER")
+  )
 
+# Select the desired variables including the new summary index
+d2 <- merged_data_2019 %>% 
+  select(HH7, HC1A, Ethnicity, HC15, HHSEX, helevel1, windex5r, WAGE, HHAGEx, MSTATUS, welevel1, HH51_grouped, HH52_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
+
+# Example variable labels
+variable_labels <- list(
+  HH7 = "Region",
+  HC1A = "Religion",
+  Ethnicity = "Ethnicity of Household Head", 
+  HC15 = "Owns Agricultural Land", 
+  HHSEX = "Sex of Household Head", 
+  helevel1 = "Education of Household Head",
+  windex5r = "Rural Wealth Index",
+  WAGE = "Age Range of Women",
+  HHAGEx = "Age Range of Household Head",
+  welevel1 = "Education of Women",
+  MSTATUS = "Marital Status",
+  HH51_grouped = "Number of children under age 5",
+  HH52_grouped = "Number of children aged 5-17",
+  UN16AA = "Staying in chaupadi/chhapro",
+  UN16AB = "Staying in separate room ",
+  UN16AC = "Staying in cowshed",
+  UN16AD = "Eating in a separate place",
+  UN16AE = "Bathing in a separate place",
+  UN16AF = "Staying away from school or work",
+  UN16AG = "Staying away from social gatherings",
+  UN16AH = "Staying away from religious work"
+)
+# Create the summary table with custom labels and add a caption
+summary_table_2019 <- tbl_summary(
+  d2,
+  label = variable_labels
+) %>%
+  modify_caption("**Table 1. Sociodemographic characteristics and the menstrual conditions of women, Nepal, 2019.**")
+
+# Display the summary table
+summary_table_2019
+#Save it 
+summary_gt2 <- as_gt(summary_table_2019)
+gtsave(summary_gt2, filename = "summary_table_2019.png")
+
+##########################################Bivariate Regressions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# save the document, run the following by choosing the directory
+write.csv(merged_data_2019, file = "/Users/nasib/Desktop/Nepal MICS/Data/clean_data_2019.csv")
 
