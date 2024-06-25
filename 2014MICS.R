@@ -1678,6 +1678,7 @@ gtsave(stacked_gtG, "bivariate_avoid_social_gatherings.png")
 different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting
 create_regression_table <- function(model, labels) {
@@ -1708,11 +1709,78 @@ create_regression_table <- function(model, labels) {
 table1 <- create_regression_table(different_house, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
 table2 <- create_regression_table(different_room, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
 table3 <- create_regression_table(animal_shed, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table4 <- create_regression_table(different_food, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
 
 # Combine the tables into one summary table
 summary_table1 <- tbl_merge(
-  tbls = list(table1, table2, table3),
-  tab_spanner = c("**Living in a different house**", "**Living in a different room**", "**Staying in animal shed**")
+  tbls = list(table1, table2, table3, table4),
+  tab_spanner = c("**Living in a different house**", "**Living in a different room**", "**Staying in animal shed**", "**Eating different food**")
+)
+
+# Hide the p.value columns after merging
+summary_table1 <- summary_table1 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt1 <- as_gt(summary_table1)
+# Save the gt table as an image
+gtsave(summary_gt1, "multivariate_table1.png")
+
+
+#######try another 
+different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+
+# Function to create a regression table with common formatting and reference category as 1.00
+create_regression_table <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        add_estimate_to_reference_rows = TRUE,  # add 1 to the coef row
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}", thresholds = c(0.05, 0.05, 0.05))  # Use one star for all significance levels
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR (95% CI)**"
+    )
+  
+  # Update the CI column for reference rows to show "1.00"
+  tbl <- tbl %>%
+    modify_table_styling(
+      columns = ci,
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  # Remove specific variables from the table body
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "SL1_group")))
+  
+  return(tbl)
+}
+
+# Create individual regression tables
+table1 <- create_regression_table(different_house, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table2 <- create_regression_table(different_room, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table3 <- create_regression_table(animal_shed, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table4 <- create_regression_table(different_food, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+
+# Combine the tables into one summary table
+summary_table1 <- tbl_merge(
+  tbls = list(table1, table2, table3, table4),
+  tab_spanner = c("**Living in a different house (n=10,608)**", "**Living in a different room (n=10,608)**", "**Staying in animal shed (n=10,608)**", "**Eating different food(n=10,608)**")
 )
 
 # Hide the p.value columns after merging
@@ -1722,12 +1790,104 @@ summary_table1 <- summary_table1 %>%
 # Convert the gtsummary table to a gt table
 summary_gt1 <- as_gt(summary_table1)
 
-# Save the gt table as an image
-gtsave(summary_gt1, "multivariate_table1.png")
+# Add the title and the note to the table
+summary_gt1 <- summary_gt1 %>%
+  tab_header(
+    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**")
+  ) %>%
+  tab_source_note(
+    source_note = md("Note: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  )
+
+# Display the final table
+summary_gt1
+
+#########creating LATEX code 
+
+# Define the regression models for multivariate_table1 without explicitly releveling
+different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, 
+                          design = design_2014, family = "quasibinomial")
+different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, 
+                         design = design_2014, family = "quasibinomial")
+animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, 
+                      design = design_2014, family = "quasibinomial")
+different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, 
+                         design = design_2014, family = "quasibinomial")
+
+# Function to create a regression table with common formatting and reference category as 1.00
+create_regression_table <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        add_estimate_to_reference_rows = TRUE,  # add 1 to the coef row
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}", thresholds = c(0.05, 0.05, 0.05))  # Use one star for all significance levels
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR (95% CI)**"
+    )
+  
+  # Update the CI column for reference rows to show "1.00"
+  tbl <- tbl %>%
+    modify_table_styling(
+      columns = ci,
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  # Remove specific variables from the table body
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "SL1_group")))
+  
+  return(tbl)
+}
+
+# Create individual regression tables
+table1 <- create_regression_table(different_house, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table2 <- create_regression_table(different_room, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table3 <- create_regression_table(animal_shed, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table4 <- create_regression_table(different_food, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+
+# Combine the tables into one summary table
+summary_table1 <- tbl_merge(
+  tbls = list(table1, table2, table3, table4),
+  tab_spanner = c("**Living in a different house (n=10,608)**", "**Living in a different room (n=10,608)**", "**Staying in animal shed (n=10,608)**", "**Eating different food(n=10,608)**")
+)
+
+# Hide the p.value columns after merging
+summary_table1 <- summary_table1 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt1 <- as_gt(summary_table1)
+
+# Add the title and the note to the table
+summary_gt1 <- summary_gt1 %>%
+  tab_header(
+    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**")
+  ) %>%
+  tab_source_note(
+    source_note = md("Key = *statistically significant (P-value <0.05); 1.00 = Reference category\nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  )
+
+# Convert the gt table to LaTeX
+latex_table <- as_latex(summary_gt1)
+
+# Display the LaTeX code
+latex_table
 
 ########################################################
 # Define the regression models for multivariate_table2
-different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
@@ -1758,7 +1918,6 @@ create_regression_table2 <- function(model, labels) {
 }
 
 # Create individual regression tables
-table4 <- create_regression_table2(different_food, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
 table5 <- create_regression_table2(bath_different_place, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
 table6 <- create_regression_table2(absent_school_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
 table7 <- create_regression_table2(avoid_social_gatherings, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
