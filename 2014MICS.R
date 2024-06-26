@@ -2667,7 +2667,179 @@ stacked_gtD_terai <- as_gt(stacked_terai1D) %>%
 # Save the gt table as an image
 gtsave(stacked_gtD_terai, "bivariate_eating_different_food_terai.png")
 
+###########################################################################
+#####UN13AE
+terai_logitE_2014 <- svyglm(UN13AE ~ HH7, design = design_terai_2014, family = quasibinomial)
+summary(terai_logitE_2014)
+tbl_regression(terai_logitE_2014, exponentiate = TRUE)
 
+##2. 
+terai_logit2E_2014 <- svyglm(UN13AE ~ HC1A, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit2E_2014)
+tbl_regression(terai_logit2E_2014, exponentiate = TRUE)
+
+#3.
+terai_logit3E_2014 <- svyglm(UN13AE ~ Ethnicity, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit3E_2014)
+tbl_regression(terai_logit3E_2014, exponentiate = TRUE)
+
+#4. 
+terai_logit4E_2014 <- svyglm(UN13AE ~ windex5r, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit4E_2014)
+tbl_regression(terai_logit4E_2014, exponentiate = TRUE)
+
+#5. 
+terai_logit5E_2014 <- svyglm(UN13AE ~ HHSEX, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit5E_2014)
+tbl_regression(terai_logit5E_2014, exponentiate = TRUE)
+
+#6. 
+terai_logit6E_2014 <- svyglm(UN13AE ~ HC11, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit6E_2014)
+tbl_regression(terai_logit6E_2014, exponentiate = TRUE)
+
+#7 
+terai_logit7E_2014 <- svyglm(UN13AE ~ helevel, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit7E_2014)
+tbl_regression(terai_logit7E_2014, exponentiate = TRUE)
+
+#8 
+terai_logit8E_2014 <- svyglm(UN13AE ~ welevel, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit8E_2014)
+tbl_regression(terai_logit8E_2014, exponentiate = TRUE)
+
+#9 
+terai_logit9E_2014 <- svyglm(UN13AE ~ WAGE, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit9E_2014)
+tbl_regression(terai_logit9E_2014, exponentiate = TRUE)
+
+#10 
+terai_logit10E_2014 <- svyglm(UN13AE ~ MSTATUS, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit10E_2014)
+tbl_regression(terai_logit10E_2014, exponentiate = TRUE)
+
+#11 
+terai_logit11E_2014 <- svyglm(UN13AE ~ SL1_group, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit11E_2014)
+tbl_regression(terai_logit11E_2014, exponentiate = TRUE)
+
+# 5th regression table
+terai1E <- terai_logitE_2014 %>%
+  tbl_regression(label = list(HH7 = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai2E <- terai_logit2E_2014 %>%
+  tbl_regression(label = list(HC1A = "Religion"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai3E <- terai_logit3E_2014 %>%
+  tbl_regression(label = list(Ethnicity = "Ethnicity"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai4E <- terai_logit4E_2014 %>%
+  tbl_regression(label = list(windex5r = "Rural Wealth"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai5E <- terai_logit5E_2014 %>%
+  tbl_regression(label = list(HHSEX = "Sex of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai6E <- terai_logit6E_2014 %>%
+  tbl_regression(label = list(HC11 = "Owns Agricultural Land"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai7E <- terai_logit7E_2014 %>%
+  tbl_regression(label = list(helevel = "Education of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+terai8E <- terai_logit8E_2014 %>%
+  tbl_regression(label = list(welevel = "Education of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+terai9E <- terai_logit9E_2014 %>%
+  tbl_regression(label = list(WAGE = "Age of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+terai10E <- terai_logit10E_2014 %>%
+  tbl_regression(label = list(MSTATUS = "Marital Status of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai11E <- terai_logit11E_2014 %>%
+  tbl_regression(label = list(SL1_group = "Number of Children Aged 1-17"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+# Stack the tables vertically
+stacked_terai1E <- tbl_stack(
+  tbls = list(terai1E, terai2E, terai3E, terai4E, terai5E, terai6E, terai7E, terai8E, terai9E, terai10E, terai11E)
+)
+# Convert the gtsummary table to a gt table
+stacked_gtE_terai <- as_gt(stacked_terai1E) %>%
+  gt::tab_header("Bathing in a separate place")
+# Save the gt table as an image
+gtsave(stacked_gtE_terai, "bivariate_bathing_separate_terai.png")
 
 
 
