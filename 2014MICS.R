@@ -3295,18 +3295,18 @@ gtsave(summary_gt2_terai, "multivariate_table2_terai.png")
 
 #######multivariate models for latex  
 library(forcats)
-merged_data_2014 <- merged_data_2014 %>%
+terai_2014 <- terai_2014 %>%
   mutate(Ethnicity = fct_recode(Ethnicity,
-                                "Terai/Madhesi/other" = "Tarai or Madhesi Other Castes"))
-design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+                                "Terai/Madhesi/other" = "Terai_Madhesi_other"))
+design_terai_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = terai_2014)
 
-different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_house_terai <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_room_terai <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+animal_shed_terai <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_food_terai <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting and reference category as 1.00
-create_regression_table <- function(model, labels) {
+create_regression_table1_terai <- function(model, labels) {
   tbl <- tbl_regression(model, 
                         label = labels,
                         exponentiate = TRUE,
@@ -3338,52 +3338,52 @@ create_regression_table <- function(model, labels) {
   
   # Remove specific variables from the table body
   tbl <- tbl %>%
-    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "SL1_group")))
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "helevel", "SL1_group", "WAGE", "HHSEX", "HC11")))
   
   return(tbl)
 }
 # Standardize labels for all regression tables
-standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity")
 
 # Create individual regression tables
-table1 <- create_regression_table(different_house, standard_labels)
-table2 <- create_regression_table(different_room, standard_labels)
-table3 <- create_regression_table(animal_shed, standard_labels)
-table4 <- create_regression_table(different_food, standard_labels)
+terai1 <- create_regression_table1_terai(different_house_terai, standard_labels)
+terai2 <- create_regression_table1_terai(different_room_terai, standard_labels)
+terai3 <- create_regression_table1_terai(animal_shed_terai, standard_labels)
+terai4 <- create_regression_table1_terai(different_food_terai, standard_labels)
 
 # Combine the tables into one summary table
-summary_table1 <- tbl_merge(
-  tbls = list(table1, table2, table3, table4),
-  tab_spanner = c("**Living in chaupadi (n=10,608)**", "**Living in a different room (n=10,608)**", "**Staying in animal shed (n=10,608)**", "**Eating different food (n=10,608)**")
+summary_table1_terai <- tbl_merge(
+  tbls = list(terai1, terai2, terai3, terai4),
+  tab_spanner = c("**Living in a different place (n=2,893)**", "**Living in a different room (n=2,893)**", "**Staying in animal shed (n=2,893)**", "**Eating different food (n=2,893)**")
 )
 
 # Hide the p.value columns after merging
-summary_table1 <- summary_table1 %>%
+summary_table1_terai <- summary_table1_terai %>%
   modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
 
 # Convert the gtsummary table to a gt table
-summary_gt1 <- as_gt(summary_table1)
+summary_gt1_terai <- as_gt(summary_table1_terai)
 
 # Add the title and the note to the table
-summary_gt1 <- summary_gt1 %>%
+summary_gt1_terai <- summary_gt1_terai %>%
   tab_header(
-    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**")
+    title = md("**Table 2. Predictors of menstrual restrictions among women and girls in Nepal for Terai Regions, 2014.**")
   ) %>%
   tab_source_note(
-    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education and age of women, education and sex of household head, number of children, owning agricultural land. Marital status and rural wealth were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
   ) %>%
   tab_options(
     heading.align = "left"
   )
 
 # Display the final table
-summary_gt1
+summary_gt1_terai
 
 # Export gt table to LaTeX code
-latex_code <- as_latex(summary_gt1)
+latex_code_terai1 <- as_latex(summary_gt1_terai)
 
 # Display the LaTeX code in the R console
-cat(as.character(latex_code))
+cat(as.character(latex_code_terai1))
 # Save to a .tex file
 writeLines(latex_code, "my_table.tex")
 
