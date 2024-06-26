@@ -3243,12 +3243,12 @@ summary_gt1_terai <- as_gt(summary_table1_terai)
 gtsave(summary_gt1_terai, "multivariate_table1_terai.png")
 #############
 # Define the regression models for multivariate_table2
-bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+bath_different_house_terai <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+absent_school_work_terai <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+avoid_social_gatherings_terai <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting
-create_regression_table2 <- function(model, labels) {
+create_regression_table2_terai <- function(model, labels) {
   tbl <- tbl_regression(model, 
                         label = labels,
                         exponentiate = TRUE,
@@ -3273,25 +3273,25 @@ create_regression_table2 <- function(model, labels) {
 }
 
 # Create individual regression tables
-table5 <- create_regression_table2(bath_different_place, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table6 <- create_regression_table2(absent_school_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
-table7 <- create_regression_table2(avoid_social_gatherings, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+terai5 <- create_regression_table2_terai(bath_different_house_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
+terai6 <- create_regression_table2_terai(absent_school_work_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
+terai7 <- create_regression_table2_terai(avoid_social_gatherings_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
 
 # Combine the tables into one summary table
-summary_table2 <- tbl_merge(
-  tbls = list(table4, table5, table6, table7),
-  tab_spanner = c("**Eating different food**", "**Bathing in a separate place**", "**Absent from school or work**", "**Avoid social gatherings**")
+summary_table2_terai <- tbl_merge(
+  tbls = list(terai5, terai6, terai7),
+  tab_spanner = c("**Bathing in a separate place**", "**Absent from school or work**", "**Avoid social gatherings**")
 )
 
 # Hide the p.value columns after merging
-summary_table2 <- summary_table2 %>%
+summary_table2_terai <- summary_table2_terai %>%
   modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
 
 # Convert the gtsummary table to a gt table
-summary_gt2 <- as_gt(summary_table2)
+summary_gt2_terai <- as_gt(summary_table2_terai)
 
 # Save the gt table as an image
-gtsave(summary_gt2, "multivariate_table2.png")
+gtsave(summary_gt2_terai, "multivariate_table2_terai.png")
 
 #######multivariate models for latex  
 library(forcats)
