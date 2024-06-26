@@ -3189,7 +3189,289 @@ stacked_gtG_terai <- as_gt(stacked_terai1G) %>%
 # Save the gt table as an image
 gtsave(stacked_gtG_terai, "bivariate_avoid social_gatherings_terai.png")
 
+##############################################################################################
+#Multivariate analysis for terai regions 
+# Define the regression models for multivariate_table1
+different_house_terai <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_room_terai <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+animal_shed_terai <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_food_terai <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
 
+# Function to create a regression table with common formatting
+create_regression_table_terai1 <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.10) %>%
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}")
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR, 95% CI**"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  return(tbl)
+}
+
+# Create individual regression tables
+terai1 <- create_regression_table_terai1(different_house_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
+terai2 <- create_regression_table_terai1(different_room_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
+terai3 <- create_regression_table_terai1(animal_shed_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
+terai4 <- create_regression_table_terai1(different_food_terai, list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land", HHSEX = "Sex of Household Head", helevel = "Education of Household Head", welevel = "Education of Women", WAGE = "Age of Women", SL1_group = "Number of Children Aged 1-17"))
+# Combine the tables into one summary table
+summary_table1_terai <- tbl_merge(
+  tbls = list(terai1, terai2, terai3, terai4),
+  tab_spanner = c("**Living in a different house**", "**Living in a different room**", "**Staying in animal shed**", "**Eating different food**")
+)
+
+# Hide the p.value columns after merging
+summary_table1_terai <- summary_table1_terai %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt1_terai <- as_gt(summary_table1_terai)
+# Save the gt table as an image
+gtsave(summary_gt1_terai, "multivariate_table1_terai.png")
+#############
+# Define the regression models for multivariate_table2
+bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+
+# Function to create a regression table with common formatting
+create_regression_table2 <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.10) %>%
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}")
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR, 95% CI**"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  return(tbl)
+}
+
+# Create individual regression tables
+table5 <- create_regression_table2(bath_different_place, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table6 <- create_regression_table2(absent_school_work, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+table7 <- create_regression_table2(avoid_social_gatherings, list(HH7 = "Region", HC1A = "Religion of Household Head", Ethnicity = "Ethnicity of Household Head", windex5r = "Rural Wealth Index", HC11 = "Owns Agricultural Land", welevel = "Education of Women", SL1_group = "Number of Children Aged 1-17"))
+
+# Combine the tables into one summary table
+summary_table2 <- tbl_merge(
+  tbls = list(table4, table5, table6, table7),
+  tab_spanner = c("**Eating different food**", "**Bathing in a separate place**", "**Absent from school or work**", "**Avoid social gatherings**")
+)
+
+# Hide the p.value columns after merging
+summary_table2 <- summary_table2 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt2 <- as_gt(summary_table2)
+
+# Save the gt table as an image
+gtsave(summary_gt2, "multivariate_table2.png")
+
+#######multivariate models for latex  
+library(forcats)
+merged_data_2014 <- merged_data_2014 %>%
+  mutate(Ethnicity = fct_recode(Ethnicity,
+                                "Terai/Madhesi/other" = "Tarai or Madhesi Other Castes"))
+design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
+
+different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+
+# Function to create a regression table with common formatting and reference category as 1.00
+create_regression_table <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        add_estimate_to_reference_rows = TRUE,  # add 1 to the coef row
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}", thresholds = c(0.05, 0.05, 0.05))  # Use one star for all significance levels
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR (95% CI)**"
+    )
+  
+  # Update the CI column for reference rows to show "1.00"
+  tbl <- tbl %>%
+    modify_table_styling(
+      columns = ci,
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  # Remove specific variables from the table body
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "SL1_group")))
+  
+  return(tbl)
+}
+# Standardize labels for all regression tables
+standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+
+# Create individual regression tables
+table1 <- create_regression_table(different_house, standard_labels)
+table2 <- create_regression_table(different_room, standard_labels)
+table3 <- create_regression_table(animal_shed, standard_labels)
+table4 <- create_regression_table(different_food, standard_labels)
+
+# Combine the tables into one summary table
+summary_table1 <- tbl_merge(
+  tbls = list(table1, table2, table3, table4),
+  tab_spanner = c("**Living in chaupadi (n=10,608)**", "**Living in a different room (n=10,608)**", "**Staying in animal shed (n=10,608)**", "**Eating different food (n=10,608)**")
+)
+
+# Hide the p.value columns after merging
+summary_table1 <- summary_table1 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt1 <- as_gt(summary_table1)
+
+# Add the title and the note to the table
+summary_gt1 <- summary_gt1 %>%
+  tab_header(
+    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**")
+  ) %>%
+  tab_source_note(
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  ) %>%
+  tab_options(
+    heading.align = "left"
+  )
+
+# Display the final table
+summary_gt1
+
+# Export gt table to LaTeX code
+latex_code <- as_latex(summary_gt1)
+
+# Display the LaTeX code in the R console
+cat(as.character(latex_code))
+# Save to a .tex file
+writeLines(latex_code, "my_table.tex")
+
+##################doing the remaining for latex 
+bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+
+# Function to create a regression table with common formatting and reference category as 1.00
+create_regression_table2 <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        add_estimate_to_reference_rows = TRUE,  # add 1 to the coef row
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}", thresholds = c(0.05, 0.05, 0.05))  # Use one star for all significance levels
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR (95% CI)**"
+    )
+  
+  # Update the CI column for reference rows to show "1.00"
+  tbl <- tbl %>%
+    modify_table_styling(
+      columns = ci,
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  # Remove specific variables from the table body
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "SL1_group")))
+  
+  return(tbl)
+}
+# Standardize labels for all regression tables
+standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+
+# Create individual regression tables
+table5 <- create_regression_table2(bath_different_place, standard_labels)
+table6 <- create_regression_table2(absent_school_work, standard_labels)
+table7 <- create_regression_table2(avoid_social_gatherings, standard_labels)
+
+# Combine the tables into one summary table
+summary_table2 <- tbl_merge(
+  tbls = list(table5, table6, table7),
+  tab_spanner = c("**Bathing in a different place (n=10,608)**", "**Absent from school/work (n=10,608)**", "**Avoid social gatherings (n=10,608)**")
+)
+
+# Hide the p.value columns after merging
+summary_table2 <- summary_table2 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt2 <- as_gt(summary_table2)
+
+# Add the title and the note to the table
+summary_gt2 <- summary_gt2 %>%
+  tab_header(
+    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal for all the regions, 2014. (Continued)**")
+  ) %>%
+  tab_source_note(
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  ) %>%
+  tab_options(
+    heading.align = "left"
+  )
+
+# Display the final table
+summary_gt2
+
+# Export gt table to LaTeX code
+latex_code2 <- as_latex(summary_gt2)
+
+# Display the LaTeX code in the R console
+cat(as.character(latex_code2))
+# Save to a .tex file
+writeLines(latex_code, "my_table.tex")
 
 
 
