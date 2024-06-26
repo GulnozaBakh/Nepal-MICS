@@ -3015,6 +3015,182 @@ stacked_gtF_terai <- as_gt(stacked_terai1F) %>%
 # Save the gt table as an image
 gtsave(stacked_gtF_terai, "bivariate_absent_from_school_work_terai.png")
 
+###########################################################################
+#####UN13AG
+terai_logitG_2014 <- svyglm(UN13AG ~ HH7, design = design_terai_2014, family = quasibinomial)
+summary(terai_logitG_2014)
+tbl_regression(terai_logitG_2014, exponentiate = TRUE)
+
+##2. 
+terai_logit2G_2014 <- svyglm(UN13AG ~ HC1A, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit2G_2014)
+tbl_regression(terai_logit2G_2014, exponentiate = TRUE)
+
+#3.
+terai_logit3G_2014 <- svyglm(UN13AG ~ Ethnicity, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit3G_2014)
+tbl_regression(terai_logit3G_2014, exponentiate = TRUE)
+
+#4. 
+terai_logit4G_2014 <- svyglm(UN13AG ~ windex5r, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit4G_2014)
+tbl_regression(terai_logit4G_2014, exponentiate = TRUE)
+
+#5. 
+terai_logit5G_2014 <- svyglm(UN13AG ~ HHSEX, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit5G_2014)
+tbl_regression(terai_logit5G_2014, exponentiate = TRUE)
+
+#6. 
+terai_logit6G_2014 <- svyglm(UN13AG ~ HC11, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit6G_2014)
+tbl_regression(terai_logit6G_2014, exponentiate = TRUE)
+
+#7 
+terai_logit7G_2014 <- svyglm(UN13AG ~ helevel, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit7G_2014)
+tbl_regression(terai_logit7G_2014, exponentiate = TRUE)
+
+#8 
+terai_logit8G_2014 <- svyglm(UN13AG ~ welevel, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit8G_2014)
+tbl_regression(terai_logit8G_2014, exponentiate = TRUE)
+
+#9 
+terai_logit9G_2014 <- svyglm(UN13AG ~ WAGE, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit9G_2014)
+tbl_regression(terai_logit9G_2014, exponentiate = TRUE)
+
+#10 
+terai_logit10G_2014 <- svyglm(UN13AG ~ MSTATUS, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit10G_2014)
+tbl_regression(terai_logit10G_2014, exponentiate = TRUE)
+
+#11 
+terai_logit11G_2014 <- svyglm(UN13AG ~ SL1_group, design = design_terai_2014, family = quasibinomial)
+summary(terai_logit11G_2014)
+tbl_regression(terai_logit11G_2014, exponentiate = TRUE)
+
+# 7th regression table
+terai1G <- terai_logitG_2014 %>%
+  tbl_regression(label = list(HH7 = "Region"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai2G <- terai_logit2G_2014 %>%
+  tbl_regression(label = list(HC1A = "Religion"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai3G <- terai_logit3G_2014 %>%
+  tbl_regression(label = list(Ethnicity = "Ethnicity"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai4G <- terai_logit4G_2014 %>%
+  tbl_regression(label = list(windex5r = "Rural Wealth"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai5G <- terai_logit5G_2014 %>%
+  tbl_regression(label = list(HHSEX = "Sex of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai6G <- terai_logit6G_2014 %>%
+  tbl_regression(label = list(HC11 = "Owns Agricultural Land"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai7G <- terai_logit7G_2014 %>%
+  tbl_regression(label = list(helevel = "Education of Household Head"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+terai8G <- terai_logit8G_2014 %>%
+  tbl_regression(label = list(welevel = "Education of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+terai9G <- terai_logit9G_2014 %>%
+  tbl_regression(label = list(WAGE = "Age of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+terai10G <- terai_logit10G_2014 %>%
+  tbl_regression(label = list(MSTATUS = "Marital Status of Women"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+terai11G <- terai_logit11G_2014 %>%
+  tbl_regression(label = list(SL1_group = "Number of Children Aged 1-17"),
+                 exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 2),
+  ) %>%
+  add_global_p() %>%
+  bold_p(t = 0.10) %>%
+  bold_labels() %>%
+  italicize_levels()
+
+# Stack the tables vertically
+stacked_terai1G <- tbl_stack(
+  tbls = list(terai1G, terai2G, terai3G, terai4G, terai5G, terai6G, terai7G, terai8G, terai9G, terai10G, terai11G)
+)
+# Convert the gtsummary table to a gt table
+stacked_gtG_terai <- as_gt(stacked_terai1G) %>%
+  gt::tab_header("Avoid social gatherings")
+# Save the gt table as an image
+gtsave(stacked_gtG_terai, "bivariate_avoid social_gatherings_terai.png")
+
+
+
 
 
 #Total 15 Regions 
