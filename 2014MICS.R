@@ -1777,17 +1777,34 @@ summary_gt2 <- as_gt(summary_table2)
 # Save the gt table as an image
 gtsave(summary_gt2, "multivariate_table2.png")
 
-#######multivariate models for latex  
+#######multivariate models for latex 
+#Before going into the regressions, I would like to show the correlation between religion and Ethnicity 
+library(DescTools)
+# Calculate and print Cramer's V:
+cramer_v1 <- CramerV(merged_data_2014$HC1A, merged_data_2014$Ethnicity)
+cat("Cramer's V between HC1A and Ethnicity:", cramer_v1)
+# Create a data frame for Cramer's V result
+cramer_v_df1 <- data.frame(
+  Variable1 = "HC1A",
+  Variable2 = "Ethnicity",
+  Cramers_V = round(cramer_v1, 3)
+)
+# Create a LaTeX table for Cramer's V result
+cramer_v_latex <- kable(cramer_v_df1, format = "latex", booktabs = TRUE, caption = "Cramer's V between Religion and Ethnicity") %>%
+  kable_styling(latex_options = c("hold_position"))
+# Display the table
+cramer_v_latex
+
 library(forcats)
 merged_data_2014 <- merged_data_2014 %>%
   mutate(Ethnicity = fct_recode(Ethnicity,
                                 "Terai/Madhesi/other" = "Tarai or Madhesi Other Castes"))
 design_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2014)
 
-different_house <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-different_room <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-animal_shed <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-different_food <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_house <- svyglm(UN13AA ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_room <- svyglm(UN13AB ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+animal_shed <- svyglm(UN13AC ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+different_food <- svyglm(UN13AD ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting and reference category as 1.00
 create_regression_table <- function(model, labels) {
@@ -1827,7 +1844,7 @@ create_regression_table <- function(model, labels) {
   return(tbl)
 }
 # Standardize labels for all regression tables
-standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+standard_labels <- list(HH7 = "Region", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
 
 # Create individual regression tables
 table1 <- create_regression_table(different_house, standard_labels)
@@ -1872,9 +1889,9 @@ cat(as.character(latex_code))
 writeLines(latex_code, "my_table.tex")
 
 ##################doing the remaining for latex 
-bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+bath_different_place <- svyglm(UN13AE ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+absent_school_work <- svyglm(UN13AF ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting and reference category as 1.00
 create_regression_table2 <- function(model, labels) {
@@ -1914,7 +1931,7 @@ create_regression_table2 <- function(model, labels) {
   return(tbl)
 }
 # Standardize labels for all regression tables
-standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+standard_labels <- list(HH7 = "Region", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
 
 # Create individual regression tables
 table5 <- create_regression_table2(bath_different_place, standard_labels)
@@ -3295,15 +3312,30 @@ gtsave(summary_gt2_terai, "multivariate_table2_terai.png")
 
 #######multivariate models for latex  
 library(forcats)
+# Calculate and print Cramer's V:
+cramer_v2 <- CramerV(terai_2014$HC1A, terai_2014$Ethnicity)
+cat("Cramer's V between HC1A and Ethnicity:", cramer_v2)
+# Create a data frame for Cramer's V result
+cramer_v_df2 <- data.frame(
+  Variable1 = "HC1A",
+  Variable2 = "Ethnicity",
+  Cramers_V = round(cramer_v2, 3)
+)
+# Create a LaTeX table for Cramer's V result
+cramer_v_latex2 <- kable(cramer_v_df2, format = "latex", booktabs = TRUE, caption = "Cramer's V between Religion and Ethnicity") %>%
+  kable_styling(latex_options = c("hold_position"))
+# Display the table
+cramer_v_latex2
+
 terai_2014 <- terai_2014 %>%
   mutate(Ethnicity = fct_recode(Ethnicity,
                                 "Terai/Madhesi/other" = "Terai_Madhesi_other"))
 design_terai_2014 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = terai_2014)
 
-different_house_terai <- svyglm(UN13AA ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
-different_room_terai <- svyglm(UN13AB ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
-animal_shed_terai <- svyglm(UN13AC ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
-different_food_terai <- svyglm(UN13AD ~ HH7 + HC1A + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_house_terai <- svyglm(UN13AA ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_room_terai <- svyglm(UN13AB ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+animal_shed_terai <- svyglm(UN13AC ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+different_food_terai <- svyglm(UN13AD ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting and reference category as 1.00
 create_regression_table1_terai <- function(model, labels) {
@@ -3338,12 +3370,12 @@ create_regression_table1_terai <- function(model, labels) {
   
   # Remove specific variables from the table body
   tbl <- tbl %>%
-    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "helevel", "SL1_group", "WAGE", "HHSEX", "HC11")))
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "helevel", "SL1_group", "WAGE", "HHSEX")))
   
   return(tbl)
 }
 # Standardize labels for all regression tables
-standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity")
+standard_labels <- list(HH7 = "Region", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land")
 
 # Create individual regression tables
 terai1 <- create_regression_table1_terai(different_house_terai, standard_labels)
@@ -3388,12 +3420,12 @@ cat(as.character(latex_code_terai1))
 writeLines(latex_code, "my_table.tex")
 
 ##################doing the remaining for latex 
-bath_different_place <- svyglm(UN13AE ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-absent_school_work <- svyglm(UN13AF ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
-avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + HC1A + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+bath_different_terai <- svyglm(UN13AE ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+absent_school_work_terai <- svyglm(UN13AF ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
+avoid_social_gatherings_terai <- svyglm(UN13AG ~ HH7 + Ethnicity + HC11 + HHSEX + helevel + welevel + WAGE + SL1_group, design = design_terai_2014, family = "quasibinomial")
 
 # Function to create a regression table with common formatting and reference category as 1.00
-create_regression_table2 <- function(model, labels) {
+create_regression_table2_terai <- function(model, labels) {
   tbl <- tbl_regression(model, 
                         label = labels,
                         exponentiate = TRUE,
@@ -3425,53 +3457,57 @@ create_regression_table2 <- function(model, labels) {
   
   # Remove specific variables from the table body
   tbl <- tbl %>%
-    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "SL1_group")))
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel", "helevel", "SL1_group", "WAGE", "HHSEX")))
   
   return(tbl)
 }
 # Standardize labels for all regression tables
-standard_labels <- list(HH7 = "Region", HC1A = "Religion", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+standard_labels <- list(HH7 = "Region", Ethnicity = "Ethnicity", HC11 = "Owns Agricultural Land")
 
 # Create individual regression tables
-table5 <- create_regression_table2(bath_different_place, standard_labels)
-table6 <- create_regression_table2(absent_school_work, standard_labels)
-table7 <- create_regression_table2(avoid_social_gatherings, standard_labels)
+terai5 <- create_regression_table2_terai(bath_different_terai, standard_labels)
+terai6 <- create_regression_table2_terai(absent_school_work_terai, standard_labels)
+terai7 <- create_regression_table2_terai(avoid_social_gatherings_terai, standard_labels)
 
 # Combine the tables into one summary table
-summary_table2 <- tbl_merge(
-  tbls = list(table5, table6, table7),
-  tab_spanner = c("**Bathing in a different place (n=10,608)**", "**Absent from school/work (n=10,608)**", "**Avoid social gatherings (n=10,608)**")
+summary_table2_terai <- tbl_merge(
+  tbls = list(terai5, terai6, terai7),
+  tab_spanner = c("**Bathing in a different place (n=2,893)**", "**Absent from school/work (n=2,893)**", "**Avoid social gatherings (n=2,893)**")
 )
 
 # Hide the p.value columns after merging
-summary_table2 <- summary_table2 %>%
+summary_table2_terai <- summary_table2_terai %>%
   modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
 
 # Convert the gtsummary table to a gt table
-summary_gt2 <- as_gt(summary_table2)
+summary_gt2_terai <- as_gt(summary_table2_terai)
 
 # Add the title and the note to the table
-summary_gt2 <- summary_gt2 %>%
+summary_gt2_terai <- summary_gt2_terai %>%
   tab_header(
-    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal for all the regions, 2014. (Continued)**")
+    title = md("**Table 2. Predictors of menstrual restrictions among women and girls in Nepal for terai regions, 2014. (Continued)**")
   ) %>%
   tab_source_note(
-    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education and age of women, education and sex of household head, number of children. Marital status and rural wealth were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
   ) %>%
   tab_options(
     heading.align = "left"
   )
 
 # Display the final table
-summary_gt2
+summary_gt2_terai
 
 # Export gt table to LaTeX code
-latex_code2 <- as_latex(summary_gt2)
+latex_code2_terai <- as_latex(summary_gt2_terai)
 
 # Display the LaTeX code in the R console
-cat(as.character(latex_code2))
+cat(as.character(latex_code2_terai))
 # Save to a .tex file
 writeLines(latex_code, "my_table.tex")
+
+
+
+
 
 
 
