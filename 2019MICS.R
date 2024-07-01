@@ -2344,11 +2344,263 @@ summary_gt2_2019 <- as_gt(summary_table2_2019)
 # Save the gt table as an image
 gtsave(summary_gt2_2019, "multivariate_table2.png")
 
+##################################################################################
+#Multivariate tables for latex 
+#Before going into the regressions, I would like to show the correlation between religion and Ethnicity 
+library(DescTools)
+# Calculate and print Cramer's V:
+cramer_v <- CramerV(merged_data_2019$HC1A, merged_data_2019$Ethnicity)
+cat("Cramer's V between HC1A and Ethnicity:", cramer_v)
+# Create a data frame for Cramer's V result
+cramer_v_df <- data.frame(
+  Variable1 = "HC1A",
+  Variable2 = "Ethnicity",
+  Cramers_V = round(cramer_v, 3)
+)
+# Create a LaTeX table for Cramer's V result
+cramer_v_latex <- kable(cramer_v_df, format = "latex", booktabs = TRUE, caption = "Cramer's V between HC1A and Ethnicity") %>%
+  kable_styling(latex_options = c("hold_position"))
+# Display the table
+cramer_v_latex
+
+library(forcats)
+merged_data_2019 <- merged_data_2019 %>%
+  mutate(Ethnicity = fct_recode(Ethnicity,
+                                "Terai/Madhesi/other" = "Tarai or Madhesi Other Castes"))
+design_2019 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2019)
+
+chaupadi <- svyglm(UN16AA ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+separate_room <- svyglm(UN16AB ~ HH7  + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+cowshed <- svyglm(UN16AC ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+eating_separate <- svyglm(UN16AD ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+
+# Function to create a regression table with common formatting and reference category as 1.00
+create_regression_table1_2019 <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        add_estimate_to_reference_rows = TRUE,  # add 1 to the coef row
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}", thresholds = c(0.05, 0.05, 0.05))  # Use one star for all significance levels
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR (95% CI)**"
+    )
+  
+  # Update the CI column for reference rows to show "1.00"
+  tbl <- tbl %>%
+    modify_table_styling(
+      columns = ci,
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  # Remove specific variables from the table body
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel1", "helevel1", "HH52_grouped", "HC15")))
+  
+  return(tbl)
+}
+# Standardize labels for all regression tables
+standard_labels_2019 <- list(HH7 = "Region", Ethnicity = "Ethnicity", windex5r = "Rural Wealth")
+
+# Create individual regression tables
+table1_2019 <- create_regression_table1_2019(chaupadi, standard_labels_2019)
+table2_2019 <- create_regression_table1_2019(separate_room, standard_labels_2019)
+table3_2019 <- create_regression_table1_2019(cowshed, standard_labels_2019)
+table4_2019 <- create_regression_table1_2019(eating_separate, standard_labels_2019)
+
+# Combine the tables into one summary table
+summary_table1_2019 <- tbl_merge(
+  tbls = list(table1_2019, table2_2019, table3_2019, table4_2019),
+  tab_spanner = c("**Living in chaupadi (n=5,465)**", "**Living in a different room (n=5,465)**", "**Staying in cowshed (n=5,465)**", "**Eating in a separate place (n=5,465)**")
+)
+
+# Hide the p.value columns after merging
+summary_table1_2019 <- summary_table1_2019 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt1_2019 <- as_gt(summary_table1_2019)
+
+# Add the title and the note to the table
+summary_gt1_2019 <- summary_gt1_2019 %>%
+  tab_header(
+    title = md("**Table 3. Predictors of menstrual restrictions among women and girls in Nepal, 2019.**")
+  ) %>%
+  tab_source_note(
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and household head, number of children aged 5-17, owning agricultural land. Marital status, age of women and household head, sex of household head and number of children under age 5 were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  ) %>%
+  tab_options(
+    heading.align = "left"
+  )
+
+# Display the final table
+summary_gt1_2019
+
+# Export gt table to LaTeX code
+latex_code_2019 <- as_latex(summary_gt1_2019)
+
+# Display the LaTeX code in the R console
+cat(as.character(latex_code_2019))
+# Save to a .tex file
+writeLines(latex_code, "my_table.tex")
+
+###############remaining four exclusions for latex document
+bathing_separate <- svyglm(UN16AE ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+away_from_school_work <- svyglm(UN16AF ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+away_from_social_gatherings <- svyglm(UN16AG ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+away_from_religious_work <- svyglm(UN16AH ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+
+# Function to create a regression table with common formatting and reference category as 1.00
+create_regression_table2_2019 <- function(model, labels) {
+  tbl <- tbl_regression(model, 
+                        label = labels,
+                        exponentiate = TRUE,
+                        add_estimate_to_reference_rows = TRUE,  # add 1 to the coef row
+                        pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() %>%
+    add_significance_stars(hide_ci = TRUE, hide_p = TRUE, pattern = "{estimate} ({conf.low} - {conf.high}){stars}", thresholds = c(0.05, 0.05, 0.05))  # Use one star for all significance levels
+  
+  # Modify the headers to show OR and CI combined, and remove SE and p-value columns
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      estimate = "**OR (95% CI)**"
+    )
+  
+  # Update the CI column for reference rows to show "1.00"
+  tbl <- tbl %>%
+    modify_table_styling(
+      columns = ci,
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% select(-std.error))
+  }
+  
+  # Remove specific variables from the table body
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% filter(!variable %in% c("welevel1", "helevel1", "HH52_grouped", "HC15")))
+  
+  return(tbl)
+}
+# Standardize labels for all regression tables
+standard_labels_2019 <- list(HH7 = "Region", Ethnicity = "Ethnicity", windex5r = "Rural Wealth")
+
+# Create individual regression tables
+table5_2019 <- create_regression_table2_2019(bathing_separate, standard_labels_2019)
+table6_2019 <- create_regression_table2_2019(away_from_school_work, standard_labels_2019)
+table7_2019 <- create_regression_table1_2019(away_from_social_gatherings, standard_labels_2019)
+table8_2019 <- create_regression_table1_2019(away_from_religious_work, standard_labels_2019)
+
+# Combine the tables into one summary table
+summary_table2_2019 <- tbl_merge(
+  tbls = list(table5_2019, table6_2019, table7_2019, table8_2019),
+  tab_spanner = c("**Bathing in a separate place (n=5,465)**", "**Staying away from school/work (n=5,465)**", "**Staying away from social gatherings (n=5,465)**", "**Staying away from religious work (n=5,465)**")
+)
+
+# Hide the p.value columns after merging
+summary_table2_2019 <- summary_table2_2019 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt2_2019 <- as_gt(summary_table2_2019)
+
+# Add the title and the note to the table
+summary_gt2_2019 <- summary_gt2_2019 %>%
+  tab_header(
+    title = md("**Table 3. Predictors of menstrual restrictions among women and girls in Nepal, 2019. (Continued)**")
+  ) %>%
+  tab_source_note(
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and household head, number of children aged 5-17, owning agricultural land. Marital status, age of women and household head, sex of household head and number of children under age 5 were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  ) %>%
+  tab_options(
+    heading.align = "left"
+  )
+
+# Display the final table
+summary_gt2_2019
+
+# Export gt table to LaTeX code
+latex_code2_2019 <- as_latex(summary_gt2_2019)
+
+# Display the LaTeX code in the R console
+cat(as.character(latex_code2_2019))
+# Save to a .tex file
+writeLines(latex_code, "my_table.tex")
+
+###########check with interaction terms
+interaction_model1<- svyglm(UN16AA ~ HH7 + HC1A + HH7 * HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+tbl_regression(interaction_model1, exponentiate = TRUE)
+
+simple_model <- svyglm(UN16AA ~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+simple_model2 <- svyglm(UN16AA ~ HH7 + HC1A + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+simple_model3 <- svyglm(UN16AA ~ HC1A + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
+simple_model4 <- svyglm(UN16AA ~ HH7 + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, design = design_2019, family = "quasibinomial")
 
 
+firth <- logistf(formula = UN16AA ~HH7 + HC1A + Ethnicity, data = merged_data_2019,
+                 weights = merged_data_2019$hhweight)
+
+#trying LAsso and Ridge
+# Extracting the design matrix and response variable
+X <- model.matrix(~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, data = merged_data_2019)[, -1]
+y <- merged_data_2019$UN16AA
+
+# Fit Lasso regression
+cv_lasso <- cv.glmnet(X, y, alpha = 1, family = "binomial")
+lasso_model <- glmnet(X, y, alpha = 1, family = "binomial", lambda = cv_lasso$lambda.min)
+# Extract coefficients from the Lasso model
+coef_lasso <- coef(lasso_model)
+# Calculate Odds Ratios (ORs)
+ORs <- exp(coef_lasso)
 
 
+# Convert factors to characters
+merged_data_2019$HC1A <- as.character(merged_data_2019$HC1A)
+merged_data_2019$Ethnicity <- as.character(merged_data_2019$Ethnicity)
 
+# Create a new composite factor variable
+merged_data_2019$HC1A_Ethnicity <- paste(merged_data_2019$HC1A, merged_data_2019$Ethnicity, sep = "_")
+
+# Convert the new composite variable back to a factor
+merged_data_2019$HC1A_Ethnicity <- as.factor(merged_data_2019$HC1A_Ethnicity)
+
+# Check the levels of the new composite variable
+levels(merged_data_2019$HC1A_Ethnicity)
+design_2019 <- svydesign(id = ~HH1, weights = ~hhweight, strata = ~stratum, nest = TRUE, survey.lonely.psu = "adjust", data = merged_data_2019)
+
+
+# Summary of the model
+summary(firth)
+
+tbl_regression(simple_model, exponentiate = TRUE)
+
+# Center the highly correlated variables
+design_2019$variables$HH7_S <- scale(design_2019$variables$HH7, center = TRUE, scale = FALSE)
+
+
+# Fit a simple linear model to calculate VIFs (not using weights here for simplicity)
+lm_model <- lm(UN16AA ~ HH7 + HC1A + Ethnicity + windex5r + HC15 + helevel1 + welevel1 + HH52_grouped, data = design_2019$variables)
+
+# Calculate VIFs
+vif_values <- vif(lm_model)
+print(vif_values)
 
 
 
