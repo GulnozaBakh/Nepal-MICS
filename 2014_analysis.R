@@ -90,7 +90,7 @@ weighted_logit11A_2014 <- svyglm(UN13AA ~ SL1_group, design = design_2014, famil
 tbl_regression(weighted_logit11A_2014, exponentiate = TRUE)
 
 # Putting all the regressions in one table
-formulas <- list(
+formulas1 <- list(
   UN13AA ~ HH7,                  
   UN13AA ~ HC1A,                 
   UN13AA ~ Ethnicity,            
@@ -116,8 +116,8 @@ labels <- list(
   MSTATUS = "Marital Status of Women",
   SL1_group = "Number of Children Aged 1-17")
 
-tables <- lapply(seq_along(formulas), function(i) {
-  formula <- formulas[[i]] 
+tables1A <- lapply(seq_along(formulas), function(i) {
+  formula <- formulas1[[i]] 
   tbl_regression(
     svyglm(formula, design = design_2014, family = quasibinomial),
     label = labels[i],  
@@ -129,20 +129,91 @@ tables <- lapply(seq_along(formulas), function(i) {
     bold_labels() %>%
     italicize_levels()
 })
-stacked_table1A <- tbl_stack(tables)
-stacked_table %>%
+stacked_table1A <- tbl_stack(tables1A)
+stacked_table1A %>%
   as_gt() %>%
   gt::tab_header(title = "Living in a different place") %>%
   gtsave("bivariate_living_in_different_place.png")
 
 
+### #Live in a different room of the same house 'UN13AB'----
+#1.
+weighted_logitB_2014 <- svyglm(UN13AB ~ HH7, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logitB_2014, exponentiate = TRUE)
 
+#2. 
+weighted_logit2B_2014 <- svyglm(UN13AB ~ HC1A, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit2B_2014, exponentiate = TRUE)
 
+#3.
+weighted_logit3B_2014 <- svyglm(UN13AB ~ Ethnicity, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit3B_2014, exponentiate = TRUE)
 
+#4. 
+weighted_logit4B_2014 <- svyglm(UN13AB ~ windex5r, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit4B_2014, exponentiate = TRUE)
 
+#5. 
+weighted_logit5B_2014 <- svyglm(UN13AB ~ HHSEX, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit5B_2014, exponentiate = TRUE)
 
+#6. 
+weighted_logit6B_2014 <- svyglm(UN13AB ~ HC11, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit6B_2014, exponentiate = TRUE)
 
-### #Live in a different room of the same house ----
+#7. 
+weighted_logit7B_2014 <- svyglm(UN13AB ~ helevel, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit7B_2014, exponentiate = TRUE)
 
+#8. 
+weighted_logit8B_2014 <- svyglm(UN13AB ~ welevel, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit8B_2014, exponentiate = TRUE)
+
+#9. 
+weighted_logit9B_2014 <- svyglm(UN13AB ~ WAGE, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit9B_2014, exponentiate = TRUE)
+
+#10. 
+weighted_logit10B_2014 <- svyglm(UN13AB ~ MSTATUS, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit10B_2014, exponentiate = TRUE)
+
+#11. 
+weighted_logit11B_2014 <- svyglm(UN13AB ~ SL1_group, design = design_2014, family = quasibinomial)
+tbl_regression(weighted_logit11B_2014, exponentiate = TRUE)
+
+# 2nd regression table
+formulas2 <- list(
+  UN13AB ~ HH7,                  
+  UN13AB ~ HC1A,                 
+  UN13AB ~ Ethnicity,            
+  UN13AB ~ windex5r,             
+  UN13AB ~ HHSEX,                
+  UN13AB ~ HC11,                 
+  UN13AB ~ helevel,              
+  UN13AB ~ welevel,              
+  UN13AB ~ WAGE,                 
+  UN13AB ~ MSTATUS,              
+  UN13AB ~ SL1_group)
+
+tablesB <- lapply(seq_along(formulas2), function(i) {
+  formula <- formulas1[[i]] 
+  tbl_regression(
+    svyglm(formula, design = design_2014, family = quasibinomial),
+    label = labels[i],  
+    exponentiate = TRUE,  
+    pvalue_fun = ~ style_pvalue(.x, digits = 2)
+  ) %>%
+    add_global_p() %>%
+    bold_p(t = 0.10) %>%
+    bold_labels() %>%
+    italicize_levels()
+})
+stacked_tableB <- tbl_stack(tablesB)
+stacked_tableB %>%
+  as_gt() %>%
+  gt::tab_header(title = "Living in a different room") %>%
+  gtsave("bivariate_living_in_different_room.png")
+
+### Live in animal shed 'UN13AC' ----
 
 
