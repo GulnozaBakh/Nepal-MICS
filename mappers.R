@@ -22,3 +22,16 @@ ethnicity_mapping1 <- list(
   "Muslim" = c("Churaute", "Musalman"),
   "Other" = c("Undefined Others")
 )
+
+map_ethnicity1 <- function(ethnicity) {
+  if (is.na(ethnicity)) {
+    return("Missing")
+  }
+  for (group in names(ethnicity_mapping1)) {
+    if (ethnicity %in% ethnicity_mapping1[[group]]) {
+      return(group)
+    }
+  }
+  return("Other")  # Default to "Other" if no match is found
+}
+
