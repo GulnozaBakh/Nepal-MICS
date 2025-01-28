@@ -853,7 +853,7 @@ table7 <- create_regression_table(avoid_social_gatherings, standard_labels)
 # Combine the tables into one summary table
 summary_table2 <- tbl_merge(
   tbls = list(table5, table6, table7),
-  tab_spanner = c("**Bathing in a different place (n=10,608)**", "**Absent from school/work (n=10,608)**", "**Avoid social gatherings (n=10,608)**")
+  tab_spanner = c("**Bathing in a different place (n=10,683)**", "**Absent from school/work (n=10,683)**", "**Avoid social gatherings (n=10,683)**")
 )
 
 # Hide the p.value columns after merging
