@@ -72,12 +72,6 @@ columns_to_clean <- c("UN13AA", "UN13AB", "UN13AC", "UN13AD", "UN13AE", "UN13AF"
 # Apply the function (Clean data)
 merged_data_2014 <- clean_data(merged_data_2014, columns_to_clean)
 
-# Filter out rows with NA in any of the selected columns
-#merged_data_2014 <- merged_data_2014 %>%
- # filter(complete.cases(select(., all_of(columns_to_clean))))
-# Verify the filtering
-#summary(merged_data_2014)
-
 #convert Yes and NO to 1 and 0 in the practices columns
 merged_data_2014 <- merged_data_2014 %>%
   mutate(across(c(UN13AA, UN13AB, UN13AC, UN13AD, UN13AE, UN13AF, UN13AG), 
@@ -87,10 +81,6 @@ merged_data_2014 <- merged_data_2014 %>%
 merged_data_2014$HC1A <- with(merged_data_2014, ifelse(HC1A %in% c("Sikh", "No religion", 
                                   "Others", "Prakriti", "Bon", "Kirat"), "Other", HC1A))
 #merged_data_2014$HC1A <- factor(merged_data_2014$HC1A)
-
-#remove don't know and missing (total 5) from ethnicity answers
-#merged_data_2014 <- merged_data_2014 %>%
-  #filter(!HC1C %in% c("Don't know", "Missing"))
 
 # Apply the mapping to create a new variable
 merged_data_2014 <-merged_data_2014 %>%
@@ -103,22 +93,19 @@ labels <- c("0", "1", "2", "3", "4 or more")  # Group labels
 # Create the grouped variable
 merged_data_2014$SL1_group <- cut(merged_data_2014$SL1, breaks = breaks, labels = labels, right = TRUE)
 
-# Find the mode of the HC11 column (we have 2 missing values for owns hh land variable, so it is better to replace the missing values with the mode)
-#mode_HC11 <- names(sort(table(merged_data_2014$HC11), decreasing = TRUE))[1]
-#print(mode_HC11)
-# Impute "Missing" values with the mode
-#merged_data_2014$HC11[merged_data_2014$HC11 == "Missing"] <- mode_HC11
-
 # Convert multiple columns to factors in one line
 merged_data_2014 <- merged_data_2014 %>%
   mutate(across(c(HC11, HHSEX, windex5r, welevel, HH6, HH7, Ethnicity, HC1A, WAGE), as.factor))
 
 # Find the mode of the helevel column excluding "Missing/DK" (inside of education 
 # of HH head there are 17 missing values, we can impute them into the mode)
+
 mode_helevel <- names(sort(table(merged_data_2014$helevel[merged_data_2014$helevel != "Missing/DK"]), decreasing = TRUE))[1]
-print(mode_helevel)  # This should print the most frequent education level
+print(mode_helevel) 
+
 # Impute "Missing/DK" values with the mode
 merged_data_2014$helevel[merged_data_2014$helevel == "Missing/DK"] <- mode_helevel
+
 # Convert helevel back to factor
 merged_data_2014$helevel <- factor(merged_data_2014$helevel)
 
