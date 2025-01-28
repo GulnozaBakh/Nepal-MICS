@@ -946,7 +946,7 @@ table4_2019 <- create_regression_table1_2019(eating_separate, standard_labels_20
 # Combine the tables into one summary table
 summary_table1_2019 <- tbl_merge(
   tbls = list(table1_2019, table2_2019, table3_2019, table4_2019),
-  tab_spanner = c("**Living in chaupadi (n=5,465)**", "**Living in a different room (n=5,465)**", "**Staying in cowshed (n=5,465)**", "**Eating in a separate place (n=5,465)**")
+  tab_spanner = c("**Living in chaupadi (n=6,163)**", "**Living in a different room (n=6,163)**", "**Staying in cowshed (n=6,163)**", "**Eating in a separate place (n=6,163)**")
 )
 
 # Hide the p.value columns after merging
@@ -997,7 +997,7 @@ table8_2019 <- create_regression_table1_2019(away_from_religious_work, standard_
 # Combine the tables into one summary table
 summary_table2_2019 <- tbl_merge(
   tbls = list(table5_2019, table6_2019, table7_2019, table8_2019),
-  tab_spanner = c("**Bathing in a separate place (n=5,465)**", "**Staying away from school/work (n=5,465)**", "**Staying away from social gatherings (n=5,465)**", "**Staying away from religious work (n=5,465)**")
+  tab_spanner = c("**Bathing in a separate place (n=6,163)**", "**Staying away from school/work (n=6,163)**", "**Staying away from social gatherings (n=6,163)**", "**Staying away from religious work (n=6,163)**")
 )
 
 # Hide the p.value columns after merging
