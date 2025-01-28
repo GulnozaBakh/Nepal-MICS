@@ -63,12 +63,6 @@ columns_to_clean1 <- c("UN16AA", "UN16AB", "UN16AC", "UN16AD", "UN16AE", "UN16AF
 # Clean the data
 merged_data_2019 <- clean_data1(merged_data_2019, columns_to_clean1)
 
-# Filter out rows with NA in any of the selected columns
-#merged_data_2019 <- merged_data_2019 %>%
- # filter(complete.cases(select(., all_of(columns_to_clean1))))
-# Verify the filtering
-#summary(merged_data_2019)
-
 #convert Yes and NO to 1 and 0 in the practices columns
 merged_data_2019 <- merged_data_2019 %>%
   mutate(across(c(UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH),
@@ -77,15 +71,11 @@ merged_data_2019 <- merged_data_2019 %>%
 # Combine low count categories for demonstration (Religion)
 merged_data_2019$HC1A <- with(merged_data_2019, ifelse(HC1A %in% c("BON", "NO RELIGION", 
                                  "OTHERS", "PRAKRITI", "JAIN", "KIRAT"), "OTHER", HC1A))
-#merged_data_2019$HC1A <- factor(merged_data_2019$HC1A)
 
 # Apply the mapping to create a new variable
 merged_data_2019 <-merged_data_2019 %>%
   mutate(Ethnicity = sapply(HC2, map_ethnicity2))
 merged_data_2019$Ethnicity <- factor(merged_data_2019$Ethnicity)
-
-# Convert WAGE to a factor 
-#merged_data_2019$WAGE <- factor(merged_data_2019$WAGE)
 
 # Grouping the number of children For HH51
 merged_data_2019$HH51_grouped <- cut(merged_data_2019$HH51, 
@@ -122,12 +112,43 @@ merged_data_2019$MSTATUS <- ifelse(merged_data_2019$MSTATUS %in% c("Currently ma
 # Convert the new variable to a factor
 merged_data_2019$MSTATUS <- factor(merged_data_2019$MSTATUS, levels = c("Ever Married", "Never Married"))
 
-# Remove rows with NA values in HC15
-#merged_data_2019 <- subset(merged_data_2019, !is.na(HC15))
-
 # Convert multiple columns to factors in one line
 merged_data_2019 <- merged_data_2019 %>%
   mutate(across(c(HH6, HH7, HHSEX, HC15, helevel1, windex5r, stratum, welevel1, WAGE, HC1A), as.factor))
+
+# Trim whitespace from the levels
+merged_data_2019$helevel1 <- trimws(merged_data_2019$helevel1)
+merged_data_2019$welevel1 <- trimws(merged_data_2019$welevel1)
+merged_data_2019$WAGE <- trimws(merged_data_2019$WAGE)
+
+# Convert factor levels with the cleaned data
+merged_data_2019 <- within(merged_data_2019, {
+  helevel1 <- factor(helevel1, 
+                     levels = c("None", "Basic (Gr 1-8)", "Secondary (Gr 9-12)", "Higher") ,
+                     labels = c("None", "Basic", "Secondary", "Higher")) 
+  welevel1 <- factor(welevel1, 
+                     levels = c("None", "Basic (Gr 1-8)", "Secondary (Gr 9-12)", "Higher") ,
+                     labels = c("None", "Basic", "Secondary", "Higher"))
+  WAGE <- factor(WAGE, 
+                 levels = c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49") ,
+                 labels = c("15 to 19", "20 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49"))
+  HH7 <- factor(HH7,
+                levels = c("SUDOORPASCHIM PROVINCE", "PROVINCE NO. 1", "PROVINCE NO. 2", "PROVINCE NO. 3", 
+                           "GANDAKI PROVINCE", "PROVINCE NO. 5", "KARNALI PROVINCE"),
+                labels = c("Sudoorpaschim Province", "Province No. 1", "Province No. 2", "Province No. 3", 
+                           "Gandaki Province", "Province No. 5", "Karnali Province"))
+  HC1A <- factor(HC1A, 
+                 levels = c("HINDU", "BUDDHIST", "CHRISTIAN", "ISLAM", "OTHER"),
+                 labels = c("Hindu", "Buddhist", "Christian", "Islam", "Other"))
+  HC15 <- factor(HC15,
+                 levels = c("YES", "NO"),
+                 labels = c("Yes", "No"))
+  windex5r <- factor(windex5r,
+                     levels = c("Poorest", "Second", "Middle", "Fourth", "Richest"),
+                     labels = c("Poorest", "Second", "Middle", "Fourth", "Richest"))
+  
+  })
+
 
 # Store
 save(merged_data_2019, file="2019_clean_data.RData")  # cleaned data 2019 for furthere analysis
