@@ -817,10 +817,10 @@ summary_gt1 <- as_gt(summary_table1)
 # Add the title and the note to the table
 summary_gt1 <- summary_gt1 %>%
   tab_header(
-    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**")
+    title = "**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**"
   ) %>%
   tab_source_note(
-    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+    source_note = "1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models."
   ) %>%
   tab_options(
     heading.align = "left"
