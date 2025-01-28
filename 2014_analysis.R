@@ -835,7 +835,7 @@ latex_code <- as_latex(summary_gt1)
 cat(as.character(latex_code))
 
 # Save to a .tex file
-writeLines(latex_code, "my_table.tex")
+writeLines(latex_code, "multivate_table1_2014.tex")
 
 # doing the remaining variables for latex output
 bath_different_place <- svyglm(UN13AE ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
@@ -880,7 +880,7 @@ summary_gt2
 # Export gt table to LaTeX code
 latex_code2 <- as_latex(summary_gt2)
 cat(as.character(latex_code2))
-writeLines(latex_code, "my_table.tex")
+writeLines(latex_code, "multivate_table2_2014.tex")
 
 
 
