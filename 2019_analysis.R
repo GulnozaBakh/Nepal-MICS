@@ -30,6 +30,49 @@ for (i in vars) {
   print(paste(i, "missings:", missing_count, sep = " "))
 }
 
+### Frequency Distribution Table ----
+# Select the desired variables including the new summary index
+d2 <- merged_data_2019 %>% 
+  select(HH7, HC1A, Ethnicity, HC15, HHSEX, helevel1, windex5r, WAGE, HHAGEx, MSTATUS, welevel1, HH51_grouped, HH52_grouped, UN16AA, UN16AB, UN16AC, UN16AD, UN16AE, UN16AF, UN16AG, UN16AH)
+
+# Example variable labels
+variable_labels <- list(
+  HH7 = "Region",
+  HC1A = "Religion",
+  Ethnicity = "Ethnicity of Household Head", 
+  HC15 = "Owns Agricultural Land", 
+  HHSEX = "Sex of Household Head", 
+  helevel1 = "Education of Household Head",
+  windex5r = "Rural Wealth Index",
+  WAGE = "Age Range of Women",
+  HHAGEx = "Age Range of Household Head",
+  welevel1 = "Education of Women",
+  MSTATUS = "Marital Status",
+  HH51_grouped = "Number of children under age 5",
+  HH52_grouped = "Number of children aged 5-17",
+  UN16AA = "Staying in chaupadi/chhapro",
+  UN16AB = "Staying in separate room ",
+  UN16AC = "Staying in cowshed",
+  UN16AD = "Eating in a separate place",
+  UN16AE = "Bathing in a separate place",
+  UN16AF = "Staying away from school or work",
+  UN16AG = "Staying away from social gatherings",
+  UN16AH = "Staying away from religious work"
+)
+# Create the summary table with custom labels and add a caption
+summary_table_2019 <- tbl_summary(
+  d2,
+  label = variable_labels
+) %>%
+  modify_caption("**Table 1. Sociodemographic characteristics and the menstrual conditions of women, Nepal, 2019.**")
+
+# Display the summary table
+summary_table_2019
+#Save it 
+summary_gt2 <- as_gt(summary_table_2019)
+gtsave(summary_gt2, filename = "summary_table_2019.png")
+
+
 ### Correlation between Religion and Ethnicity ----
 # Cramer's V:
 cramer_v <- CramerV(merged_data_2019$HC1A, merged_data_2019$Ethnicity)
