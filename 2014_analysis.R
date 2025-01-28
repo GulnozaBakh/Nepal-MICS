@@ -725,6 +725,162 @@ summary_gt2 <- as_gt(summary_table2)
 gtsave(summary_gt2, "multivariate_table2.png")
 
 ### multivariate models for latex ----
+create_regression_table <- function(model, labels) {
+  tbl <- tbl_regression(
+    model,
+    label = labels,
+    exponentiate = TRUE,
+    add_estimate_to_reference_rows = TRUE,  # Add 1 to the coef row
+    pvalue_fun = ~ style_pvalue(.x, digits = 2)
+  ) %>%
+    bold_p(t = 0.05) %>%  # Bold p-values less than 0.05
+    bold_labels() %>%
+    italicize_levels() 
+  
+  tbl <- tbl %>%
+    modify_table_body(
+      ~ .x %>%
+        dplyr::mutate(
+          stars = case_when(
+            p.value < 0.001 ~ "***",
+            p.value < 0.01 ~ "**",
+            p.value < 0.05 ~ "*",
+            TRUE ~ ""
+          ),
+          display_estimate = ifelse(
+            !is.na(conf.low) & !is.na(conf.high),
+            paste0(
+              formatC(estimate, format = "f", digits = 2), " (",
+              formatC(conf.low, format = "f", digits = 2), " to ",
+              formatC(conf.high, format = "f", digits = 2), ")",
+              stars
+            ),
+            formatC(estimate, format = "f", digits = 2)
+          )
+        ) %>%
+        dplyr::mutate(
+          display_estimate = ifelse(is.na(estimate), "", display_estimate)  
+        ) %>%
+        dplyr::select(-estimate, -stars, -conf.low, -conf.high)  # Remove unnecessary columns
+    )
+  
+  tbl <- tbl %>%
+    modify_header(
+      label = "**Characteristic**",
+      display_estimate = "**OR (95% CI)**"
+    ) %>%
+    modify_table_styling(
+      columns = "display_estimate",
+      rows = reference_row %in% TRUE,
+      missing_symbol = "1.00"
+    )
+  
+  if ("std.error" %in% names(tbl$table_body)) {
+    tbl <- tbl %>% modify_table_body(~ .x %>% dplyr::select(-std.error))
+  }
+  
+  tbl <- tbl %>%
+    modify_table_body(~ .x %>% dplyr::filter(!variable %in% c("welevel", "SL1_group")))
+  
+  return(tbl)
+}
+
+standard_labels <- list(
+  HH7 = "Region",
+  Ethnicity = "Ethnicity",
+  windex5r = "Rural Wealth",
+  HC11 = "Owns Agricultural Land")
+
+# Create individual regression tables
+table1 <- create_regression_table(different_house, standard_labels)
+table2 <- create_regression_table(different_room, standard_labels)
+table3 <- create_regression_table(animal_shed, standard_labels)
+table4 <- create_regression_table(different_food, standard_labels)
+
+# Combine the tables into one summary table
+summary_table1 <- tbl_merge(
+  tbls = list(table1, table2, table3, table4),
+  tab_spanner = c(
+    "**Living in chaupadi (n=10,683)**",
+    "**Living in a different room (n=10,683)**",
+    "**Staying in animal shed (n=10,683)**",
+    "**Eating different food (n=10,683)**"
+  ))
+
+# Hide the p.value columns after merging
+summary_table1 <- summary_table1 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt1 <- as_gt(summary_table1)
+
+# Add the title and the note to the table
+summary_gt1 <- summary_gt1 %>%
+  tab_header(
+    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal, 2014.**")
+  ) %>%
+  tab_source_note(
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  ) %>%
+  tab_options(
+    heading.align = "left"
+  )
+
+summary_gt1
+
+# Export gt table to LaTeX code
+latex_code <- as_latex(summary_gt1)
+
+# Display the LaTeX code in the R console
+cat(as.character(latex_code))
+
+# Save to a .tex file
+writeLines(latex_code, "my_table.tex")
+
+# doing the remaining variables for latex output
+bath_different_place <- svyglm(UN13AE ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+absent_school_work <- svyglm(UN13AF ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+avoid_social_gatherings <- svyglm(UN13AG ~ HH7 + Ethnicity + windex5r + HC11 + welevel + SL1_group, design = design_2014, family = "quasibinomial")
+
+# Standardize labels for all regression tables
+standard_labels <- list(HH7 = "Region", Ethnicity = "Ethnicity", windex5r = "Rural Wealth", HC11 = "Owns Agricultural Land")
+
+# Create individual regression tables
+table5 <- create_regression_table(bath_different_place, standard_labels)
+table6 <- create_regression_table(absent_school_work, standard_labels)
+table7 <- create_regression_table(avoid_social_gatherings, standard_labels)
+
+# Combine the tables into one summary table
+summary_table2 <- tbl_merge(
+  tbls = list(table5, table6, table7),
+  tab_spanner = c("**Bathing in a different place (n=10,608)**", "**Absent from school/work (n=10,608)**", "**Avoid social gatherings (n=10,608)**")
+)
+
+# Hide the p.value columns after merging
+summary_table2 <- summary_table2 %>%
+  modify_table_styling(columns = starts_with("p.value"), hide = TRUE)
+
+# Convert the gtsummary table to a gt table
+summary_gt2 <- as_gt(summary_table2)
+
+# Add the title and the note to the table
+summary_gt2 <- summary_gt2 %>%
+  tab_header(
+    title = md("**Table 1. Predictors of menstrual restrictions among women and girls in Nepal for all the regions, 2014. (Continued)**")
+  ) %>%
+  tab_source_note(
+    source_note = md("1.00 = Reference category. \nNote: Each model controlled for education of women and number of children. Education and sex of household head, marital status and age of women were not significant for any of the outcome variables at the bivariate level and thus were not included in the models.")
+  ) %>%
+  tab_options(
+    heading.align = "left"
+  )
+
+summary_gt2
+
+# Export gt table to LaTeX code
+latex_code2 <- as_latex(summary_gt2)
+cat(as.character(latex_code2))
+writeLines(latex_code, "my_table.tex")
 
 
 
